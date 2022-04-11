@@ -9,18 +9,20 @@ import android.widget.Button
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.DTO.LottoNumber
-import com.kimjinwouk.lotto.Retrofit.Interface.RetrofitService
+import com.kimjinwouk.lotto.DTO.winLotto
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : BaseActivity() {
 
@@ -47,6 +49,7 @@ class MainActivity : BaseActivity() {
 
     private var didRun = false
     private val pickNumberSet = mutableSetOf<Int>()
+    private val winLottoData = mutableSetOf<winLotto>()
 
     private val numberTvList: List<TextView> by lazy {
         listOf<TextView>(
@@ -73,14 +76,15 @@ class MainActivity : BaseActivity() {
         initAddButton()
         initResetButton()
         initQr()
+        initCrawling()
 
         RetroifitManager.service.getNumber()?.enqueue(object : Callback<LottoNumber> {
             override fun onResponse(call: Call<LottoNumber>, response: Response<LottoNumber>) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     // 정상적으로 통신이 성고된 경우
                     var result: LottoNumber? = response.body()
                     Log.d("YMC", "onResponse 성공: " + result?.toString());
-                }else{
+                } else {
                     // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                     Log.d("YMC", "onResponse 실패")
                 }
@@ -95,8 +99,32 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun initQr()
-    {
+    private fun initCrawling() {
+
+        var contentData: Element
+        var address:String = ""
+        var type : String = ""
+        var name : String = ""
+
+        CoroutineScope(Dispatchers.IO).async {
+            val url = "https://dhlottery.co.kr/store.do?method=topStore&pageGubun=L645"
+            val doc = Jsoup.connect(url).timeout(1000 * 10).get()  //타임아웃 10초
+            contentData =
+                doc.select("html body div section div div div div.group_content")[0].select("table tbody")[0]
+
+            //로또 1등부터 마지막 등수까지의 전체
+            contentData.children().forEachIndexed { index, element ->
+                val _winLotto =  winLotto(
+                    element.select("td")[1].text(),
+                    element.select("td")[2].text(),
+                    element.select("td")[3].text()
+                )
+                winLottoData.add(_winLotto)
+            }
+        }
+    }
+
+    private fun initQr() {
         runQr.setOnClickListener {
             val integrator = IntentIntegrator(this)
             integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE) // 여러가지 바코드중에 특정 바코드 설정 가능
@@ -110,6 +138,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         // QR 코드를 찍은 결과를 변수에 담는다.
 
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
@@ -147,8 +176,7 @@ class MainActivity : BaseActivity() {
 
             list.forEachIndexed { index, number ->
 
-                if( index >= pickNumberSet.size)
-                {
+                if (index >= pickNumberSet.size) {
                     val textView = numberTvList[index]
                     textView.text = number.toString()
                     textView.isVisible = true
