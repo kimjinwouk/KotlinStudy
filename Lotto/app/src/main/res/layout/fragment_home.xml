@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_margin="20dp">
 
 
     <LinearLayout
@@ -50,6 +51,16 @@
         app:layout_constraintTop_toBottomOf="@+id/ll_msg2"
         app:layout_constraintVertical_weight="1">
 
+        <TextView
+            android:id="@+id/tv_qr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="18dp"
+            android:text="QR코드"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -65,6 +76,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_3"
         app:layout_constraintVertical_weight="1">
+
+        <TextView
+            android:id="@+id/tv_lottoNumber"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="18dp"
+            android:text="로또번호 추천"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -87,6 +109,16 @@
             android:layout_weight="1"
             android:background="@color/material_dynamic_primary90">
 
+            <TextView
+                android:id="@+id/tv_place"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:text="로또번호 추천"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -97,6 +129,16 @@
             android:layout_weight="1"
             android:background="@color/material_dynamic_primary90">
 
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:text="당첨현황"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
 

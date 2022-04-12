@@ -5,8 +5,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.zxing.integration.android.IntentIntegrator
 
-abstract class WebViewActivity : AppCompatActivity() {
+public class WebViewActivity : BaseActivity() {
 
 
     private val wv: WebView by lazy {
@@ -20,8 +21,9 @@ abstract class WebViewActivity : AppCompatActivity() {
 
         wv.settings.javaScriptEnabled = true
         wv.webViewClient = WebViewClient()
-
         //웹뷰를 띄운다.
-        wv.loadUrl(intent.putExtra("url","").toString())
+        wv.loadUrl(intent.getStringExtra("url").toString())
     }
+
+
 }
