@@ -3,8 +3,6 @@ package com.kimjinwouk.lotto
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.webkit.WebViewClient
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -44,6 +42,7 @@ class MainActivity : BaseActivity() {
 
     private fun initListner()
     {
+
         fab_qr.setOnClickListener {
             runQR()
         }
@@ -84,10 +83,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun changeFragment(fragment: Fragment) {
+    public fun changeFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fl_container, fragment).commit()
+
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // QR 코드를 찍은 결과를 변수에 담는다.

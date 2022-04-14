@@ -1,26 +1,36 @@
 package com.kimjinwouk.lotto
 
+import android.Manifest
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 
 abstract class BaseActivity : AppCompatActivity() {
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getHashKey()
-    }
+        initLocate()
 
-    private fun initInstance()
+    }
+    private fun initLocate()
     {
 
+
     }
+
 
     private fun getHashKey() {
         var packageInfo: PackageInfo? = null
@@ -40,5 +50,6 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         }
     }
+
 
 }
