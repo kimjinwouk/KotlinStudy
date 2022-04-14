@@ -1,5 +1,6 @@
 package com.kimjinwouk.lotto
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +12,13 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.Fragment.homeFragment
 import com.kimjinwouk.lotto.Fragment.placeFragment
 
+
 class MainActivity : BaseActivity() {
 
-    private val homeFragment by lazy { homeFragment() }
-    private val placeFragment by lazy { placeFragment() }
+    public val homeFragment by lazy { homeFragment() }
+    public val placeFragment by lazy { placeFragment() }
 
-
-    private val bnv_main: BottomNavigationView by lazy {
+    public val bnv_main: BottomNavigationView by lazy {
         findViewById(R.id.bnv_main)
     }
 
@@ -25,6 +26,7 @@ class MainActivity : BaseActivity() {
         findViewById(R.id.fab_qr)
     }
 
+    lateinit var m_Context: Context
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +37,12 @@ class MainActivity : BaseActivity() {
         initNavigationBar()
     }
 
-    private fun init()
-    {
 
+    private fun init() {
+        m_Context = this
     }
 
-    private fun initListner()
-    {
+    private fun initListner() {
 
         fab_qr.setOnClickListener {
             runQR()
@@ -50,8 +51,7 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun runQR()
-    {
+    private fun runQR() {
         val integrator = IntentIntegrator(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE) // 여러가지 바코드중에 특정 바코드 설정 가능
         integrator.setPrompt("QR 코드를 스캔하여 주세요.") // 스캔할 때 하단의 문구
@@ -63,38 +63,89 @@ class MainActivity : BaseActivity() {
     }
 
 
+    var didHomeAction : Boolean = false;
+    override fun showPermissionGranted(permission: String) {
+        //didHomeAction = true;
+        changeFragment(placeFragment)
+        //selectedView(PLACE)
+        //bnv_main.run {
+        //    selectedItemId = R.id.place
+        //}
 
+    }
+
+
+    override fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
+        //changeFragment(homeFragment)
+        bnv_main.run {
+            selectedItemId = R.id.home
+        }
+    }
 
 
     private fun initNavigationBar() {
         bnv_main.run {
-            setOnItemSelectedListener  {
+            setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
                         changeFragment(homeFragment)
                     }
                     R.id.place -> {
-                        changeFragment(placeFragment)
+                        requestPermission();
+
                     }
                 }
+                didHomeAction = false
                 true
             }
             selectedItemId = R.id.home
+
         }
     }
 
     public fun changeFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fl_container, fragment).commit()
+
+        if(fragment.equals(homeFragment))
+        { // 홈을 선택했을 경우
+            val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Home")
+            if (fragmenthome != null) {
+                supportFragmentManager.beginTransaction().show(homeFragment).commit();
+                supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+                return
+            }
+        }
+        else{
+            val fragmentplace: Fragment? = supportFragmentManager.findFragmentByTag("Place")
+
+            if (fragmentplace != null) {
+                supportFragmentManager.beginTransaction().show(placeFragment).commit();
+                supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                return
+            }
+        }
+        supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment, if (fragment.equals(homeFragment)) "Home" else "Place").commit();
+        supportFragmentManager.beginTransaction().show(fragment).commit();
 
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun permissionResult(int: Int) {
+        when (int) {
+            HOME -> selectedView(int)
+            RUN -> changeFragment(placeFragment)
+        }
+
     }
+
+    public fun selectedView(int: Int) {
+        bnv_main.run {
+            selectedItemId = when (int) {
+                HOME -> R.id.home
+                else -> R.id.place
+            }
+        }
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // QR 코드를 찍은 결과를 변수에 담는다.
@@ -116,7 +167,7 @@ class MainActivity : BaseActivity() {
                 Log.d("TTT", "QR 코드 URL:${result.contents}")
 
                 val nextIntent = Intent(this, WebViewActivity::class.java)
-                nextIntent.putExtra("url",result.contents);
+                nextIntent.putExtra("url", result.contents);
                 startActivity(nextIntent)
             }
             // 결과가 없으면

@@ -29,6 +29,7 @@ class homeFragment : Fragment() {
     }
 
     lateinit var tv_qr : TextView
+    lateinit var tv_place : TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,6 +40,7 @@ class homeFragment : Fragment() {
     private fun init(view: View)
     {
         tv_qr = view.findViewById(R.id.tv_qr)
+        tv_place = view.findViewById(R.id.tv_place)
     }
     private fun initListner()
     {
@@ -46,6 +48,13 @@ class homeFragment : Fragment() {
         tv_qr.setOnClickListener {
 
             runQR()
+        }
+        tv_place.setOnClickListener {
+            (activity as MainActivity).bnv_main.run{
+                selectedItemId = R.id.place
+            }
+            //(activity as MainActivity).changeFragment((activity as MainActivity).placeFragment)
+            //(activity as MainActivity).selectedView((activity as MainActivity).PLACE)
         }
     }
 
