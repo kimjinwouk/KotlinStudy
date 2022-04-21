@@ -24,7 +24,7 @@
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="d403f95eb910af89e0ed88535e043c21"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
             tools:replace="screenOrientation"/>
 
         <activity android:name=".WebViewActivity"/>
-
+        <activity android:name=".MainActivity"/>
     </application>
 
 </manifest>

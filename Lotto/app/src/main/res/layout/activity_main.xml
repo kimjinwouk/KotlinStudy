@@ -19,7 +19,7 @@
         android:id="@+id/bnv_main"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/design_default_color_secondary_variant"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,8 +37,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/bnv_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/qr_code"
-        app:elevation="10dp"
+        android:src="@drawable/ic_scan"
+        app:tint="@color/white"
+        app:backgroundTint="@color/black"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
