@@ -38,6 +38,7 @@
 
         <activity android:name=".WebViewActivity"/>
         <activity android:name=".MainActivity"/>
+        <activity android:name=".LottoActivity"/>
     </application>
 
 </manifest>

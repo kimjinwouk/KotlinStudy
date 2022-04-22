@@ -17,7 +17,7 @@ import com.kimjinwouk.lotto.Fragment.placeFragment
 class SplashActivity : BaseActivity() {
 
     companion object {
-        private const val DURATION : Long = 3000
+        private const val DURATION : Long = 1000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.MainActivity
 import com.kimjinwouk.lotto.R
 import com.kimjinwouk.lotto.WebViewActivity
+import java.util.*
 
 class homeFragment : Fragment() {
 
@@ -28,35 +30,108 @@ class homeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    lateinit var tv_qr : TextView
-    lateinit var tv_place : TextView
+    lateinit var ll_qrcode : LinearLayout
+    lateinit var ll_lottonumber : LinearLayout
+    lateinit var ll_place : LinearLayout
+    lateinit var tv_lotto : TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init(view)
         initListner()
+
     }
+
+    override fun onResume() {
+        super.onResume()
+        CreateLottoText()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
 
     private fun init(view: View)
     {
-        tv_qr = view.findViewById(R.id.tv_qr)
-        tv_place = view.findViewById(R.id.tv_place)
+        ll_qrcode = view.findViewById(R.id.ll_qrcode)
+        ll_lottonumber = view.findViewById(R.id.ll_lottonumber)
+        ll_place = view.findViewById(R.id.ll_place)
+        tv_lotto = view.findViewById(R.id.tv_lotto)
     }
     private fun initListner()
     {
 
-        tv_qr.setOnClickListener {
-
+        ll_qrcode.setOnClickListener {
             runQR()
         }
-        tv_place.setOnClickListener {
+        ll_place.setOnClickListener {
             (activity as MainActivity).bnv_main.run{
                 selectedItemId = R.id.place
             }
-            //(activity as MainActivity).changeFragment((activity as MainActivity).placeFragment)
-            //(activity as MainActivity).selectedView((activity as MainActivity).PLACE)
+        }
+        ll_lottonumber.setOnClickListener{
+            (activity as MainActivity).ShowFragmentLotto()
         }
     }
+
+    private fun runLottoPick()
+    {
+
+    }
+
+    private fun CreateLottoText()
+    {
+        //오늘시간에서 가장가까운 토요일 시간을 뺀 시간.
+        val instance = Calendar.getInstance()
+        val Today = Calendar.getInstance()
+
+        val Result = Calendar.getInstance()
+
+        val day = Today.get(Calendar.DAY_OF_WEEK)
+        val date = Today.get(Calendar.HOUR)
+
+        //DAY_OF_WEEK = 7 토요일
+        //토요일 9시 이전이면 토요일 9시까지의 시간계산.
+        //토요일 9시 이후면 다음주 토요일 9시 까지의 시간계산.
+        when(day) {
+            in 2..6 -> {
+                Result.set(Calendar.DAY_OF_WEEK,Calendar.SATURDAY)
+                Result.set(Calendar.HOUR_OF_DAY,21)
+            }
+            1 -> {
+                Result.add(Calendar.DATE,7)
+                Result.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY)
+                Result.set(Calendar.HOUR_OF_DAY,21)
+            }
+            7 -> when (date) {
+                in 0..20 -> {
+                    Result.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY)
+                    Result.set(Calendar.HOUR_OF_DAY, 21)
+                }
+                else -> {
+                    Result.add(Calendar.DATE,7)
+                    Result.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY)
+                    Result.set(Calendar.HOUR_OF_DAY,21)
+                }
+            }
+        }
+        val hour = (getIgnoredTimeDays(Result.timeInMillis) - getIgnoredTimeDays(Today.timeInMillis)) / (60*60*1000)
+
+
+        tv_lotto.text = "로또 발표까지 \n"+hour+"시간 남았습니다"
+    }
+
+    private fun getIgnoredTimeDays(time: Long) : Long {
+        return Calendar.getInstance().apply {
+            timeInMillis = time
+            set(Calendar.MINUTE,0)
+            set(Calendar.SECOND,0)
+            set(Calendar.MILLISECOND,0)
+        }.timeInMillis
+    }
+
+
 
     private fun runQR()
     {

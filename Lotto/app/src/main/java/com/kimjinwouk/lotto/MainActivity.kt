@@ -11,12 +11,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.Fragment.homeFragment
 import com.kimjinwouk.lotto.Fragment.placeFragment
+import com.kimjinwouk.lotto.Fragment.lottonumberFragment
 
 
 class MainActivity : BaseActivity() {
 
     public val homeFragment by lazy { homeFragment() }
     public val placeFragment by lazy { placeFragment() }
+    public val lottonumberFragment by lazy { lottonumberFragment() }
 
     public val bnv_main: BottomNavigationView by lazy {
         findViewById(R.id.bnv_main)
@@ -66,7 +68,7 @@ class MainActivity : BaseActivity() {
     var didHomeAction : Boolean = false;
     override fun showPermissionGranted(permission: String) {
         //didHomeAction = true;
-        changeFragment(placeFragment)
+        ShowFragmentPlace()
         //selectedView(PLACE)
         //bnv_main.run {
         //    selectedItemId = R.id.place
@@ -88,7 +90,7 @@ class MainActivity : BaseActivity() {
             setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.home -> {
-                        changeFragment(homeFragment)
+                        ShowFragmentHome()
                     }
                     R.id.place -> {
                         requestPermission();
@@ -103,6 +105,52 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    public fun ShowFragmentHome()
+    {
+
+        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Home")
+        if(fragmenthome == null)
+        {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container,homeFragment,"Home").commit()
+        }
+
+        if(homeFragment != null) supportFragmentManager.beginTransaction().show(homeFragment).commit();
+        if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+    }
+
+    public fun ShowFragmentPlace()
+    {
+        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Place")
+        if(fragmenthome == null)
+        {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container,placeFragment,"Place").commit()
+        }
+        if(placeFragment != null) supportFragmentManager.beginTransaction().show(placeFragment).commit();
+        if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+    }
+
+    public fun ShowFragmentLotto()
+    {
+        /*
+        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Lotto")
+        if(fragmenthome == null)
+        {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container,lottonumberFragment,"Lotto").commit()
+        }
+        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().show(lottonumberFragment).commit();
+        if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+        if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        */
+
+
+        val intent = Intent(this, LottoActivity::class.java)
+        startActivity(intent)
+
+    }
+
+    /*
     public fun changeFragment(fragment: Fragment) {
 
         if(fragment.equals(homeFragment))
@@ -110,28 +158,39 @@ class MainActivity : BaseActivity() {
             val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Home")
             if (fragmenthome != null) {
                 supportFragmentManager.beginTransaction().show(homeFragment).commit();
-                supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+                //supportFragmentManager.beginTransaction().hide(placeFragment).commit();
                 return
             }
         }
-        else{
+        else if(fragment.equals(placeFragment)){
             val fragmentplace: Fragment? = supportFragmentManager.findFragmentByTag("Place")
 
             if (fragmentplace != null) {
                 supportFragmentManager.beginTransaction().show(placeFragment).commit();
-                supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                //supportFragmentManager.beginTransaction().hide(homeFragment).commit();
                 return
             }
         }
+        else if(fragment.equals(placeFragment)){
+            val fragmentplace: Fragment? = supportFragmentManager.findFragmentByTag("Place")
+
+            if (fragmentplace != null) {
+                supportFragmentManager.beginTransaction().show(placeFragment).commit();
+                //supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+                return
+            }
+        }
+
         supportFragmentManager.beginTransaction().add(R.id.fl_container, fragment, if (fragment.equals(homeFragment)) "Home" else "Place").commit();
         supportFragmentManager.beginTransaction().show(fragment).commit();
 
     }
+    */
 
     override fun permissionResult(int: Int) {
         when (int) {
             HOME -> selectedView(int)
-            RUN -> changeFragment(placeFragment)
+            RUN -> ShowFragmentPlace()
         }
 
     }
@@ -158,13 +217,13 @@ class MainActivity : BaseActivity() {
             // 컨텐츠가 없으면
             if (result.contents == null) {
                 //토스트를 띄운다.
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
             }
             // 컨텐츠가 있으면
             else {
                 //토스트를 띄운다.
-                Toast.makeText(this, "scanned" + result.contents, Toast.LENGTH_LONG).show()
-                Log.d("TTT", "QR 코드 URL:${result.contents}")
+                //Toast.makeText(this, "scanned" + result.contents, Toast.LENGTH_LONG).show()
+                //Log.d("TTT", "QR 코드 URL:${result.contents}")
 
                 val nextIntent = Intent(this, WebViewActivity::class.java)
                 nextIntent.putExtra("url", result.contents);

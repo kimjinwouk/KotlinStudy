@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:layout_margin="20dp"
-    >
+    android:background="@drawable/home_background"
+    android:padding="20dp"
+    tools:context=".MainActivity">
 
 
     <LinearLayout
@@ -14,12 +14,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/material_dynamic_neutral95"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/ll_msg2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1">
+
+        <TextView
+            android:id="@+id/tv_lotto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gmarketsansttfmedium"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:text="로또 발표까지 \n180시간 남았습니다"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
@@ -30,64 +42,131 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/material_dynamic_neutral95"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/ll_3"
+        app:layout_constraintBottom_toTopOf="@+id/ll_qrcode"
         app:layout_constraintStart_toStartOf="@id/ll_msg"
         app:layout_constraintTop_toBottomOf="@+id/ll_msg"
         app:layout_constraintVertical_weight="0.2">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/gmarketsansttfmedium"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
+            android:text="한주를 버티는 행운의 로또구매 잊지마세요"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_3"
+        android:id="@+id/ll_qrcode"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/material_dynamic_neutral95"
+        android:background="@drawable/home_qrcode_menu"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/ll_4"
+        app:layout_constraintBottom_toTopOf="@+id/ll_lottonumber"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_msg2"
         app:layout_constraintVertical_weight="1">
 
-        <TextView
-            android:id="@+id/tv_qr"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:padding="18dp"
-            android:text="QR코드"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:layout_weight="1.5"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttfmedium"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="22dp"
+                android:text="QR 코드"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttflight"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:text="쉽고 빠르게 확인해보세요"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_4"
+        android:id="@+id/ll_lottonumber"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/material_dynamic_neutral95"
+        android:background="@drawable/home_lottonumber_menu"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/ll_5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_3"
+        app:layout_constraintTop_toBottomOf="@+id/ll_qrcode"
         app:layout_constraintVertical_weight="1">
 
-        <TextView
-            android:id="@+id/tv_lottoNumber"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:padding="18dp"
-            android:text="로또번호 추천"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:layout_weight="1.5"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttfmedium"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="22dp"
+                android:text="로또번호 추천"
+                android:textColor="@color/black"
+                android:textSize="30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttflight"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:text="행운의 번호를 전해드려요"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -100,46 +179,48 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_4"
+        app:layout_constraintTop_toBottomOf="@+id/ll_lottonumber"
         app:layout_constraintVertical_weight="1">
 
         <LinearLayout
+            android:id="@+id/ll_place"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:background="@color/material_dynamic_primary90">
+            android:background="@drawable/home_other_menu">
 
             <TextView
-                android:id="@+id/tv_place"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:padding="18dp"
-                android:text="내주변 판매점"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:text="내 주변\n판매점 찾기"
                 android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_result"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:background="@color/material_dynamic_primary90">
+            android:background="@drawable/home_other_menu">
 
             <TextView
-                android:id="@+id/tv_result"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:padding="18dp"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
                 android:text="당첨현황"
                 android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textSize="24sp"/>
         </LinearLayout>
 
 

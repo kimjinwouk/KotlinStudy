@@ -16,4 +16,6 @@
     <color name="permission_granted">#2DF2A4</color>
     <color name="permission_denied">#F22D24</color>
     <color name="permission_unknown">#F2AD24</color>
+
+    <color name="orange">#FF8300</color>
 </resources>
