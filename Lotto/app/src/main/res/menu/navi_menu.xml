@@ -4,14 +4,14 @@
     <item
         android:id="@+id/home"
         android:enabled="true"
-        android:icon="@drawable/baseline_home_black_18"
+        android:icon="@drawable/ic_home_bottom_home"
         android:title="홈"
         app:showAsAction="withText"
         />
     <item
         android:id="@+id/place"
         android:enabled="true"
-        android:icon="@drawable/baseline_location_on_black_18"
+        android:icon="@drawable/ic_home_bottom_place"
         android:title="내 주변"
         app:showAsAction="withText"/>
 

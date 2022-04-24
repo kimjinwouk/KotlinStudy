@@ -3,13 +3,19 @@ package com.kimjinwouk.lotto
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
+
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequestErrorListener
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener
@@ -31,6 +37,13 @@ abstract class BaseActivity : AppCompatActivity() {
     val RUN: Int = 2
 
 
+    private var mFusedLocationProviderClient: FusedLocationProviderClient? =
+        null // 현재 위치를 가져오기 위한 변수
+    private var mLastLocation: Location? = null // 위치 값을 가지고 있는 객체
+    internal lateinit var mLocationRequest: LocationRequest // 위치 정보 요청의 매개변수를 저장하는
+    private val REQUEST_PERMISSION_LOCATION = 10
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initLocate()
@@ -39,10 +52,90 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun initLocate() {
-
+        mLocationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
 
     }
 
+
+    public fun getXpos(): Double {
+        var returnValue: Double
+
+        returnValue = if (mLastLocation == null)
+            127.047325
+        else
+            mLastLocation!!.longitude
+
+
+        return returnValue
+    }
+
+    public fun getYpos(): Double {
+        var returnValue: Double
+
+        returnValue = if (mLastLocation == null)
+            37.517235
+        else
+            mLastLocation!!.latitude
+
+
+        return returnValue
+    }
+
+
+    public fun startLocationUpdates() {
+
+        //FusedLocationProviderClient의 인스턴스를 생성.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        mFusedLocationProviderClient!!.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    mLastLocation = location
+                }
+            }
+        // 기기의 위치에 관한 정기 업데이트를 요청하는 메서드 실행
+        // 지정한 루퍼 스레드(Looper.myLooper())에서 콜백(mLocationCallback)으로 위치 업데이트를 요청
+        mFusedLocationProviderClient!!.requestLocationUpdates(
+            mLocationRequest,
+            mLocationCallback,
+            Looper.myLooper()!!
+        )
+    }
+
+    // 시스템으로 부터 위치 정보를 콜백으로 받음
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            // 시스템에서 받은 location 정보를 onLocationChanged()에 전달
+            locationResult.lastLocation
+            onLocationChanged(locationResult.lastLocation)
+        }
+    }
+
+    // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
+    fun onLocationChanged(location: Location) {
+        mLastLocation = location
+        //text2.text = "위도 : " + mLastLocation.latitude // 갱신 된 위도
+        //text1.text = "경도 : " + mLastLocation.longitude // 갱신 된 경도
+        CallbackLocate()
+    }
+
+
+    open fun CallbackLocate()
+    {
+
+    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun showPermissionRationale(token: PermissionToken) {
@@ -65,7 +158,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
-        Toast.makeText(this,permission,Toast.LENGTH_LONG).show()
+        Toast.makeText(this, permission, Toast.LENGTH_LONG).show()
     }
 
     open fun permissionResult(int: Int) {

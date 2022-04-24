@@ -1,6 +1,5 @@
 package com.kimjinwouk.lotto.Fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.MainActivity
@@ -32,7 +32,7 @@ class homeFragment : Fragment() {
 
     lateinit var ll_qrcode : LinearLayout
     lateinit var ll_lottonumber : LinearLayout
-    lateinit var ll_place : LinearLayout
+    lateinit var ll_place : ConstraintLayout
     lateinit var tv_lotto : TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class homeFragment : Fragment() {
     {
         ll_qrcode = view.findViewById(R.id.ll_qrcode)
         ll_lottonumber = view.findViewById(R.id.ll_lottonumber)
-        ll_place = view.findViewById(R.id.ll_place)
+        ll_place = view.findViewById(R.id.cl_place)
         tv_lotto = view.findViewById(R.id.tv_lotto)
     }
     private fun initListner()
@@ -159,13 +159,13 @@ class homeFragment : Fragment() {
             // 컨텐츠가 없으면
             if (result.contents == null) {
                 //토스트를 띄운다.
-                Toast.makeText(context, "Cancelled", Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, "Cancelled", Toast.LENGTH_LONG).show()
             }
             // 컨텐츠가 있으면
             else {
                 //토스트를 띄운다.
-                Toast.makeText(context, "scanned" + result.contents, Toast.LENGTH_LONG).show()
-                Log.d("TTT", "QR 코드 URL:${result.contents}")
+                //Toast.makeText(context, "scanned" + result.contents, Toast.LENGTH_LONG).show()
+                //Log.d("TTT", "QR 코드 URL:${result.contents}")
 
                 val nextIntent = Intent(context, WebViewActivity::class.java)
                 nextIntent.putExtra("url",result.contents);

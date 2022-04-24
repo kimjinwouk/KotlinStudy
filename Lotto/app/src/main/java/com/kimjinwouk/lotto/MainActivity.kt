@@ -68,7 +68,9 @@ class MainActivity : BaseActivity() {
     var didHomeAction : Boolean = false;
     override fun showPermissionGranted(permission: String) {
         //didHomeAction = true;
+
         ShowFragmentPlace()
+
         //selectedView(PLACE)
         //bnv_main.run {
         //    selectedItemId = R.id.place
@@ -121,6 +123,7 @@ class MainActivity : BaseActivity() {
 
     public fun ShowFragmentPlace()
     {
+        startLocationUpdates()
         val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Place")
         if(fragmenthome == null)
         {
@@ -129,6 +132,12 @@ class MainActivity : BaseActivity() {
         if(placeFragment != null) supportFragmentManager.beginTransaction().show(placeFragment).commit();
         if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
         if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+    }
+
+
+    override fun CallbackLocate()
+    {
+        placeFragment.setLocate()
     }
 
     public fun ShowFragmentLotto()

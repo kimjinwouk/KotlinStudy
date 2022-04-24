@@ -108,9 +108,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-
+            android:orientation="vertical"
+            android:padding="20dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_home_qrcode"
+                />
         </LinearLayout>
 
 
@@ -163,8 +167,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:padding="20dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_home_recommend"
+                />
 
         </LinearLayout>
 
@@ -180,48 +189,66 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_lottonumber"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintVertical_weight="0.8"
+        android:layout_marginBottom="20dp">
 
-        <LinearLayout
-            android:id="@+id/ll_place"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_place"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:background="@drawable/home_other_menu">
-
+            android:background="@drawable/home_other_menu"
+            android:padding="20dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:paddingTop="20dp"
-                android:paddingLeft="20dp"
                 android:text="내 주변\n판매점 찾기"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_place"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_result"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_result"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:background="@drawable/home_other_menu">
+            android:background="@drawable/home_other_menu"
+            android:padding="20dp"
+>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:paddingTop="20dp"
-                android:paddingLeft="20dp"
                 android:text="당첨현황"
                 android:textColor="@color/black"
-                android:textSize="24sp"/>
-        </LinearLayout>
+                android:textSize="20sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_home_result"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </LinearLayout>
