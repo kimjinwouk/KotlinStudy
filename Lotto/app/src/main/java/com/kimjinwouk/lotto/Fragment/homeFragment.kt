@@ -32,6 +32,7 @@ class homeFragment : Fragment() {
 
     lateinit var ll_qrcode : LinearLayout
     lateinit var ll_lottonumber : LinearLayout
+    lateinit var ll_result : ConstraintLayout
     lateinit var ll_place : ConstraintLayout
     lateinit var tv_lotto : TextView
 
@@ -57,6 +58,7 @@ class homeFragment : Fragment() {
         ll_qrcode = view.findViewById(R.id.ll_qrcode)
         ll_lottonumber = view.findViewById(R.id.ll_lottonumber)
         ll_place = view.findViewById(R.id.cl_place)
+        ll_result = view.findViewById(R.id.cl_result)
         tv_lotto = view.findViewById(R.id.tv_lotto)
     }
     private fun initListner()
@@ -72,6 +74,10 @@ class homeFragment : Fragment() {
         }
         ll_lottonumber.setOnClickListener{
             (activity as MainActivity).ShowFragmentLotto()
+        }
+
+        ll_result.setOnClickListener{
+            (activity as MainActivity).ShowFragmentResult()
         }
     }
 

@@ -3,11 +3,8 @@ package com.kimjinwouk.lotto
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.kimjinwouk.lotto.DTO.LottoNumber
 
 
 class LottoActivity : BaseActivity() {
@@ -74,7 +71,6 @@ class LottoActivity : BaseActivity() {
     private var ArrayList = arrayListOf<List<TextView>>()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lotto)
@@ -84,15 +80,13 @@ class LottoActivity : BaseActivity() {
     }
 
 
-    private fun init()
-    {
+    private fun init() {
         ArrayList.add(numberTvList_1)
         ArrayList.add(numberTvList_2)
         ArrayList.add(numberTvList_3)
         ArrayList.add(numberTvList_4)
         ArrayList.add(numberTvList_5)
     }
-
 
 
     private fun initListner() {
@@ -104,8 +98,7 @@ class LottoActivity : BaseActivity() {
     }
 
 
-    private fun runLottoNumber()
-    {
+    private fun runLottoNumber() {
 
         ArrayList.forEachIndexed { index, listTv ->
             val list = getRandomNumber()
@@ -138,15 +131,6 @@ class LottoActivity : BaseActivity() {
         val newList = numberList.subList(0, 6)
         return newList.sorted()
     }
-
-
-
-
-
-
-
-
-
 
 
 }

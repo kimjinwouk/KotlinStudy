@@ -1,29 +1,29 @@
 package com.kimjinwouk.lotto.Fragment
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ColorStateListInflaterCompat.inflate
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kimjinwouk.lotto.Adapter.BottomSheetAdapter
 import com.kimjinwouk.lotto.Kakao.Document
-import com.kimjinwouk.lotto.Kakao.KakaoApi
 import com.kimjinwouk.lotto.Kakao.KakaoData
 import com.kimjinwouk.lotto.MainActivity
 import com.kimjinwouk.lotto.R
-import com.kimjinwouk.lotto.Retrofit.Interface.RetrofitService
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager.KakaoService
+import net.daum.mf.map.api.CalloutBalloonAdapter
+import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import retrofit2.Call
@@ -36,7 +36,6 @@ class placeFragment : Fragment() {
     lateinit var mapView: MapView
     lateinit var mKakaoData: MutableLiveData<KakaoData>
     lateinit var mKakaoDocument: List<Document>
-    lateinit var mlvPlace: ListView
     lateinit var mAdapter: BottomSheetAdapter
 
 
@@ -50,54 +49,8 @@ class placeFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_place, container, false)
         mapView = MapView(activity)
         val mapViewContainer: ViewGroup = view.findViewById(R.id.map_view)
-        mlvPlace = view.findViewById(R.id.lv_place)
-
         mapViewContainer.addView(mapView)
         _MainActivity = activity as MainActivity
-
-        bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheet))
-
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // handle onSlide
-            }
-
-            /*
-            *STATE_DRAGGING = 끝까지 올린상태
-            * */
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> Toast.makeText(
-                        context,
-                        "STATE_COLLAPSED",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    BottomSheetBehavior.STATE_EXPANDED -> Toast.makeText(
-                        context,
-                        "STATE_EXPANDED",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    BottomSheetBehavior.STATE_DRAGGING -> Toast.makeText(
-                        context,
-                        "STATE_DRAGGING",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    BottomSheetBehavior.STATE_SETTLING -> Toast.makeText(
-                        context,
-                        "STATE_SETTLING",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    BottomSheetBehavior.STATE_HIDDEN -> Toast.makeText(
-                        context,
-                        "STATE_HIDDEN",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    else -> Toast.makeText(context, "OTHER_STATE", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
 
         return view
     }
@@ -134,6 +87,57 @@ class placeFragment : Fragment() {
         )
     }
 
+    private fun setMarker() {
+
+
+        mKakaoDocument.forEachIndexed { index, number ->
+
+            val marker = MapPOIItem()
+
+            marker.apply {
+                tag = index
+                itemName = mKakaoDocument[index].place_name
+                mapPoint = MapPoint.mapPointWithGeoCoord( mKakaoDocument[index].y.toDouble(),mKakaoDocument[index].x.toDouble())
+                markerType = MapPOIItem.MarkerType.CustomImage
+                customImageResourceId = R.drawable.ic_place_locate
+                selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                isCustomImageAutoscale = false
+                setCustomImageAnchor(0f, -1.0f)
+                isShowDisclosureButtonOnCalloutBalloon = false
+
+            }
+            mapView.setCalloutBalloonAdapter(context?.let { CustomCalloutBalloonAdapter(it,mKakaoDocument) })
+            mapView.addPOIItem(marker)
+
+        }
+        // 서울시청 마커 추가
+
+
+    }
+
+    class CustomCalloutBalloonAdapter(context: Context,mData : List<Document>) : CalloutBalloonAdapter {
+        private val mCalloutBalloon: View
+        private val mDatas : List<Document>
+
+        override fun getCalloutBalloon(poiItem: MapPOIItem): View {
+            (mCalloutBalloon.findViewById<View>(R.id.ct) as ConstraintLayout).setPadding(20)
+            (mCalloutBalloon.findViewById<View>(R.id.name) as TextView).text = mDatas[poiItem.tag].place_name
+            (mCalloutBalloon.findViewById<View>(R.id.address) as TextView).text = mDatas[poiItem.tag].address_name
+            (mCalloutBalloon.findViewById<View>(R.id.distance) as TextView).text = mDatas[poiItem.tag].distance+"M"
+            return mCalloutBalloon
+
+        }
+
+        override fun getPressedCalloutBalloon(poiItem: MapPOIItem): View? {
+            return null
+        }
+
+        init {
+            mCalloutBalloon = LayoutInflater.from(context).inflate(R.layout.custom_callout_balloon, null)
+            mDatas = mData
+        }
+    }
+
     private fun callKakaoKeyword(
         address: String,
         x: String,
@@ -146,9 +150,7 @@ class placeFragment : Fragment() {
                 override fun onResponse(call: Call<KakaoData>, response: Response<KakaoData>) {
                     mKakaoData.value = response.body()
                     mKakaoDocument = mKakaoData.value?.documents!!
-                    mAdapter = BottomSheetAdapter(mKakaoDocument)
-                    mlvPlace.adapter = mAdapter
-
+                    setMarker()
                 }
 
                 override fun onFailure(call: Call<KakaoData>, t: Throwable) {

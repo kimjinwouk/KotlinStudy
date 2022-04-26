@@ -35,7 +35,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
-        initListner();
+        initListner()
         initNavigationBar()
     }
 
@@ -135,6 +135,7 @@ class MainActivity : BaseActivity() {
     }
 
 
+
     override fun CallbackLocate()
     {
         placeFragment.setLocate()
@@ -142,21 +143,14 @@ class MainActivity : BaseActivity() {
 
     public fun ShowFragmentLotto()
     {
-        /*
-        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Lotto")
-        if(fragmenthome == null)
-        {
-            supportFragmentManager.beginTransaction().add(R.id.fl_container,lottonumberFragment,"Lotto").commit()
-        }
-        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().show(lottonumberFragment).commit();
-        if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
-        if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
-        */
-
-
         val intent = Intent(this, LottoActivity::class.java)
         startActivity(intent)
+    }
 
+    public fun ShowFragmentResult()
+    {
+        val intent = Intent(this, ResultActivity::class.java)
+        startActivity(intent)
     }
 
     /*

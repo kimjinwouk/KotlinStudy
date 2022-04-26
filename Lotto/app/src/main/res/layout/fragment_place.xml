@@ -16,8 +16,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-
+<!--
     <include
         layout="@layout/dialog_persistent_bottom_sheet" />
-
+-->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
