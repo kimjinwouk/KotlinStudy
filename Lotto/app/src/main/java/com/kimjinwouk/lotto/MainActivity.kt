@@ -12,6 +12,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.Fragment.homeFragment
 import com.kimjinwouk.lotto.Fragment.placeFragment
 import com.kimjinwouk.lotto.Fragment.lottonumberFragment
+import com.kimjinwouk.lotto.Fragment.resultFragment
 
 
 class MainActivity : BaseActivity() {
@@ -19,6 +20,7 @@ class MainActivity : BaseActivity() {
     public val homeFragment by lazy { homeFragment() }
     public val placeFragment by lazy { placeFragment() }
     public val lottonumberFragment by lazy { lottonumberFragment() }
+    public val resultFragment by lazy { resultFragment() }
 
     public val bnv_main: BottomNavigationView by lazy {
         findViewById(R.id.bnv_main)
@@ -96,7 +98,12 @@ class MainActivity : BaseActivity() {
                     }
                     R.id.place -> {
                         requestPermission();
-
+                    }
+                    R.id.lotto ->{
+                        ShowFragmentLotto()
+                    }
+                    R.id.result ->{
+                        ShowFragmentResult()
                     }
                 }
                 didHomeAction = false
@@ -119,6 +126,7 @@ class MainActivity : BaseActivity() {
         if(homeFragment != null) supportFragmentManager.beginTransaction().show(homeFragment).commit();
         if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
         if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+        if(resultFragment != null) supportFragmentManager.beginTransaction().hide(resultFragment).commit();
     }
 
     public fun ShowFragmentPlace()
@@ -132,6 +140,36 @@ class MainActivity : BaseActivity() {
         if(placeFragment != null) supportFragmentManager.beginTransaction().show(placeFragment).commit();
         if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
         if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+        if(resultFragment != null) supportFragmentManager.beginTransaction().hide(resultFragment).commit();
+    }
+
+    public fun ShowFragmentLotto()
+    {
+
+        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Lotto")
+        if(fragmenthome == null)
+        {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container,lottonumberFragment,"Lotto").commit()
+        }
+        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().show(lottonumberFragment).commit();
+        if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+        if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        if(resultFragment != null) supportFragmentManager.beginTransaction().hide(resultFragment).commit();
+    }
+
+    public fun ShowFragmentResult()
+    {
+
+        val fragmenthome: Fragment? = supportFragmentManager.findFragmentByTag("Result")
+        if(fragmenthome == null)
+        {
+            supportFragmentManager.beginTransaction().add(R.id.fl_container,resultFragment,"Result").commit()
+        }
+        if(resultFragment != null) supportFragmentManager.beginTransaction().show(resultFragment).commit();
+        if(placeFragment != null) supportFragmentManager.beginTransaction().hide(placeFragment).commit();
+        if(homeFragment != null) supportFragmentManager.beginTransaction().hide(homeFragment).commit();
+        if(lottonumberFragment != null) supportFragmentManager.beginTransaction().hide(lottonumberFragment).commit();
+
     }
 
 
@@ -141,6 +179,7 @@ class MainActivity : BaseActivity() {
         placeFragment.setLocate()
     }
 
+    /*
     public fun ShowFragmentLotto()
     {
         val intent = Intent(this, LottoActivity::class.java)
@@ -152,7 +191,7 @@ class MainActivity : BaseActivity() {
         val intent = Intent(this, ResultActivity::class.java)
         startActivity(intent)
     }
-
+    */
     /*
     public fun changeFragment(fragment: Fragment) {
 

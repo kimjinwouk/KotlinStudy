@@ -8,7 +8,7 @@
     android:paddingTop="40dp">
 
     <TextView
-        android:id="@+id/tv_text1"
+        android:id="@+id/tv_text_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="로또번호 추천"
@@ -22,11 +22,11 @@
         />
 
     <TextView
-        android:id="@+id/tv_text2"
+        android:id="@+id/tv_text_shop_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5개 게임의 행운번호를 랜덤추천 해드려요."
-        app:layout_constraintTop_toBottomOf="@+id/tv_text1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_text_result"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textColor="@color/black"
         android:fontFamily="@font/gmarketsansttfmedium"
@@ -39,7 +39,7 @@
         android:id="@+id/ll_lotto_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_text_shop_list"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"

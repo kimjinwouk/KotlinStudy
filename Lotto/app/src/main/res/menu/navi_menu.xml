@@ -12,7 +12,24 @@
         android:id="@+id/place"
         android:enabled="true"
         android:icon="@drawable/ic_home_bottom_place"
-        android:title="내 주변"
+        android:title="판매점"
         app:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/result"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_bottom_award"
+        android:title="당첨현황"
+        app:showAsAction="withText"
+        />
+
+    <item
+        android:id="@+id/lotto"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_bottom_lotto"
+        android:title="번호추천"
+        app:showAsAction="withText"
+        />
+
 
 </menu>
