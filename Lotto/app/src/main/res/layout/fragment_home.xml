@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_background"
-    android:padding="20dp"
+    android:padding="@dimen/padding_option_20"
     tools:context=".MainActivity">
 
 
@@ -13,12 +13,11 @@
         android:id="@+id/ll_msg"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/ll_msg2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
+        app:layout_constraintVertical_weight="0.8">
 
         <TextView
             android:id="@+id/tv_lotto"
@@ -26,11 +25,10 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/gmarketsansttfmedium"
             android:gravity="center_vertical|left"
-            android:paddingLeft="20dp"
-            android:paddingTop="20dp"
+            android:paddingLeft="@dimen/padding_option_20"
             android:text="로또 발표까지 \n180시간 남았습니다"
             android:textColor="@color/black"
-            android:textSize="30sp"
+            android:textSize="@dimen/txtsize_option_30"
             android:textStyle="bold" />
 
 
@@ -41,7 +39,7 @@
         android:id="@+id/ll_msg2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/padding_option_10"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/ll_qrcode"
         app:layout_constraintStart_toStartOf="@id/ll_msg"
@@ -53,10 +51,10 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/gmarketsansttfmedium"
             android:gravity="center_vertical|left"
-            android:paddingLeft="20dp"
+            android:paddingLeft="@dimen/padding_option_20"
             android:text="한주를 버티는 행운의 로또구매 잊지마세요"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/txtsize_option_16" />
 
 
     </LinearLayout>
@@ -65,7 +63,7 @@
         android:id="@+id/ll_qrcode"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/padding_option_10"
         android:background="@drawable/home_qrcode_menu"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/ll_lottonumber"
@@ -85,22 +83,22 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:paddingLeft="25dp"
-                android:paddingTop="30dp"
+                android:paddingLeft="@dimen/padding_option_25"
+                android:paddingTop="@dimen/padding_option_30"
                 android:text="QR 코드"
                 android:textColor="@color/black"
-                android:textSize="26sp" />
+                android:textSize="@dimen/txtsize_option_26" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttflight"
                 android:gravity="center_vertical"
-                android:paddingLeft="25dp"
-                android:paddingTop="10dp"
+                android:paddingLeft="@dimen/padding_option_25"
+                android:paddingTop="@dimen/padding_option_10"
                 android:text="쉽고 빠르게 확인해보세요"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txtsize_option_16" />
 
         </LinearLayout>
 
@@ -109,12 +107,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="@dimen/padding_option_20">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_home_qrcode"
-                />
+                android:src="@drawable/ic_home_qrcode" />
         </LinearLayout>
 
 
@@ -124,7 +122,7 @@
         android:id="@+id/ll_lottonumber"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/padding_option_10"
         android:background="@drawable/home_lottonumber_menu"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/ll_5"
@@ -144,22 +142,22 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttfmedium"
                 android:gravity="center_vertical"
-                android:paddingLeft="25dp"
-                android:paddingTop="30dp"
+                android:paddingLeft="@dimen/padding_option_25"
+                android:paddingTop="@dimen/padding_option_30"
                 android:text="로또번호 추천"
                 android:textColor="@color/black"
-                android:textSize="26sp" />
+                android:textSize="@dimen/txtsize_option_26" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarketsansttflight"
                 android:gravity="center_vertical"
-                android:paddingLeft="25dp"
-                android:paddingTop="10dp"
+                android:paddingLeft="@dimen/padding_option_25"
+                android:paddingTop="@dimen/padding_option_10"
                 android:text="행운의 번호를 전해드려요"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="@dimen/txtsize_option_16" />
 
         </LinearLayout>
 
@@ -168,12 +166,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="@dimen/padding_option_20">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_home_recommend"
-                />
+                android:src="@drawable/ic_home_recommend" />
 
         </LinearLayout>
 
@@ -184,22 +182,23 @@
         android:id="@+id/ll_5"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/padding_option_20"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_lottonumber"
-        app:layout_constraintVertical_weight="0.8"
-        android:layout_marginBottom="20dp">
+        app:layout_constraintVertical_weight="0.8">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_place"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="@dimen/padding_option_5"
             android:layout_weight="1"
             android:background="@drawable/home_other_menu"
-            android:padding="20dp">
+            android:padding="@dimen/padding_option_20">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -207,27 +206,26 @@
                 android:gravity="center_vertical"
                 android:text="내 주변\n판매점 찾기"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                android:textSize="@dimen/txtsize_option_20"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_home_place"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                />
+                app:layout_constraintRight_toRightOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_result"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="@dimen/padding_option_5"
             android:layout_weight="1"
             android:background="@drawable/home_other_menu"
-            android:padding="20dp"
->
+            android:padding="@dimen/padding_option_20">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -236,17 +234,16 @@
                 android:gravity="center_vertical"
                 android:text="당첨현황"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                android:textSize="@dimen/txtsize_option_20"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_home_result"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                />
+                app:layout_constraintRight_toRightOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

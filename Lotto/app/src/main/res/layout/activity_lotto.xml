@@ -17,8 +17,8 @@
         android:textColor="@color/black"
         android:fontFamily="@font/gmarketsansttfmedium"
         android:textSize="26sp"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
+        android:paddingTop="@dimen/padding_option_20"
+        android:paddingLeft="@dimen/padding_option_20"
         />
 
     <TextView
@@ -30,31 +30,31 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:textColor="@color/black"
         android:fontFamily="@font/gmarketsansttfmedium"
-        android:textSize="16sp"
+        android:textSize="@dimen/txtsize_option_16"
         android:paddingTop="30dp"
-        android:paddingLeft="20dp"
+        android:paddingLeft="@dimen/padding_option_20"
         />
 
     <LinearLayout
         android:id="@+id/ll_lotto_1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tv_text_shop_list"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_margin="20dp"
+        android:padding="@dimen/padding_option_10"
+        android:layout_margin="@dimen/padding_option_20"
         android:background="@drawable/lotto_game_background"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -62,11 +62,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -74,11 +74,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -86,11 +86,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -98,11 +98,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -110,11 +110,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -122,11 +122,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
 
@@ -141,18 +141,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_margin="20dp"
+        android:padding="@dimen/padding_option_10"
+        android:layout_margin="@dimen/padding_option_20"
         android:background="@drawable/lotto_game_background"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -160,11 +160,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -172,11 +172,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -184,11 +184,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -196,11 +196,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -208,11 +208,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -220,11 +220,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
 
@@ -239,18 +239,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_margin="20dp"
+        android:padding="@dimen/padding_option_10"
+        android:layout_margin="@dimen/padding_option_20"
         android:background="@drawable/lotto_game_background"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -258,11 +258,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -270,11 +270,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -282,11 +282,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -294,11 +294,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -306,11 +306,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -318,11 +318,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
 
@@ -336,18 +336,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_margin="20dp"
+        android:padding="@dimen/padding_option_10"
+        android:layout_margin="@dimen/padding_option_20"
         android:background="@drawable/lotto_game_background"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -355,11 +355,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -367,11 +367,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -379,11 +379,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -391,11 +391,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -403,11 +403,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -415,11 +415,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
 
@@ -433,18 +433,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_margin="20dp"
+        android:padding="@dimen/padding_option_10"
+        android:layout_margin="@dimen/padding_option_20"
         android:background="@drawable/lotto_game_background"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -452,11 +452,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -464,11 +464,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -476,11 +476,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -488,11 +488,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -500,11 +500,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="5"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
         <TextView
@@ -512,11 +512,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="6"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/padding_option_5"
             android:background="@drawable/circle_blue"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="@dimen/txtsize_option_18"
             android:textStyle="bold"
             />
 
@@ -526,17 +526,17 @@
         android:id="@+id/btn_Run"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:padding="10dp"
+        android:layout_marginLeft="@dimen/padding_option_10"
+        android:layout_marginTop="@dimen/padding_option_20"
+        android:layout_marginRight="@dimen/padding_option_10"
+        android:padding="@dimen/padding_option_10"
         android:text="번호 생성"
         android:backgroundTint="@color/orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="16sp"
+        android:textSize="@dimen/txtsize_option_16"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

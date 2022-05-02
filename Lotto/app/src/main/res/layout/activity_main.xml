@@ -36,7 +36,7 @@
         android:id="@+id/fab_qr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="@dimen/padding_option_40"
         app:layout_constraintBottom_toBottomOf="@+id/bnv_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
