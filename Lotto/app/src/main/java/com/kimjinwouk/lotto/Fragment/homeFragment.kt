@@ -73,11 +73,15 @@ class homeFragment : Fragment() {
             }
         }
         ll_lottonumber.setOnClickListener{
-            (activity as MainActivity).ShowFragmentLotto()
+            (activity as MainActivity).bnv_main.run{
+                selectedItemId = R.id.lotto
+            }
         }
 
         ll_result.setOnClickListener{
-            (activity as MainActivity).ShowFragmentResult()
+            (activity as MainActivity).bnv_main.run{
+                selectedItemId = R.id.result
+            }
         }
     }
 

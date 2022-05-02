@@ -9,6 +9,8 @@ class MyApp : Application() {
         lateinit var prefs: PreferenceUtil
     }
 
+
+
     override fun onCreate() {
         prefs = PreferenceUtil(applicationContext)
         super.onCreate()

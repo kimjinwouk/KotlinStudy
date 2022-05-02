@@ -1,5 +1,8 @@
 package com.kimjinwouk.lotto.Fragment
 
+import android.graphics.Color
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,16 +10,16 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.kimjinwouk.lotto.Adapter.BottomSheetAdapter
 import com.kimjinwouk.lotto.Adapter.ResultAdapter
 import com.kimjinwouk.lotto.DTO.winLotto
 import com.kimjinwouk.lotto.MyApp
@@ -26,8 +29,6 @@ import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -62,9 +63,9 @@ class resultFragment : Fragment() {
 
     private lateinit var lv_1st: ListView
     private lateinit var mAdapter: ResultAdapter
-    private lateinit var gson : Gson
+    private lateinit var gson: Gson
 
-
+    private lateinit var progressDialog: AppCompatDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +73,7 @@ class resultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_result, container, false)
-
+        progressON()
         init(view);
         initListner();
         return view
@@ -122,24 +123,25 @@ class resultFragment : Fragment() {
         tv_date.text = MyApp.prefs.getString("년월일", "")
 
         tv_game_1.text = MyApp.prefs.getString("1번호", "")
-        setNumberBackgroun((tv_game_1.text as String).toInt(),tv_game_1)
+        setNumberBackgroun((tv_game_1.text as String).toInt(), tv_game_1)
         tv_game_2.text = MyApp.prefs.getString("2번호", "")
-        setNumberBackgroun((tv_game_2.text as String).toInt(),tv_game_2)
+        setNumberBackgroun((tv_game_2.text as String).toInt(), tv_game_2)
         tv_game_3.text = MyApp.prefs.getString("3번호", "")
-        setNumberBackgroun((tv_game_3.text as String).toInt(),tv_game_3)
+        setNumberBackgroun((tv_game_3.text as String).toInt(), tv_game_3)
         tv_game_4.text = MyApp.prefs.getString("4번호", "")
-        setNumberBackgroun((tv_game_4.text as String).toInt(),tv_game_4)
+        setNumberBackgroun((tv_game_4.text as String).toInt(), tv_game_4)
         tv_game_5.text = MyApp.prefs.getString("5번호", "")
-        setNumberBackgroun((tv_game_5.text as String).toInt(),tv_game_5)
+        setNumberBackgroun((tv_game_5.text as String).toInt(), tv_game_5)
         tv_game_6.text = MyApp.prefs.getString("6번호", "")
-        setNumberBackgroun((tv_game_6.text as String).toInt(),tv_game_6)
+        setNumberBackgroun((tv_game_6.text as String).toInt(), tv_game_6)
         tv_game_bonus.text = MyApp.prefs.getString("보너스", "")
-        setNumberBackgroun((tv_game_bonus.text as String).toInt(),tv_game_bonus)
+        setNumberBackgroun((tv_game_bonus.text as String).toInt(), tv_game_bonus)
 
 
         tv_1st_cost_top.text = MyApp.prefs.getString("1등_당첨금", "")
         tv_1st_cost.text = MyApp.prefs.getString("1등_당첨금", "")
         tv_1st_cnt.text = MyApp.prefs.getString("1등_당첨수", "")
+
         tv_2st_cost.text = MyApp.prefs.getString("2등_당첨금", "")
         tv_2st_cnt.text = MyApp.prefs.getString("2등_당첨수", "")
 
@@ -152,19 +154,17 @@ class resultFragment : Fragment() {
         tv_5st_cost.text = MyApp.prefs.getString("5등_당첨금", "")
         tv_5st_cnt.text = MyApp.prefs.getString("5등_당첨수", "")
 
-        val doc : Document = Jsoup.parse(MyApp.prefs.getString("당첨판매점",""))
+        val doc: Document = Jsoup.parse(MyApp.prefs.getString("당첨판매점", ""))
 
-        val element : Element = doc
+        val element: Element = doc
         //로또 1등부터 마지막 등수까지의 전체
 
 
-        val test : String = MyApp.prefs.getString("당첨판매점","").toString()
-        winLottoData = gson.fromJson(test,
+        val test: String = MyApp.prefs.getString("당첨판매점", "").toString()
+        winLottoData = gson.fromJson(
+            test,
             object : TypeToken<ArrayList<winLotto?>>() {}.type
         )
-
-
-
 
 /*
         (Jsoup.parse(MyApp.prefs.getString("당첨판매점","")) as Element).children().forEachIndexed { index, element ->
@@ -178,9 +178,7 @@ class resultFragment : Fragment() {
  */
         mAdapter = ResultAdapter(winLottoData)
         lv_1st.adapter = mAdapter
-
-
-
+        progressOFF()
     }
 
     private fun initCrawling() {
@@ -197,25 +195,24 @@ class resultFragment : Fragment() {
         val test: String = MyApp.prefs.getString("년월일", "(2022년 01월 01일)")
 
         val Result = Calendar.getInstance()
-        Result.set(Calendar.YEAR,test.split(" ")[0].substring(1,5).toInt())
-        Result.set(Calendar.MONTH,test.split(" ")[1].substring(0,2).toInt()-1)
-        Result.set(Calendar.DAY_OF_MONTH,test.split(" ")[2].substring(0,2).toInt())
-        Result.set(Calendar.HOUR_OF_DAY,21)
+        Result.set(Calendar.YEAR, test.split(" ")[0].substring(1, 5).toInt())
+        Result.set(Calendar.MONTH, test.split(" ")[1].substring(0, 2).toInt() - 1)
+        Result.set(Calendar.DAY_OF_MONTH, test.split(" ")[2].substring(0, 2).toInt())
+        Result.set(Calendar.HOUR_OF_DAY, 21)
 
         val Today = Calendar.getInstance()
 
-            Today.set(Calendar.YEAR,2022)
-            Today.set(Calendar.MONTH,3)
-            Today.set(Calendar.DAY_OF_MONTH,30)
-            Today.set(Calendar.HOUR_OF_DAY,21)
+        Today.set(Calendar.YEAR, 2022)
+        Today.set(Calendar.MONTH, 3)
+        Today.set(Calendar.DAY_OF_MONTH, 30)
+        Today.set(Calendar.HOUR_OF_DAY, 21)
 
-        val day = (getIgnoredTimeDays(Today.timeInMillis) -  getIgnoredTimeDays(Result.timeInMillis)) / (24*60*60*1000)
+        val day =
+            (getIgnoredTimeDays(Today.timeInMillis) - getIgnoredTimeDays(Result.timeInMillis)) / (24 * 60 * 60 * 1000)
 
-        if (day >= 7)
-        {
+        if (day >= 7) {
             reNewData()
-        }else
-        {
+        } else {
             uiUpdate()
         }
     }
@@ -231,10 +228,9 @@ class resultFragment : Fragment() {
     }
 
 
-    private fun reNewData()
-    {
+    private fun reNewData() {
         CoroutineScope(Dispatchers.Main).launch {
-             CoroutineScope(Dispatchers.IO).async {
+            CoroutineScope(Dispatchers.IO).async {
                 getNumber()
                 getData()
             }.await()
@@ -243,12 +239,12 @@ class resultFragment : Fragment() {
     }
 
 
-    private fun getIgnoredTimeDays(time: Long) : Long {
+    private fun getIgnoredTimeDays(time: Long): Long {
         return Calendar.getInstance().apply {
             timeInMillis = time
-            set(Calendar.MINUTE,0)
-            set(Calendar.SECOND,0)
-            set(Calendar.MILLISECOND,0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }.timeInMillis
     }
 
@@ -261,7 +257,7 @@ class resultFragment : Fragment() {
             ct_shop_list.visibility = GONE
         }
 
-        tv_text_shop_list.setOnClickListener{
+        tv_text_shop_list.setOnClickListener {
             tv_text_result.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
             tv_text_shop_list.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
             ct_result.visibility = GONE
@@ -269,30 +265,26 @@ class resultFragment : Fragment() {
         }
     }
 
-    private fun getDataPasing(doc: Document){
+    private fun getDataPasing(doc: Document) {
 
 
+        //로또 1등부터 마지막 등수까지의 전체
+        doc.select("html body div section div div div div.group_content")[0].select("table tbody")[0].children()
+            .forEachIndexed { index, element ->
+                val _winLotto = winLotto(
+                    element.select("td")[1].text(),
+                    element.select("td")[2].text(),
+                    element.select("td")[3].text()
+                )
+                winLottoData.add(_winLotto)
+            }
 
 
-       //로또 1등부터 마지막 등수까지의 전체
-        doc.select("html body div section div div div div.group_content")[0].select("table tbody")[0].children().forEachIndexed { index, element ->
-            val _winLotto =  winLotto(
-                element.select("td")[1].text(),
-                element.select("td")[2].text(),
-                element.select("td")[3].text()
-            )
-            winLottoData.add(_winLotto)
-        }
-
-
-        MyApp.prefs.setString("당첨판매점",gson.toJson(winLottoData))
+        MyApp.prefs.setString("당첨판매점", gson.toJson(winLottoData))
     }
 
 
-
-
-    suspend fun getData(): Boolean
-    {
+    suspend fun getData(): Boolean {
         Log.d("coroutine Dispatchers.IO start", "test") // 페이지 끝 여부 var isEnd = false
         var isEnd = false
         var contentData: Element
@@ -301,7 +293,6 @@ class resultFragment : Fragment() {
             val url = "https://dhlottery.co.kr/store.do?method=topStore&pageGubun=L645"
             val doc = Jsoup.connect(url).timeout(1000 * 10).get()  //타임아웃 10초
             getDataPasing(doc)
-
 
 
         } catch (httpStatusException: HttpStatusException) {
@@ -321,13 +312,11 @@ class resultFragment : Fragment() {
         return isEnd
     }
 
-    private fun uiUpdate()
-    {
+    private fun uiUpdate() {
         valueSetting()
     }
 
-    suspend fun getNumber(): Boolean
-    {
+    suspend fun getNumber(): Boolean {
         Log.d("coroutine Dispatchers.IO start", "test") // 페이지 끝 여부 var isEnd = false
         var isEnd = false
         var contentData: Element
@@ -478,9 +467,31 @@ class resultFragment : Fragment() {
             "5등_당첨금",
             doc.select("html body div section div div div table tbody tr")[4].select("td")[3].text()
         )
+    }
 
+    fun progressON() {
+        progressDialog = AppCompatDialog(requireContext())
+        progressDialog.setCancelable(false)
+        progressDialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        progressDialog.setContentView(R.layout.progress_result)
+        progressDialog.show()
+        var img_loading_framge = progressDialog.findViewById<ImageView>(R.id.iv_frame_loading)
+        var frameAnimation = img_loading_framge?.getBackground() as AnimationDrawable
+        img_loading_framge?.post(object : Runnable {
+            override fun run() {
+                frameAnimation.start()
+            }
+        })
 
-
+        var tv_progress_message = progressDialog.findViewById<TextView>(R.id.tv_progress_message)
+        tv_progress_message?.text = "데이터 불러오는 중.."
 
     }
+
+    fun progressOFF() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss()
+        }
+    }
+
 }
