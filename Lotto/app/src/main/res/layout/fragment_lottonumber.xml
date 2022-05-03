@@ -20,7 +20,7 @@
         android:fontFamily="@font/gmarketsansttfmedium"
         android:textSize="@dimen/txtsize_option_26"
         android:paddingTop="@dimen/padding_option_20"
-        android:paddingLeft="@dimen/padding_option_20"
+        android:layout_marginLeft="@dimen/padding_option_10"
         />
 
     <TextView
@@ -34,7 +34,7 @@
         android:fontFamily="@font/gmarketsansttfmedium"
         android:textSize="@dimen/txtsize_option_16"
         android:paddingTop="@dimen/padding_option_20"
-        android:paddingLeft="@dimen/padding_option_20"
+        android:layout_marginLeft="@dimen/padding_option_10"
         />
 
     <LinearLayout
@@ -45,11 +45,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:orientation="horizontal"
-        android:paddingRight="@dimen/padding_option_5"
-        android:paddingLeft="@dimen/padding_option_5"
         android:paddingTop="@dimen/padding_option_10"
         android:paddingBottom="@dimen/padding_option_10"
-        android:layout_margin="@dimen/padding_option_20"
+        android:layout_margin="@dimen/padding_option_10"
         android:background="@drawable/lotto_game_background"
         android:gravity="center"
         >
@@ -57,7 +55,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임1"
-            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
             android:textSize="@dimen/txtsize_option_14"
@@ -151,7 +148,7 @@
         android:paddingLeft="@dimen/padding_option_5"
         android:paddingTop="@dimen/padding_option_10"
         android:paddingBottom="@dimen/padding_option_10"
-        android:layout_margin="@dimen/padding_option_20"
+        android:layout_margin="@dimen/padding_option_10"
         android:background="@drawable/lotto_game_background"
         android:gravity="center"
         >
@@ -159,7 +156,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임2"
-            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
             android:textSize="@dimen/txtsize_option_14"
@@ -253,7 +249,7 @@
         android:paddingLeft="@dimen/padding_option_5"
         android:paddingTop="@dimen/padding_option_10"
         android:paddingBottom="@dimen/padding_option_10"
-        android:layout_margin="@dimen/padding_option_20"
+        android:layout_margin="@dimen/padding_option_10"
         android:background="@drawable/lotto_game_background"
         android:gravity="center"
         >
@@ -261,7 +257,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임3"
-            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
             android:textSize="@dimen/txtsize_option_14"
@@ -354,7 +349,7 @@
         android:paddingLeft="@dimen/padding_option_5"
         android:paddingTop="@dimen/padding_option_10"
         android:paddingBottom="@dimen/padding_option_10"
-        android:layout_margin="@dimen/padding_option_20"
+        android:layout_margin="@dimen/padding_option_10"
         android:background="@drawable/lotto_game_background"
         android:gravity="center"
         >
@@ -362,7 +357,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임4"
-            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
             android:textSize="@dimen/txtsize_option_14"
@@ -455,7 +449,7 @@
         android:paddingLeft="@dimen/padding_option_5"
         android:paddingTop="@dimen/padding_option_10"
         android:paddingBottom="@dimen/padding_option_10"
-        android:layout_margin="@dimen/padding_option_20"
+        android:layout_margin="@dimen/padding_option_10"
         android:background="@drawable/lotto_game_background"
         android:gravity="center"
         >
@@ -463,7 +457,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="게임5"
-            android:layout_margin="@dimen/padding_option_5"
             android:gravity="center"
             android:textColor="#505050"
             android:textSize="@dimen/txtsize_option_14"
