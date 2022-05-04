@@ -11,6 +11,7 @@
 
 
     <dimen name="txtsize_option_30">30sp</dimen>
+    <dimen name="txtsize_option_28">28sp</dimen>
     <dimen name="txtsize_option_18">18sp</dimen>
     <dimen name="txtsize_option_16">16sp</dimen>
     <dimen name="txtsize_option_14">14sp</dimen>

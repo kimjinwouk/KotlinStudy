@@ -6,35 +6,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_option_10"
+
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tv_text_result"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_result_top"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gmarketsansttfmedium"
-        android:padding="@dimen/padding_option_10"
-        android:text="당첨현황"
-        android:textColor="@color/black"
-        android:textSize="@dimen/txtsize_option_26"
-        android:textStyle="bold"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingLeft="@dimen/padding_option_10"
+        android:paddingRight="@dimen/padding_option_10"
+        android:paddingTop="@dimen/padding_option_20"
+        android:background="@drawable/result_top_menu">
+        <TextView
+            android:id="@+id/tv_text_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gmarketsansttfmedium"
+            android:padding="@dimen/padding_option_10"
+            android:text="당첨현황"
+            android:textColor="@color/black"
+            android:textSize="@dimen/txtsize_option_26"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/result_top_menu_seleted"/>
 
 
-    <TextView
-        android:id="@+id/tv_text_shop_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/gmarketsansttfmedium"
-        android:padding="@dimen/padding_option_10"
-        android:text="당첨판매점"
-        android:textColor="#999999"
-        android:textSize="@dimen/txtsize_option_26"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/tv_text_result"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_text_shop_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gmarketsansttfmedium"
+            android:padding="@dimen/padding_option_10"
+            android:text="당첨판매점"
+            android:textColor="#999999"
+            android:textSize="@dimen/txtsize_option_26"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/tv_text_result"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,11 +58,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/padding_option_20"
-        android:padding="@dimen/padding_option_10"
+        android:padding="@dimen/padding_option_20"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_text_result"
+        app:layout_constraintTop_toBottomOf="@+id/ll_result_top"
         android:visibility="visible">
 
         <TextView

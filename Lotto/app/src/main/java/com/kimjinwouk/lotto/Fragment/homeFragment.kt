@@ -30,11 +30,12 @@ class homeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    lateinit var ll_qrcode : LinearLayout
-    lateinit var ll_lottonumber : LinearLayout
+    lateinit var ll_qrcode : ConstraintLayout
+    lateinit var ll_lottonumber : ConstraintLayout
     lateinit var ll_result : ConstraintLayout
     lateinit var ll_place : ConstraintLayout
     lateinit var tv_lotto : TextView
+    lateinit var tv_emoji : TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,6 +61,11 @@ class homeFragment : Fragment() {
         ll_place = view.findViewById(R.id.cl_place)
         ll_result = view.findViewById(R.id.cl_result)
         tv_lotto = view.findViewById(R.id.tv_lotto)
+        tv_emoji = view.findViewById(R.id.emoji_test)
+        val fireWorkUnicode = 0x1F603
+        val emojiText = "${String(Character.toChars(fireWorkUnicode))} 한주를 버티는 행운의 로또구매 잊지마세요."
+        tv_emoji.text=emojiText
+
     }
     private fun initListner()
     {

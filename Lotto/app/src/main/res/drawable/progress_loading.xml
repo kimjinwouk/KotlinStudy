@@ -30,4 +30,5 @@
     <item android:drawable="@drawable/progress_27" android:duration="30"/>
     <item android:drawable="@drawable/progress_28" android:duration="30"/>
     <item android:drawable="@drawable/progress_29" android:duration="30"/>
+    <item android:drawable="@drawable/progress_30" android:duration="30"/>
 </animation-list>

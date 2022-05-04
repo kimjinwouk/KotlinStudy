@@ -178,7 +178,7 @@ class resultFragment : Fragment() {
  */
         mAdapter = ResultAdapter(winLottoData)
         lv_1st.adapter = mAdapter
-        progressOFF()
+        //progressOFF()
     }
 
     private fun initCrawling() {
@@ -252,6 +252,8 @@ class resultFragment : Fragment() {
 
         tv_text_result.setOnClickListener {
             tv_text_result.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            tv_text_result.background = ContextCompat.getDrawable(requireContext(), R.drawable.result_top_menu_seleted)
+            tv_text_shop_list.background = ContextCompat.getDrawable(requireContext(), R.drawable.result_top_menu)
             tv_text_shop_list.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
             ct_result.visibility = VISIBLE
             ct_shop_list.visibility = GONE
@@ -260,6 +262,8 @@ class resultFragment : Fragment() {
         tv_text_shop_list.setOnClickListener {
             tv_text_result.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
             tv_text_shop_list.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            tv_text_shop_list.background = ContextCompat.getDrawable(requireContext(), R.drawable.result_top_menu_seleted)
+            tv_text_result.background = ContextCompat.getDrawable(requireContext(), R.drawable.result_top_menu)
             ct_result.visibility = GONE
             ct_shop_list.visibility = VISIBLE
         }
@@ -482,9 +486,6 @@ class resultFragment : Fragment() {
                 frameAnimation.start()
             }
         })
-
-        var tv_progress_message = progressDialog.findViewById<TextView>(R.id.tv_progress_message)
-        tv_progress_message?.text = "데이터 불러오는 중.."
 
     }
 

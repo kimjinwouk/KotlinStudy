@@ -17,4 +17,5 @@
     <dimen name="txtsize_option_24">21sp</dimen>
     <dimen name="txtsize_option_26">23sp</dimen>
     <dimen name="txtsize_option_30">27sp</dimen>
+    <dimen name="txtsize_option_28">25sp</dimen>
 </resources>
