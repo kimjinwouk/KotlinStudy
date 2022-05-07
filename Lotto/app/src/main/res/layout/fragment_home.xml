@@ -25,7 +25,6 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/gmarketsansttfmedium"
             android:gravity="center_vertical|left"
-            android:paddingLeft="@dimen/padding_option_20"
             android:text="로또 발표까지 \n180시간 남았습니다"
             android:textColor="@color/black"
             android:textSize="@dimen/txtsize_option_30"
@@ -51,12 +50,11 @@
             android:id="@+id/emoji_test"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fontFamily="@font/gmarketsansttfmedium"
+            android:fontFamily="@font/notosanskrmedium"
             android:gravity="center_vertical|left"
-            android:paddingLeft="@dimen/padding_option_20"
             android:text="한주를 버티는 행운의 로또구매 잊지마세요"
             android:textColor="@color/black"
-            android:textSize="@dimen/txtsize_option_16"
+            android:textSize="@dimen/txtsize_option_14"
             android:lineSpacingExtra="10dp"/>
 
 
@@ -101,11 +99,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/notosanskrmedium"
+                android:fontFamily="@font/notosanskrregular"
                 android:gravity="center_vertical"
                 android:text="쉽고 빠르게 확인해보세요"
-                android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_option_18"
+                android:textColor="#454545"
+                android:textSize="@dimen/txtsize_option_14"
                 app:layout_constraintTop_toBottomOf="@+id/menu_1_txt"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -114,13 +112,13 @@
 
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_110"
+            android:layout_height="@dimen/size_110"
             android:src="@drawable/ic_home_qrcode"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="@dimen/padding_option_30"/>
+            android:layout_marginRight="@dimen/padding_option_20"/>
 
 
 
@@ -156,7 +154,7 @@
                 android:gravity="center_vertical"
                 android:text="로또번호 추천"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_option_18"
+                android:textSize="@dimen/txtsize_option_22"
                 android:layout_margin="20dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
@@ -164,26 +162,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/notosanskrmedium"
+                android:fontFamily="@font/notosanskrregular"
                 android:gravity="center_vertical"
-                android:paddingTop="@dimen/padding_option_5"
                 android:text="행운의 번호를 전해드려요"
-                android:textColor="@color/black"
+                android:textColor="#454545"
                 android:textSize="@dimen/txtsize_option_14"
-                android:layout_margin="20dp"
+                android:layout_marginLeft="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/menu_2_txt"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_110"
+            android:layout_height="@dimen/size_110"
             android:src="@drawable/ic_home_recommend"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="@dimen/padding_option_30"/>
+            android:layout_marginRight="@dimen/padding_option_20"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -207,7 +204,7 @@
             android:layout_marginRight="@dimen/padding_option_5"
             android:layout_weight="1"
             android:background="@drawable/home_other_menu"
-            android:padding="@dimen/padding_option_20">
+            android:padding="@dimen/padding_option_10">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -216,17 +213,20 @@
                 android:gravity="center_vertical"
                 android:text="내 주변\n판매점 찾기"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_option_20"
+                android:textSize="@dimen/txtsize_option_22"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:lineSpacingExtra="10dp"/>
+                android:lineSpacingExtra="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_home_place"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -236,7 +236,7 @@
             android:layout_marginLeft="@dimen/padding_option_5"
             android:layout_weight="1"
             android:background="@drawable/home_other_menu"
-            android:padding="@dimen/padding_option_20">
+            android:padding="@dimen/padding_option_10">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -245,9 +245,11 @@
                 android:gravity="center_vertical"
                 android:text="당첨현황"
                 android:textColor="@color/black"
-                android:textSize="@dimen/txtsize_option_20"
+                android:textSize="@dimen/txtsize_option_22"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
 
             <ImageView
                 android:layout_width="wrap_content"

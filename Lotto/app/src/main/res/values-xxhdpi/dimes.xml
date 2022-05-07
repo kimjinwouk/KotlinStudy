@@ -3,6 +3,7 @@
     <!--S21,S20-->
     <dimen name="padding_option_5">5dp</dimen>
     <dimen name="padding_option_10">10dp</dimen>
+    <dimen name="padding_option_15">15dp</dimen>
     <dimen name="padding_option_20">20dp</dimen>
     <dimen name="padding_option_25">25dp</dimen>
     <dimen name="padding_option_30">30dp</dimen>
@@ -15,11 +16,12 @@
     <dimen name="txtsize_option_18">18sp</dimen>
     <dimen name="txtsize_option_16">16sp</dimen>
     <dimen name="txtsize_option_14">14sp</dimen>
+    <dimen name="txtsize_option_22">22sp</dimen>
     <dimen name="txtsize_option_26">26sp</dimen>
     <dimen name="txtsize_option_24">24sp</dimen>
     <dimen name="txtsize_option_20">20sp</dimen>
 
-
+    <dimen name="size_110">110dp</dimen>
 
 
 

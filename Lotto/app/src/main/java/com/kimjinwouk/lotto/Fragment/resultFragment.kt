@@ -178,7 +178,7 @@ class resultFragment : Fragment() {
  */
         mAdapter = ResultAdapter(winLottoData)
         lv_1st.adapter = mAdapter
-        //progressOFF()
+        progressOFF()
     }
 
     private fun initCrawling() {
