@@ -1,5 +1,8 @@
 package com.kimjinwouk.weather
 
+import android.app.ActivityManager
+import android.content.Context
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -44,10 +47,32 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //requestPermission()
-
+        if(!isMyServiceRunning(WeatherSerivce::class.java)){
+            startService(Intent(this, WeatherSerivce::class.java))
+        }
 
     }
 
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        try {
+            val manager =
+                getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            for (service in manager.getRunningServices(
+                Int.MAX_VALUE
+            )) {
+                if (serviceClass.name == service.service.className) {
+                    return true
+                }
+            }
+        } catch (e: Exception) {
+            return false
+        }
+        return false
+    }
+
+    companion object{
+        const val  ACTION_STOP = "${BuildConfig.APPLICATION_ID}.stop"
+    }
 
     override fun onLocationChanged(location: Location) {
         //getCurrentAddress(getYpos(),getXpos())

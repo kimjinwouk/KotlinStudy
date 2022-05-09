@@ -37,7 +37,6 @@ abstract class BaseActivity : AppCompatActivity() {
     val PLACE: Int = 1
     val RUN: Int = 2
 
-
     private var mFusedLocationProviderClient: FusedLocationProviderClient? =
         null // 현재 위치를 가져오기 위한 변수
     private var mLastLocation: Location? = null // 위치 값을 가지고 있는 객체
@@ -50,6 +49,7 @@ abstract class BaseActivity : AppCompatActivity() {
         initLocate()
         createPermissionListeners()
         startLocationUpdates()
+
     }
 
     private fun initLocate() {
