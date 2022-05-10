@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--S6-->
+    <dimen name="padding_option_5">3dp</dimen>
+    <dimen name="padding_option_10">8dp</dimen>
+    <dimen name="padding_option_15">12dp</dimen>
+    <dimen name="padding_option_20">15dp</dimen>
+    <dimen name="padding_option_25">18dp</dimen>
+    <dimen name="padding_option_30">23dp</dimen>
+    <dimen name="padding_option_40">30dp</dimen>
+    <dimen name="padding_option_38">35dp</dimen>
+
+
+    <dimen name="txtsize_option_14">11sp</dimen>
+    <dimen name="txtsize_option_16">13sp</dimen>
+    <dimen name="txtsize_option_18">15sp</dimen>
+    <dimen name="txtsize_option_20">17sp</dimen>
+    <dimen name="txtsize_option_22">19sp</dimen>
+    <dimen name="txtsize_option_24">21sp</dimen>
+    <dimen name="txtsize_option_26">23sp</dimen>
+    <dimen name="txtsize_option_30">27sp</dimen>
+    <dimen name="txtsize_option_28">25sp</dimen>
+
+
+    <dimen name="size_110">88dp</dimen>
+</resources>

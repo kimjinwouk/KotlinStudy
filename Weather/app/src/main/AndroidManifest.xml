@@ -18,6 +18,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
+            android:launchMode="singleTop"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

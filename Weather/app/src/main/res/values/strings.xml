@@ -1,8 +1,26 @@
 <resources>
-    <string name="app_name">날씨</string>
+    <string name="app_name">오렌지로또</string>
+    <string name="btn_Add">추가하기</string>
+    <string name="btn_Reset">초기화</string>
+    <string name="btn_AutoCreate">자동 생성</string>
 
+
+    <string name="ask_for_camera_permission_button">Camera</string>
+    <string name="ask_for_contacts_permission_button">Contacts</string>
+    <string name="ask_for_audio_permission_button">Audio</string>
+    <string name="ask_for_all_permissions_button">Request all</string>
+    <string name="permission_granted_feedback">GRANTED</string>
+    <string name="permission_denied_feedback">DENIED</string>
+    <string name="permission_permanently_denied_feedback">PERMANENTLY DENIED</string>
+    <string name="permission_unknown_feedback">UNKNOWN</string>
+    <string name="all_permissions_denied_feedback">All those permissions are needed for doing some magic</string>
+    <string name="camera_permission_denied_feedback">Camera permission is needed for doing some magic</string>
+    <string name="location_permission_denied_feedback">내 주변 판매점을 보기 위해서 위치 권한이 필요합니다.</string>
+    <string name="audio_permission_denied_dialog_title">Audio permission request</string>
+    <string name="audio_permission_denied_dialog_feedback">Audio recording will not be available until you accept the permission request</string>
     <string name="permission_rationale_title">위치 권한이 필요합니다.</string>
     <string name="permission_rationale_message">내 주변 로또 판매점을 알기 위해 필요한 권한입니다.</string>
-    <string name="location_permission_denied_feedback">내 주변 판매점을 보기 위해서 위치 권한이 필요합니다.</string>
     <string name="permission_rationale_settings_button_text">권한설정</string>
+
+
 </resources>

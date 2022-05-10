@@ -48,17 +48,9 @@ class WeatherSerivce : Service() {
     var mNotificationManager: NotificationManager? = null
     private val mNotificationId = 123
 
-    var rainType = ""       // 강수 형태
-    var humidity = ""       // 습도
-    var sky = ""            // 하늘 상태
-    var temp = ""           // 기온
-    var fcstTime = ""       // 예보시각
-
-
-
     private fun generateForegroundNotification() {
-        val Msg : String =
-                ""
+        val Msg: String =
+            ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val intentMainLanding = Intent(this, MainActivity::class.java)
             val pendingIntent =
@@ -84,20 +76,18 @@ class WeatherSerivce : Service() {
             }
             val builder = NotificationCompat.Builder(this, "service_channel")
 
-            builder.setContentTitle(
-                StringBuilder(resources.getString(R.string.app_name)).append(" 알림 실행중").toString()
-            )
-                .setTicker(
-                    StringBuilder(resources.getString(R.string.app_name)).append("service is running")
-                        .toString()
-                )
-                .setContentText("현재 날씨 들어아갸할 부분" + time.toString()) //                    , swipe down for more options.
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setWhen(0)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
+            builder.apply {
+                setContentTitle(StringBuilder(resources.getString(R.string.app_name)).append(" 알림 실행중").toString())
+                setTicker(StringBuilder(resources.getString(R.string.app_name)).append("service is running").toString())
+                setContentText("현재 날씨 들어아갸할 부분" + time.toString())
+                setSmallIcon(R.drawable.ic_launcher_foreground)
+                setPriority(NotificationCompat.PRIORITY_LOW)
+                setWhen(System.currentTimeMillis())
+                setOnlyAlertOnce(true)
+                setContentIntent(pendingIntent)
+                setOngoing(true)
+            }
+
             if (iconNotification != null) {
                 builder.setLargeIcon(Bitmap.createScaledBitmap(iconNotification!!, 128, 128, false))
             }

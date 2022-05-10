@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_option_10">
+
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="버스카드판매대"
+        android:textColor="@color/black"
+        android:textSize="@dimen/txtsize_option_18"
+        android:fontFamily="@font/gmarketsansttfmedium"
+        android:paddingTop="@dimen/padding_option_10"
+        android:paddingBottom="@dimen/padding_option_10"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
