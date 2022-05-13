@@ -18,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.concurrent.timer
 
 class WeatherSerivce : Service() {
     override fun onBind(intent: Intent?): IBinder? {
@@ -35,9 +36,12 @@ class WeatherSerivce : Service() {
             stopForeground(true)
             stopSelf()
         }
-        timerTask = kotlin.concurrent.timer(period = 60 * 60 * 1000) { // 1시간단위로 수정
-            time++
-            setWeather()
+        else {
+            timerTask = timer(period = 5 * 60 * 1000) { // 20분단위수정
+                Log.d("Weather_MainActivity", "timer돌아가는곳")
+                time++
+                setWeather()
+            }
         }
         return START_STICKY
     }
@@ -49,6 +53,7 @@ class WeatherSerivce : Service() {
     private val mNotificationId = 123
 
     private fun generateForegroundNotification() {
+        Log.d("Weather_MainActivity", "generateForegroundNotification()")
         val Msg: String =
             ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -68,7 +73,7 @@ class WeatherSerivce : Service() {
                 val notificationChannel =
                     NotificationChannel(
                         "service_channel", "Service Notifications",
-                        NotificationManager.IMPORTANCE_MIN
+                        NotificationManager.IMPORTANCE_HIGH
                     )
                 notificationChannel.enableLights(false)
                 notificationChannel.lockscreenVisibility = Notification.VISIBILITY_SECRET
@@ -76,12 +81,27 @@ class WeatherSerivce : Service() {
             }
             val builder = NotificationCompat.Builder(this, "service_channel")
 
+            /*
+            - 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
+            - 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7)
+            (단기) 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4)
+            */
+
+
             builder.apply {
-                setContentTitle(StringBuilder(resources.getString(R.string.app_name)).append(" 알림 실행중").toString())
+                setContentTitle(MyApp.prefs.getString("설정_주소_1","")+" : "+weatherArr[0].temp+"º")
                 setTicker(StringBuilder(resources.getString(R.string.app_name)).append("service is running").toString())
-                setContentText("현재 날씨 들어아갸할 부분" + time.toString())
+                setContentText("하늘 상태 : " +
+                    when (weatherArr[0].sky)
+                    {
+                        "1" -> "맑음"
+                        "3" -> "구름많음"
+                        "4" -> "흐림"
+                        else -> ""
+                    }
+                )
                 setSmallIcon(R.drawable.ic_launcher_foreground)
-                setPriority(NotificationCompat.PRIORITY_LOW)
+                setPriority(NotificationCompat.PRIORITY_HIGH)
                 setWhen(System.currentTimeMillis())
                 setOnlyAlertOnce(true)
                 setContentIntent(pendingIntent)
@@ -94,6 +114,7 @@ class WeatherSerivce : Service() {
             builder.color = resources.getColor(R.color.purple_200)
             notification = builder.build()
             startForeground(mNotificationId, notification)
+            Log.d("Weather_MainActivity", "generateForegroundNotification() - startForeground")
         }
 
     }
@@ -101,8 +122,7 @@ class WeatherSerivce : Service() {
 
     private var base_date = "20210510"  // 발표 일자
     private var base_time = "1400"      // 발표 시각
-    private var nx = "55"               // 예보지점 X 좌표
-    private var ny = "127"              // 예보지점 Y 좌표
+
     private val serviceKey: String = RetroifitManager.API_KEY
     private val dataType: String = "json"
     private val numOfRows: String = "100"
@@ -132,7 +152,7 @@ class WeatherSerivce : Service() {
         }
 
         val callGetWeather = RetroifitManager.service.getWeather(
-            serviceKey, dataType, base_date, base_time, nx, ny, numOfRows
+            serviceKey, dataType, base_date, base_time, MyApp.prefs.getString("설정_nx",""), MyApp.prefs.getString("설정_ny",""), numOfRows
         )
 
 
@@ -171,7 +191,7 @@ class WeatherSerivce : Service() {
             }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
-                Log.d("Weather_MainActivity", "onFailure")
+                Log.d("Weather_MainActivity", "onFailure - "+ t.stackTrace.toString())
             }
 
         }

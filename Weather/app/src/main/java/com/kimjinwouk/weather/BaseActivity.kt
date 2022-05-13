@@ -48,8 +48,8 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initLocate()
         createPermissionListeners()
+        requestPermission()
         startLocationUpdates()
-
     }
 
     private fun initLocate() {

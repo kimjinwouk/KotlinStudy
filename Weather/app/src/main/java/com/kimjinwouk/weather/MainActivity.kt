@@ -10,16 +10,16 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.weather.Adaper.AddressAdapter
 import com.kimjinwouk.weather.Data.Item
+import com.kimjinwouk.weather.Data.ItemAddress
 import com.kimjinwouk.weather.Data.Kakao.Document
 import com.kimjinwouk.weather.Data.Kakao.KakaoData
 import com.kimjinwouk.weather.Data.WeatherData
+import com.kimjinwouk.weather.Dialog.AddressConfirmDailog
 import jxl.Workbook
 import jxl.read.biff.BiffException
 import retrofit2.Call
@@ -56,11 +56,12 @@ class MainActivity : BaseActivity() {
     private lateinit var btn_runService: Button
     private lateinit var btn_stopService: Button
     private lateinit var edt_search: EditText
+    private lateinit var tv_myaddress: TextView
 
     private lateinit var lv_address: ListView
     private lateinit var mAdapter: AddressAdapter
-    private var addressData = ArrayList<String>()
-    private var addressList = mutableListOf<String>()
+    private var addressData = ArrayList<ItemAddress>()
+    private var addressList = mutableListOf<ItemAddress>()
 
     /*
     * 앱실행시
@@ -73,6 +74,7 @@ class MainActivity : BaseActivity() {
         //requestPermission()
         init()
         initListner()
+        UpdateUI()
     }
 
     private fun init() {
@@ -80,11 +82,23 @@ class MainActivity : BaseActivity() {
         btn_stopService = findViewById(R.id.btn_stopService)
         lv_address = findViewById(R.id.lv_address)
         edt_search = findViewById(R.id.edt_search)
+        tv_myaddress = findViewById(R.id.tv_myaddress)
 
         initReadExcel()
         addressData.addAll(addressList)
         mAdapter = AddressAdapter(addressList)
         lv_address.adapter = mAdapter
+    }
+
+    private fun UpdateUI() {
+        Log.d("Weather_MainActivity", "UpdateUI()")
+        tv_myaddress.text =
+            MyApp.prefs.getString("설정_주소", "설정 주소 없음") + "\n" + MyApp.prefs.getString(
+                "선택_주소",
+                "선택 주소 없음"
+            )
+                            
+
     }
 
     private fun initListner() {
@@ -108,12 +122,54 @@ class MainActivity : BaseActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
+                if (edt_search.getText().toString().length == 0)
+                    lv_address.visibility = View.GONE
+
                 val text: String = edt_search.getText().toString()
                 search(text)
             }
         }
 
         )
+
+
+        lv_address.setOnItemClickListener { adapterView, view, i, l ->
+
+            //adapterView.getItemAtPosition(i) 값을 저장.
+            val dialog = AddressConfirmDailog.CustomDialogBuilder()
+                .setTitle("설정")
+                .setDescription((adapterView.getItemAtPosition(0) as ItemAddress).address_full + "\n지역으로 설정할까요?")
+                .setPositiveBtnText("확인")
+                .setNegativeBtnText("취소")
+                .setBtnClickListener(object : AddressConfirmDailog.CustomDialogListener {
+                    override fun onClickPositiveBtn() {
+                        // 확인 버튼 클릭 시
+                        MyApp.prefs.setString(
+                            "선택_주소",
+                            (adapterView.getItemAtPosition(0) as ItemAddress).address_full
+                        )
+                        MyApp.prefs.setString(
+                            "선택_nx",
+                            (adapterView.getItemAtPosition(0) as ItemAddress).nx.toString()
+                        )
+                        MyApp.prefs.setString(
+                            "선택_ny",
+                            (adapterView.getItemAtPosition(0) as ItemAddress).ny.toString()
+                        )
+
+                        UpdateUI()
+
+                    }
+
+                    override fun onClickNegativeBtn() {
+                        // 취소 버튼 클릭 시
+
+                    }
+                })
+                .create()
+            dialog.show(supportFragmentManager, dialog.tag)
+
+        }
     }
 
     fun search(charText: String) {
@@ -128,32 +184,22 @@ class MainActivity : BaseActivity() {
             // 리스트의 모든 데이터를 검색한다.
             for (i in 0 until addressData.size) {
                 // arraylist의 모든 데이터에 입력받은 단어(charText)가 포함되어 있으면 true를 반환한다.
-                if (addressData.get(i).contains(charText)) {
+                if (addressData.get(i).address_full.contains(charText)) {
                     // 검색된 데이터를 리스트에 추가한다.
                     addressList.add(addressData.get(i))
                 }
             }
         }
+        lv_address.visibility =
+            if (charText.length != 0) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
         mAdapter.notifyDataSetChanged()
     }
 
-    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
-        try {
-            val manager =
-                getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            for (service in manager.getRunningServices(
-                Int.MAX_VALUE
-            )) {
-                if (serviceClass.name == service.service.className) {
-                    return true
-                }
-            }
-        } catch (e: Exception) {
-            return false
-        }
-        return false
-    }
 
     companion object {
         const val ACTION_STOP = "${BuildConfig.APPLICATION_ID}.stop"
@@ -164,35 +210,8 @@ class MainActivity : BaseActivity() {
         setAddress()
     }
 
-
-    fun getCurrentAddress(latitude: Double, longitude: Double): String? {
-
-        //지오코더... GPS를 주소로 변환
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val addresses: List<Address>?
-        addresses = try {
-            geocoder.getFromLocation(
-                latitude,
-                longitude,
-                7
-            )
-        } catch (ioException: IOException) {
-            //네트워크 문제
-            Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show()
-            return "지오코더 서비스 사용불가"
-        } catch (illegalArgumentException: IllegalArgumentException) {
-            Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show()
-            return "잘못된 GPS 좌표"
-        }
-        if (addresses == null || addresses.size == 0) {
-            Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show()
-            return "주소 미발견"
-        }
-        val address: Address = addresses[0]
-        return address.getAddressLine(0).toString().toString() + "\n"
-    }
-
     private fun initReadExcel() {
+        Log.d("Weather_MainActivity", "initReadExcel()")
         try {
             val localFile: InputStream = baseContext.resources.assets.open("local_code.xls")
             val wb: Workbook = Workbook.getWorkbook(localFile)
@@ -205,23 +224,30 @@ class MainActivity : BaseActivity() {
                     var row = rowIndexStart
                     while (row < rowTotal) {
                         addressList.add(
-                            if (sheet.getCell(0, row).contents.length > 0) {
-                                sheet.getCell(0, row).contents
-                            } else {
-                                ""
-                            }
-                                    +
-                                    if (sheet.getCell(1, row).contents.length > 0) {
-                                        " " + sheet.getCell(1, row).contents
-                                    } else {
-                                        ""
-                                    }
-                                    +
-                                    if (sheet.getCell(2, row).contents.length > 0) {
-                                        " " + sheet.getCell(2, row).contents
-                                    } else {
-                                        ""
-                                    }
+                            ItemAddress(
+                                if (sheet.getCell(0, row).contents.length > 0) {
+                                    sheet.getCell(0, row).contents
+                                } else {
+                                    ""
+                                }
+                                        +
+                                        if (sheet.getCell(1, row).contents.length > 0) {
+                                            " " + sheet.getCell(1, row).contents
+                                        } else {
+                                            ""
+                                        }
+                                        +
+                                        if (sheet.getCell(2, row).contents.length > 0) {
+                                            " " + sheet.getCell(2, row).contents
+                                        } else {
+                                            ""
+                                        },
+                                sheet.getCell(0, row).contents,
+                                sheet.getCell(1, row).contents,
+                                sheet.getCell(2, row).contents,
+                                sheet.getCell(3, row).contents.toInt(),
+                                sheet.getCell(4, row).contents.toInt()
+                            )
                         )
                         row++
                     }
@@ -260,19 +286,38 @@ class MainActivity : BaseActivity() {
                             )
                         ) {
                             if (addCode_2.length == 0) {
-                                nx = sheet.getCell(3, row).contents
-                                ny = sheet.getCell(4, row).contents
+                                MyApp.prefs.setString(
+                                    "설정_nx",
+                                    sheet.getCell(3, row).contents
+                                )
+                                MyApp.prefs.setString(
+                                    "설정_ny",
+                                    sheet.getCell(4, row).contents
+                                )
+
                                 row = rowTotal
                                 break;
                             } else if (addCode_2.equals(sheet.getCell(1, row).contents)) {
                                 if (addCode_3.length == 0) {
-                                    nx = sheet.getCell(3, row).contents
-                                    ny = sheet.getCell(4, row).contents
+                                    MyApp.prefs.setString(
+                                        "설정_nx",
+                                        sheet.getCell(3, row).contents
+                                    )
+                                    MyApp.prefs.setString(
+                                        "설정_ny",
+                                        sheet.getCell(4, row).contents
+                                    )
                                     row = rowTotal
                                     break;
                                 } else if (addCode_3.equals(sheet.getCell(2, row).contents)) {
-                                    nx = sheet.getCell(3, row).contents
-                                    ny = sheet.getCell(4, row).contents
+                                    MyApp.prefs.setString(
+                                        "설정_nx",
+                                        sheet.getCell(3, row).contents
+                                    )
+                                    MyApp.prefs.setString(
+                                        "설정_ny",
+                                        sheet.getCell(4, row).contents
+                                    )
                                     row = rowTotal
                                     break;
                                 }
@@ -280,6 +325,7 @@ class MainActivity : BaseActivity() {
                         }
                         row++
                     }
+                    UpdateUI()
                 }
             }
         } catch (e: IOException) {
@@ -290,9 +336,11 @@ class MainActivity : BaseActivity() {
             e.printStackTrace()
         }
 
-        setWeather()
+
     }
 
+
+/*
     private fun setWeather() {
         // 준비 단계 : base_date(발표 일자), base_time(발표 시각)
         // 현재 날짜, 시간 정보 가져오기
@@ -350,8 +398,9 @@ class MainActivity : BaseActivity() {
             }
         })
     }
-
+*/
     private fun setAddress() {
+    Log.d("Weather_MainActivity", "setAddress()")
         val callGetAddress = RetroifitManager.KakaoService.getKakaoAddress(
             KAKAOserviceKey, getXpos(), getYpos()
         )
@@ -370,10 +419,30 @@ class MainActivity : BaseActivity() {
                             addCode_1 = it[i].region_1depth_name
                             addCode_2 = it[i].region_2depth_name
                             addCode_3 = it[i].region_3depth_name
+
+                            MyApp.prefs.setString(
+                                "설정_주소",
+                                addCode_1 + " " + addCode_2 + " " + addCode_3
+                            )
+
+                            MyApp.prefs.setString(
+                                "설정_주소_1",
+                                addCode_1
+                            )
+
+                            MyApp.prefs.setString(
+                                "설정_주소_2",
+                                addCode_2
+                            )
+
+                            MyApp.prefs.setString(
+                                "설정_주소_3",
+                                addCode_3
+                            )
                         }
                     }
+                    readExcel()
                 }
-                readExcel();
             }
 
             override fun onFailure(call: Call<KakaoData>, t: Throwable) {
@@ -390,6 +459,7 @@ class MainActivity : BaseActivity() {
         var fcstTime = ""       // 예보시각
     }
 
+    /*
     // baseTime 설정하기
     private fun getBaseTime(h: String, m: String): String {
         var result = ""
@@ -412,6 +482,8 @@ class MainActivity : BaseActivity() {
 
         return result
     }
+
+     */
 
 
 }
