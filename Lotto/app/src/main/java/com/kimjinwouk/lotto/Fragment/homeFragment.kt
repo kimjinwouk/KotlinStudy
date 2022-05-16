@@ -83,7 +83,6 @@ class homeFragment : Fragment() {
                 selectedItemId = R.id.lotto
             }
         }
-
         ll_result.setOnClickListener{
             (activity as MainActivity).bnv_main.run{
                 selectedItemId = R.id.result
