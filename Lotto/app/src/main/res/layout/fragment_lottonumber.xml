@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:paddingTop="@dimen/padding_option_40"
+    android:paddingTop="@dimen/padding_option_20"
     android:paddingLeft="@dimen/padding_option_10"
     android:paddingRight="@dimen/padding_option_10">
 
@@ -19,7 +19,7 @@
         android:textColor="@color/black"
         android:fontFamily="@font/gmarketsansttfmedium"
         android:textSize="@dimen/txtsize_option_26"
-        android:paddingTop="@dimen/padding_option_20"
+        android:paddingTop="@dimen/padding_option_15"
         android:layout_marginLeft="@dimen/padding_option_10"
         />
 

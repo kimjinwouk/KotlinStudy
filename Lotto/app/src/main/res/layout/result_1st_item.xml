@@ -17,9 +17,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/txtsize_option_18"
         android:textStyle="bold"
-        android:fontFamily="@font/gmarketsansttfmedium"
-        android:paddingTop="@dimen/padding_option_10"
-        android:paddingBottom="@dimen/padding_option_10"
+        android:fontFamily="@font/notosanskrregular"
+
         />
 
     <TextView
@@ -31,8 +30,8 @@
         android:text="장소"
         android:textColor="#999999"
         android:textSize="@dimen/txtsize_option_16"
-        android:paddingTop="@dimen/padding_option_5"
-        android:paddingBottom="@dimen/padding_option_5"
+        android:paddingTop="@dimen/padding_option_3"
+        android:paddingBottom="@dimen/padding_option_3"
         />
 
     <TextView
@@ -43,13 +42,13 @@
         app:layout_constraintLeft_toRightOf="@+id/tv_address"
         app:layout_constraintBottom_toBottomOf="@id/tv_address"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="@dimen/padding_option_30"
+        android:layout_marginLeft="@dimen/padding_option_10"
         android:text="서울 관악구 신림로 1234서울 관악구 신림로 12345서울 관악구 신림로 12345서울 관악구 신림로 12345서울 관악구 신림로 12345서울 관악구 신림로 123455"
         android:ellipsize="end"
         android:textColor="@color/black"
         android:textSize="@dimen/txtsize_option_16"
-        android:paddingTop="@dimen/padding_option_5"
-        android:paddingBottom="@dimen/padding_option_5"
+        android:paddingTop="@dimen/padding_option_3"
+        android:paddingBottom="@dimen/padding_option_3"
         />
 
 
@@ -62,8 +61,8 @@
         android:text="구분"
         android:textColor="#999999"
         android:textSize="@dimen/txtsize_option_16"
-        android:paddingTop="@dimen/padding_option_5"
-        android:paddingBottom="@dimen/padding_option_5"
+        android:paddingTop="@dimen/padding_option_3"
+        android:paddingBottom="@dimen/padding_option_3"
         />
 
     <TextView
@@ -73,12 +72,12 @@
         app:layout_constraintLeft_toRightOf="@+id/tv_type"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/tv_type"
-        android:layout_marginLeft="@dimen/padding_option_30"
+        android:layout_marginLeft="@dimen/padding_option_10"
         android:text="수동"
         android:textColor="@color/black"
         android:textSize="@dimen/txtsize_option_16"
-        android:paddingTop="@dimen/padding_option_5"
-        android:paddingBottom="@dimen/padding_option_5"
+        android:paddingTop="@dimen/padding_option_3"
+        android:paddingBottom="@dimen/padding_option_3"
         />
 
 

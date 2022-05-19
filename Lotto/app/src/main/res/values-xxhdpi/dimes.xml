@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--S21,S20-->
+    <dimen name="padding_option_3">3dp</dimen>
     <dimen name="padding_option_5">5dp</dimen>
     <dimen name="padding_option_10">10dp</dimen>
     <dimen name="padding_option_15">15dp</dimen>
