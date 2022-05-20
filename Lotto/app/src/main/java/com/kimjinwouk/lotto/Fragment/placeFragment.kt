@@ -100,7 +100,6 @@ class placeFragment : Fragment() {
                 mapPoint = MapPoint.mapPointWithGeoCoord( mKakaoDocument[index].y.toDouble(),mKakaoDocument[index].x.toDouble())
                 markerType = MapPOIItem.MarkerType.CustomImage
                 customImageResourceId = R.drawable.ic_place_locate
-                selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                 isCustomImageAutoscale = false
                 setCustomImageAnchor(0f, -1.0f)
                 isShowDisclosureButtonOnCalloutBalloon = false
