@@ -30,7 +30,9 @@ import com.kimjinwouk.lotto.Permission.SamplePermissionListener
 
 abstract class BaseActivity : AppCompatActivity() {
 
-
+    companion object {
+        const val ACTION_STOP = "${BuildConfig.APPLICATION_ID}.stop"
+    }
     private var locationPermissionListener: MultiplePermissionsListener? = null
     private var errorListener: PermissionRequestErrorListener? = null
     val HOME: Int = 0
@@ -155,12 +157,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showPermissionGranted(permission: String) {
-        Toast.makeText(this, permission, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, permission, Toast.LENGTH_LONG).show()
         startLocationUpdates()
     }
 
     open fun showPermissionDenied(permission: String, isPermanentlyDenied: Boolean) {
-        Toast.makeText(this, permission, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, permission, Toast.LENGTH_LONG).show()
     }
 
     open fun permissionResult(int: Int) {

@@ -7,11 +7,18 @@ class PreferenceUtil(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("Lotto", Context.MODE_PRIVATE)
 
+    fun getPrefs() : SharedPreferences
+    {
+        return prefs
+    }
     fun getString(key: String, defValue: String): String {
         return prefs.getString(key, defValue).toString()
+
     }
 
     fun setString(key: String, str: String) {
         prefs.edit().putString(key, str).apply()
     }
+
+
 }

@@ -11,9 +11,10 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
+import com.kimjinwouk.weather.BaseActivity.Companion.ACTION_STOP
 import com.kimjinwouk.weather.Data.Item
 import com.kimjinwouk.weather.Data.WeatherData
-import com.kimjinwouk.weather.MainActivity.Companion.ACTION_STOP
+
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
@@ -24,6 +25,7 @@ class WeatherSerivce : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
+
 
 
     private var timerTask: Timer? = null
@@ -51,11 +53,11 @@ class WeatherSerivce : Service() {
     private var notification: Notification? = null
     var mNotificationManager: NotificationManager? = null
     private val mNotificationId = 123
-
+    private var isSelected : String = MyApp.prefs.getString("선택여부","")
     private fun generateForegroundNotification() {
         Log.d("Weather_MainActivity", "generateForegroundNotification()")
-        val Msg: String =
-            ""
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val intentMainLanding = Intent(this, MainActivity::class.java)
             val pendingIntent =
@@ -88,18 +90,11 @@ class WeatherSerivce : Service() {
             */
 
 
+
             builder.apply {
-                setContentTitle(MyApp.prefs.getString("설정_주소_1","")+" : "+weatherArr[0].temp+"º")
+                setContentTitle(getContentTitle()+" : "+weatherArr[0].temp+"º")
                 setTicker(StringBuilder(resources.getString(R.string.app_name)).append("service is running").toString())
-                setContentText("하늘 상태 : " +
-                    when (weatherArr[0].sky)
-                    {
-                        "1" -> "맑음"
-                        "3" -> "구름많음"
-                        "4" -> "흐림"
-                        else -> ""
-                    }
-                )
+                setContentText(getContentText())
                 setSmallIcon(R.drawable.ic_launcher_foreground)
                 setPriority(NotificationCompat.PRIORITY_HIGH)
                 setWhen(System.currentTimeMillis())
@@ -119,6 +114,19 @@ class WeatherSerivce : Service() {
 
     }
 
+    private fun getContentTitle():String{
+        if (isSelected.equals("")) { return MyApp.prefs.getString("설정_주소","") } else { return MyApp.prefs.getString("선택_주소","") }
+    }
+    private fun getContentText():String{
+        return "하늘 상태 : " +
+                when (weatherArr[0].sky)
+                {
+                    "1" -> "맑음"
+                    "3" -> "구름많음"
+                    "4" -> "흐림"
+                    else -> ""
+                }
+    }
 
     private var base_date = "20210510"  // 발표 일자
     private var base_time = "1400"      // 발표 시각
@@ -152,7 +160,10 @@ class WeatherSerivce : Service() {
         }
 
         val callGetWeather = RetroifitManager.service.getWeather(
-            serviceKey, dataType, base_date, base_time, MyApp.prefs.getString("설정_nx",""), MyApp.prefs.getString("설정_ny",""), numOfRows
+            serviceKey, dataType, base_date, base_time,
+            if (isSelected.equals("")) { MyApp.prefs.getString("설정_nx","") } else { MyApp.prefs.getString("선택_nx","") } ,
+            if (isSelected.equals("")) { MyApp.prefs.getString("설정_ny","") } else { MyApp.prefs.getString("선택_ny","") } ,
+            numOfRows
         )
 
 

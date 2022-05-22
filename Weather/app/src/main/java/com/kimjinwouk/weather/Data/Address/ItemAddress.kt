@@ -7,4 +7,6 @@ data class ItemAddress(
     val address_3: String, // 신천동
     val nx: Int,
     val ny: Int,
+    val xpos : Double,
+    val ypos : Double
 )

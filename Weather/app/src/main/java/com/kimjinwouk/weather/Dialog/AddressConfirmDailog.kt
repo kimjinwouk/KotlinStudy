@@ -45,13 +45,13 @@ class AddressConfirmDailog()  : DialogFragment() {
             findViewById<Button>(R.id.btn_negative)?.text = negativeBtnText
             findViewById<Button>(R.id.btn_negative)?.setOnClickListener {
                 dismiss()
-                listener?.onClickPositiveBtn()
+                listener?.onClickNegativeBtn()
             }
 
             findViewById<Button>(R.id.btn_positive)?.text = positiveBtnText
             findViewById<Button>(R.id.btn_positive)?.setOnClickListener {
                 dismiss()
-                listener?.onClickNegativeBtn()
+                listener?.onClickPositiveBtn()
             }
         }
     }
