@@ -140,19 +140,19 @@ class resultFragment : Fragment() {
 
         tv_1st_cost_top.text = MyApp.prefs.getString("1등_당첨금", "")
         tv_1st_cost.text = MyApp.prefs.getString("1등_당첨금", "")
-        tv_1st_cnt.text = MyApp.prefs.getString("1등_당첨수", "")
+        tv_1st_cnt.text = MyApp.prefs.getString("1등_당첨수", "")+"명"
 
         tv_2st_cost.text = MyApp.prefs.getString("2등_당첨금", "")
-        tv_2st_cnt.text = MyApp.prefs.getString("2등_당첨수", "")
+        tv_2st_cnt.text = MyApp.prefs.getString("2등_당첨수", "")+"명"
 
         tv_3st_cost.text = MyApp.prefs.getString("3등_당첨금", "")
-        tv_3st_cnt.text = MyApp.prefs.getString("3등_당첨수", "")
+        tv_3st_cnt.text = MyApp.prefs.getString("3등_당첨수", "")+"명"
 
         tv_4st_cost.text = MyApp.prefs.getString("4등_당첨금", "")
-        tv_4st_cnt.text = MyApp.prefs.getString("4등_당첨수", "")
+        tv_4st_cnt.text = MyApp.prefs.getString("4등_당첨수", "")+"명"
 
         tv_5st_cost.text = MyApp.prefs.getString("5등_당첨금", "")
-        tv_5st_cnt.text = MyApp.prefs.getString("5등_당첨수", "")
+        tv_5st_cnt.text = MyApp.prefs.getString("5등_당첨수", "")+"명"
 
         val doc: Document = Jsoup.parse(MyApp.prefs.getString("당첨판매점", ""))
 

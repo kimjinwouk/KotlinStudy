@@ -19,7 +19,7 @@
         android:textColor="@color/black"
         android:fontFamily="@font/gmarketsansttfmedium"
         android:textSize="@dimen/txtsize_option_26"
-        android:paddingTop="@dimen/padding_option_15"
+        android:paddingTop="@dimen/padding_option_10"
         android:layout_marginLeft="@dimen/padding_option_10"
         />
 
@@ -31,8 +31,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_text_result"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textColor="@color/black"
-        android:fontFamily="@font/notosanskrmedium"
-        android:textSize="@dimen/txtsize_option_16"
+        android:fontFamily="@font/notosanskrregular"
+        android:textSize="@dimen/txtsize_option_14"
         android:paddingTop="@dimen/padding_option_20"
         android:layout_marginLeft="@dimen/padding_option_10"
         />
@@ -60,6 +60,7 @@
             android:textSize="@dimen/txtsize_option_14"
             android:textStyle="bold"
             android:fontFamily="@font/notosanskrregular"
+            android:layout_marginRight="@dimen/padding_option_5"
             />
         <TextView
             android:id="@+id/tv_game_1_1"
@@ -162,6 +163,7 @@
             android:textSize="@dimen/txtsize_option_14"
             android:textStyle="bold"
             android:fontFamily="@font/notosanskrregular"
+            android:layout_marginRight="@dimen/padding_option_5"
             />
         <TextView
             android:id="@+id/tv_game_2_1"
@@ -264,6 +266,7 @@
             android:textSize="@dimen/txtsize_option_14"
             android:textStyle="bold"
             android:fontFamily="@font/notosanskrregular"
+            android:layout_marginRight="@dimen/padding_option_5"
             />
         <TextView
             android:id="@+id/tv_game_3_1"
@@ -365,6 +368,7 @@
             android:textSize="@dimen/txtsize_option_14"
             android:textStyle="bold"
             android:fontFamily="@font/notosanskrregular"
+            android:layout_marginRight="@dimen/padding_option_5"
             />
         <TextView
             android:id="@+id/tv_game_4_1"
@@ -466,6 +470,7 @@
             android:textSize="@dimen/txtsize_option_14"
             android:textStyle="bold"
             android:fontFamily="@font/notosanskrregular"
+            android:layout_marginRight="@dimen/padding_option_5"
             />
         <TextView
             android:id="@+id/tv_game_5_1"

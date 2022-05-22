@@ -3,11 +3,14 @@ package com.kimjinwouk.lotto
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +18,6 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.karumi.dexter.Dexter
-
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequestErrorListener
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener
@@ -25,6 +27,8 @@ import com.karumi.dexter.listener.single.PermissionListener
 import com.kimjinwouk.lotto.Permission.SampleErrorListener
 import com.kimjinwouk.lotto.Permission.SampleMultiplePermissionListener
 import com.kimjinwouk.lotto.Permission.SamplePermissionListener
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -48,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initLocate()
         createPermissionListeners()
-
+        getHashKey()
     }
 
     private fun initLocate() {
@@ -56,6 +60,25 @@ abstract class BaseActivity : AppCompatActivity() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
+    }
+
+    private fun getHashKey() {
+        var packageInfo: PackageInfo? = null
+        try {
+            packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        if (packageInfo == null) Log.e("KeyHash", "KeyHash:null")
+        for (signature in packageInfo!!.signatures) {
+            try {
+                val md: MessageDigest = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            } catch (e: NoSuchAlgorithmException) {
+                Log.e("KeyHash", "Unable to get MessageDigest. signature=$signature", e)
+            }
+        }
     }
 
 
