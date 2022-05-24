@@ -8,11 +8,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.weather.Adaper.AddressAdapter
@@ -45,6 +48,7 @@ class MainActivity : BaseActivity() {
     private lateinit var btn_runService: Button
     private lateinit var edt_myAddress: EditText
     private lateinit var lv_address: ListView
+    private lateinit var toolbar: Toolbar
     private lateinit var mAdapter: AddressAdapter
     private lateinit var KakaoMapContainer: RelativeLayout
 
@@ -66,25 +70,48 @@ class MainActivity : BaseActivity() {
         initListner() // 리스너 초기화
         UpdateUI() // UI 업데이트
 
+        setSupportActionBar(toolbar)    //툴바 사용 설정
+        supportActionBar!!.setDisplayShowTitleEnabled(false)        //타이틀 보이게 설정
+
     }
 
     private fun KakaoMap() {
         KakaoMapView = MapView(this)
         KakaoMapContainer.addView(KakaoMapView)
-
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_btn1 -> {
+                Log.d("Main", "설정클릭")
+                doSetting();
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun doSetting() {
+        val intent = Intent(this, SettingActivity::class.java)
+        startActivity(intent)
+    }
+
 
     private fun init() {
         btn_runService = findViewById(R.id.btn_runService)
         lv_address = findViewById(R.id.lv_address)
         edt_myAddress = findViewById(R.id.edt_myAddress)
         KakaoMapContainer = findViewById(R.id.kakaoMapView)
+        toolbar = findViewById(R.id.toolbar)
         initReadExcel()
         addressData.addAll(addressList)
         mAdapter = AddressAdapter(addressList)
         lv_address.adapter = mAdapter
-
-
     }
 
     private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {

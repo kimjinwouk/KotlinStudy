@@ -1,0 +1,9 @@
+<menu  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_btn1"
+        android:title="설정"
+        android:icon="@android:mipmap/sym_def_app_icon"
+        app:showAsAction="always" />
+
+</menu>

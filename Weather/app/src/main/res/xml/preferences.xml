@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:iconSpaceReserved="false">
+
+    <PreferenceCategory
+        android:title="위치표시"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:key="key_locate"
+            android:title="현재위치 표시"
+            android:summary="현재 또는 지정위치 설정."
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="주소표시"
+        app:iconSpaceReserved="false">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_address_1"
+            android:summary="서울특별시"
+            android:title="특별시/광역시/도"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_address_2"
+            android:summary="종로구"
+            android:title="시/구/군"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_address_3"
+            android:summary="연지동"
+            android:title="읍/면/동"
+            app:iconSpaceReserved="false" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="날씨표시"
+        app:iconSpaceReserved="false">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_weather_thm"
+            android:summary="20º"
+            android:title="온도"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_weather_ksy"
+            android:summary="맑음"
+            android:title="하늘상태"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="key_weather_rain"
+            android:summary="1~5mm"
+            android:title="강수량"
+            app:iconSpaceReserved="false" />
+
+
+    </PreferenceCategory>
+</PreferenceScreen>
+
+
