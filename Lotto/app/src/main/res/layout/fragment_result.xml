@@ -26,13 +26,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gmarketsansttfmedium"
-            android:padding="@dimen/padding_option_10"
+            android:paddingTop="@dimen/padding_option_10"
+            android:paddingBottom="@dimen/padding_option_10"
             android:text="당첨현황"
             android:textColor="@color/black"
             android:textSize="@dimen/txtsize_option_26"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/result_top_menu_seleted"/>
+            android:background="@drawable/result_top_menu_seleted"
+            android:layout_marginLeft="@dimen/padding_option_10"
+            android:layout_marginRight="@dimen/padding_option_10"/>
 
 
         <TextView
@@ -40,12 +43,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/gmarketsansttfmedium"
-            android:padding="@dimen/padding_option_10"
+            android:paddingTop="@dimen/padding_option_10"
+            android:paddingBottom="@dimen/padding_option_10"
             android:text="당첨판매점"
             android:textColor="#999999"
             android:textSize="@dimen/txtsize_option_26"
             app:layout_constraintLeft_toRightOf="@+id/tv_text_result"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="@dimen/padding_option_10"
+            android:layout_marginRight="@dimen/padding_option_10"/>
 
     </LinearLayout>
 
@@ -408,20 +414,21 @@
                     android:text="순위"
                     android:paddingLeft="@dimen/padding_option_5"
                     android:gravity="center_vertical"
-                    android:fontFamily="@font/gmarketsansttfmedium"/>
+                    android:fontFamily="@font/notosanskrregular"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="1인당 당첨금액"
                     android:gravity="center_vertical"
-                    android:fontFamily="@font/gmarketsansttfmedium"/>
+                    android:fontFamily="@font/notosanskrregular"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="당첨자 수"
                     android:gravity="center_vertical"
+                    android:fontFamily="@font/notosanskrregular"
                     />
 
             </TableRow>
