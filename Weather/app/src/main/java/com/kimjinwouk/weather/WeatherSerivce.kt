@@ -27,7 +27,6 @@ class WeatherSerivce : Service() {
     }
 
 
-
     private var timerTask: Timer? = null
     private var time = 0
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -37,8 +36,7 @@ class WeatherSerivce : Service() {
         ) {
             stopForeground(true)
             stopSelf()
-        }
-        else {
+        } else {
             timerTask = timer(period = 5 * 60 * 1000) { // 20분단위수정
                 Log.d("Weather_MainActivity", "timer돌아가는곳")
                 time++
@@ -53,7 +51,7 @@ class WeatherSerivce : Service() {
     private var notification: Notification? = null
     var mNotificationManager: NotificationManager? = null
     private val mNotificationId = 123
-    private var isSelected : String = MyApp.prefs.getString("선택여부","")
+    private var isSelected: Boolean = MyApp.prefs.getBoolean("key_locate", true)
     private fun generateForegroundNotification() {
         Log.d("Weather_MainActivity", "generateForegroundNotification()")
 
@@ -92,8 +90,11 @@ class WeatherSerivce : Service() {
 
 
             builder.apply {
-                setContentTitle(getContentTitle()+" : "+weatherArr[0].temp+"º")
-                setTicker(StringBuilder(resources.getString(R.string.app_name)).append("service is running").toString())
+                setContentTitle(getContentTitle())
+                setTicker(
+                    StringBuilder(resources.getString(R.string.app_name)).append("service is running")
+                        .toString()
+                )
                 setContentText(getContentText())
                 setSmallIcon(R.drawable.ic_launcher_foreground)
                 setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -114,18 +115,111 @@ class WeatherSerivce : Service() {
 
     }
 
-    private fun getContentTitle():String{
-        if (isSelected.equals("")) { return MyApp.prefs.getString("설정_주소","") } else { return MyApp.prefs.getString("선택_주소","") }
-    }
-    private fun getContentText():String{
-        return "하늘 상태 : " +
-                when (weatherArr[0].sky)
-                {
-                    "1" -> "맑음"
-                    "3" -> "구름많음"
-                    "4" -> "흐림"
-                    else -> ""
+    private fun getContentTitle(): String {
+        /*
+        *  key_address_1
+        *  key_address_2
+        *  key_address_3
+        *
+        *  저장값에 따라 어떻게 표시할지 선택.
+        * */
+
+        var Address: String? = ""
+
+        if (isSelected) {
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_1", true)) {
+                    MyApp.prefs.getString("설정_주소_1", "")
+                } else {
+                    ""
                 }
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_2", true)) {
+                    " "+MyApp.prefs.getString("설정_주소_2", "")
+                } else {
+                    ""
+                }
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_3", true)) {
+                    " "+MyApp.prefs.getString("설정_주소_3", "")
+                } else {
+                    ""
+                }
+
+        } else {
+
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_1", true)) {
+                    MyApp.prefs.getString("선택_주소_1", "")
+                } else {
+                    ""
+                }
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_2", true)) {
+                    " "+MyApp.prefs.getString("선택_주소_2", "")
+                } else {
+                    ""
+                }
+
+            Address +=
+                if (MyApp.prefs.getBoolean("key_address_3", true)) {
+                    " "+MyApp.prefs.getString("선택_주소_3", "")
+                } else {
+                    ""
+                }
+        }
+        if (MyApp.prefs.getBoolean("key_weather_thm", true))
+        {
+            Address += " : " + weatherArr[0].temp + "º"
+        }
+        return Address!!
+    }
+
+    private fun getContentText(): String {
+        /*
+       *  key_weather_sky
+       *  key_weather_rain
+       *
+       *  저장값에 따라 어떻게 표시할지 선택.
+       * */
+
+        /*
+- 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
+- 강수형태(PTY) 코드 : (초단기) 없음(0), 비(1), 비/눈(2), 눈(3), 빗방울(5), 빗방울눈날림(6), 눈날림(7)
+
+*/
+        var Weather: String? = ""
+        if (MyApp.prefs.getBoolean("key_weather_sky", true))
+        {
+            Weather += "하늘은 " +
+                    when (weatherArr[0].sky) {
+                        "1" -> "맑음"
+                        "3" -> "구름많음"
+                        "4" -> "흐림"
+                        else -> ""
+                    }
+        }
+
+        if (MyApp.prefs.getBoolean("key_weather_rain", true))
+        {
+            Weather +=
+                    when (weatherArr[0].rainType) {
+                        "1" -> " 그리고 비"
+                        "2" -> " 그리고 비 또는 눈"
+                        "3" -> " 그리고 눈"
+                        "5" -> " 그리고 빗방울"
+                        "6" -> " 그리고 빗방울 또는 눈날림"
+                        "7" -> " 그리고 눈날림"
+                        else -> ""
+                    }
+        }
+
+        return Weather!!
     }
 
     private var base_date = "20210510"  // 발표 일자
@@ -161,8 +255,16 @@ class WeatherSerivce : Service() {
 
         val callGetWeather = RetroifitManager.service.getWeather(
             serviceKey, dataType, base_date, base_time,
-            if (isSelected.equals("")) { MyApp.prefs.getString("설정_nx","") } else { MyApp.prefs.getString("선택_nx","") } ,
-            if (isSelected.equals("")) { MyApp.prefs.getString("설정_ny","") } else { MyApp.prefs.getString("선택_ny","") } ,
+            if (isSelected) {
+                MyApp.prefs.getString("설정_nx", "")
+            } else {
+                MyApp.prefs.getString("선택_nx", "")
+            },
+            if (isSelected) {
+                MyApp.prefs.getString("설정_ny", "")
+            } else {
+                MyApp.prefs.getString("선택_ny", "")
+            },
             numOfRows
         )
 
@@ -202,7 +304,7 @@ class WeatherSerivce : Service() {
             }
 
             override fun onFailure(call: Call<WeatherData>, t: Throwable) {
-                Log.d("Weather_MainActivity", "onFailure - "+ t.stackTrace.toString())
+                Log.d("Weather_MainActivity", "onFailure - " + t.stackTrace.toString())
             }
 
         }

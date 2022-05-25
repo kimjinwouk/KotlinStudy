@@ -25,6 +25,10 @@ import com.kimjinwouk.weather.Data.Kakao.KakaoData
 import com.kimjinwouk.weather.Dialog.AddressConfirmDailog
 import jxl.Workbook
 import jxl.read.biff.BiffException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -75,6 +79,19 @@ class MainActivity : BaseActivity() {
 
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        if(MyApp.prefs.getBoolean("key_edit",false)){
+            //수정된 이력이 있으면
+            startService(Intent(this@MainActivity, WeatherSerivce::class.java))
+            //서비스를 재싱핼하여 수정.
+        }
+
+        UpdateUI()
+
+    }
     private fun KakaoMap() {
         KakaoMapView = MapView(this)
         KakaoMapContainer.addView(KakaoMapView)
@@ -142,9 +159,9 @@ class MainActivity : BaseActivity() {
 
     private fun UpdateUI() {
         Log.d("Weather_MainActivity", "UpdateUI()")
-        var isSelected: String = MyApp.prefs.getString("선택여부", "")
+        var isSelected: Boolean = MyApp.prefs.getBoolean("key_locate", true)
         edt_myAddress.setText(
-            if (isSelected.equals("")) {
+            if (isSelected) {
                 MyApp.prefs.getString("설정_주소", "현재 위치 찾는중..")
             } else {
                 MyApp.prefs.getString("선택_주소", "현재 위치 찾는중..")
@@ -154,12 +171,12 @@ class MainActivity : BaseActivity() {
         //카카오지도 현재위치 셋팅.
         KakaoMapView.setMapCenterPointAndZoomLevel(
             MapPoint.mapPointWithGeoCoord(
-                if (isSelected.equals("")) {
+                if (isSelected) {
                     getYpos()
                 } else {
                     MyApp.prefs.getString("선택_ypos", "").toDouble()
                 },
-                if (isSelected.equals("")) {
+                if (isSelected) {
                     getXpos()
                 } else {
                     MyApp.prefs.getString("선택_xpos", "").toDouble()
@@ -172,18 +189,18 @@ class MainActivity : BaseActivity() {
         KakaoMapView.removeAllPOIItems()
         marker.apply {
             tag = 0
-            itemName = if (isSelected.equals("")) {
+            itemName = if (isSelected) {
                 "현재 내 위치"
             } else {
                 "설정한 위치"
             }
             mapPoint = MapPoint.mapPointWithGeoCoord(
-                if (isSelected.equals("")) {
+                if (isSelected) {
                     getYpos()
                 } else {
                     MyApp.prefs.getString("선택_ypos", "").toDouble()
                 },
-                if (isSelected.equals("")) {
+                if (isSelected) {
                     getXpos()
                 } else {
                     MyApp.prefs.getString("선택_xpos", "").toDouble()
@@ -202,22 +219,25 @@ class MainActivity : BaseActivity() {
 
         SetListViewVisibleState()
 
-        btn_runService.setText(
-            if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                "서비스 위치변경 또는 중지"
-            } else {
-                "서비스 실행하기"
-            }
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(100L)
+            btn_runService.setText(
+                if (isMyServiceRunning(WeatherSerivce::class.java)) {
+                    "서비스 위치변경 또는 중지"
+                } else {
+                    "서비스 실행"
+                }
+            )
+        }
     }
 
     private fun runService() {
 
 
         val dialog = AddressConfirmDailog.CustomDialogBuilder()
-            .setTitle("설정")
+            .setTitle("위치 설정")
             .setDescription(
-                if (MyApp.prefs.getString("선택여부", "").equals("")) {
+                if (MyApp.prefs.getBoolean("key_locate", true)) {
                     MyApp.prefs.getString("설정_주소", "")
                 } else {
                     MyApp.prefs.getString("선택_주소", "")
@@ -232,9 +252,9 @@ class MainActivity : BaseActivity() {
             )
             .setNegativeBtnText(
                 if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                    "취소"
+                    "서비스 중지"
                 } else {
-                    "중지"
+                    "취소"
                 }
             )
             .setBtnClickListener(object : AddressConfirmDailog.CustomDialogListener {
@@ -255,10 +275,16 @@ class MainActivity : BaseActivity() {
             })
             .create()
         dialog.show(supportFragmentManager, dialog.tag)
-
-
     }
 
+    override fun onBackPressed() {
+        if(ListViewVisibleState) {
+            lv_address.visibility = View.GONE
+            ListViewVisibleState = !ListViewVisibleState
+            return
+        }
+        super.onBackPressed()
+    }
     private fun initListner() {
         btn_runService.setOnClickListener {
             runService()
@@ -315,6 +341,7 @@ class MainActivity : BaseActivity() {
 
                     override fun onClickPositiveBtn() {
                         // 확인 버튼 클릭 시
+                        MyApp.prefs.setBoolean("key_locate",false)
                         MyApp.prefs.getPrefs().edit(true) {
                             putString(
                                 "선택여부",
@@ -353,6 +380,7 @@ class MainActivity : BaseActivity() {
                                 (adapterView.getItemAtPosition(0) as ItemAddress).ypos.toString()
                             )
                         }
+
 
                         UpdateUI()
                     }

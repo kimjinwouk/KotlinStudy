@@ -58,7 +58,7 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="key_weather_ksy"
+            android:key="key_weather_sky"
             android:summary="맑음"
             android:title="하늘상태"
             app:iconSpaceReserved="false" />

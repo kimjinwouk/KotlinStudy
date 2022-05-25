@@ -32,16 +32,36 @@ class SettingPreferences : PreferenceFragmentCompat(){
     {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(activity)
+        MyApp.prefs.setBoolean("key_edit",false)
         m_SwAddr1 = (preferenceScreen.findPreference<SwitchPreference>("key_locate") as SwitchPreference)
         m_CkbAddr1 = (preferenceScreen.findPreference<CheckBoxPreference>("key_address_1") as CheckBoxPreference)
         m_CkbAddr2 = (preferenceScreen.findPreference<CheckBoxPreference>("key_address_2") as CheckBoxPreference)
         m_CkbAddr3 = (preferenceScreen.findPreference<CheckBoxPreference>("key_address_3") as CheckBoxPreference)
         m_CkbAddr4 = (preferenceScreen.findPreference<CheckBoxPreference>("key_weather_thm") as CheckBoxPreference)
-        m_CkbAddr5 = (preferenceScreen.findPreference<CheckBoxPreference>("key_weather_ksy") as CheckBoxPreference)
+        m_CkbAddr5 = (preferenceScreen.findPreference<CheckBoxPreference>("key_weather_sky") as CheckBoxPreference)
         m_CkbAddr6 = (preferenceScreen.findPreference<CheckBoxPreference>("key_weather_rain") as CheckBoxPreference)
 
 
 
+    }
+
+    private fun UpdateUI()
+    {
+        val summary = prefs.getBoolean("key_locate", false)
+        m_SwAddr1.title = if (summary)
+        {
+            "현재위치 표시"
+        }else
+        {
+            "설정위치 표시"
+        }
+        m_SwAddr1.summary = if (summary)
+        {
+            "현재 단말기의 위치로 설정한다."
+        }else
+        {
+            "지정된 위치로 설정한다."
+        }
     }
 
 
@@ -49,6 +69,7 @@ class SettingPreferences : PreferenceFragmentCompat(){
         SharedPreferences.OnSharedPreferenceChangeListener {
                 sharedPreferences: SharedPreferences?, key: String? ->
             // key는 xml에 등록된 key에 해당
+            MyApp.prefs.setBoolean("key_edit",true)
             when (key) {
                 "key_locate" -> {
                     // SharedPreferences에 저장된 값을 가져와서 summary 설정
@@ -74,6 +95,7 @@ class SettingPreferences : PreferenceFragmentCompat(){
     // 리스너 등록
     override fun onResume() {
         super.onResume()
+        UpdateUI()
         prefs.registerOnSharedPreferenceChangeListener(prefListener)
     }
 
