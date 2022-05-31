@@ -3,7 +3,7 @@
 
     <item android:id="@+id/action_btn1"
         android:title="설정"
-        android:icon="@android:mipmap/sym_def_app_icon"
+        android:icon="@drawable/ic_setting"
         app:showAsAction="always" />
 
 </menu>

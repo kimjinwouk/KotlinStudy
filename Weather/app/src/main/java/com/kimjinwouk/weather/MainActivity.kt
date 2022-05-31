@@ -87,6 +87,7 @@ class MainActivity : BaseActivity() {
             //수정된 이력이 있으면
             startService(Intent(this@MainActivity, WeatherSerivce::class.java))
             //서비스를 재싱핼하여 수정.
+            MyApp.prefs.setBoolean("key_edit",false)
         }
 
         UpdateUI()

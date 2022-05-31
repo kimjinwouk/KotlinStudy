@@ -28,7 +28,7 @@ class WeatherSerivce : Service() {
 
 
     private var timerTask: Timer? = null
-    private var time = 0
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action != null && intent.action!!.equals(
                 ACTION_STOP
@@ -39,7 +39,6 @@ class WeatherSerivce : Service() {
         } else {
             timerTask = timer(period = 5 * 60 * 1000) { // 20분단위수정
                 Log.d("Weather_MainActivity", "timer돌아가는곳")
-                time++
                 setWeather()
             }
         }
