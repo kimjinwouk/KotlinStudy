@@ -201,12 +201,12 @@ class resultFragment : Fragment() {
         Result.set(Calendar.HOUR_OF_DAY, 21)
 
         val Today = Calendar.getInstance()
-
+/*
         Today.set(Calendar.YEAR, 2022)
         Today.set(Calendar.MONTH, 3)
         Today.set(Calendar.DAY_OF_MONTH, 30)
         Today.set(Calendar.HOUR_OF_DAY, 21)
-
+*/
         val day =
             (getIgnoredTimeDays(Today.timeInMillis) - getIgnoredTimeDays(Result.timeInMillis)) / (24 * 60 * 60 * 1000)
 
