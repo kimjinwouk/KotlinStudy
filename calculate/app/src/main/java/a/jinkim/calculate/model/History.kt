@@ -1,7 +1,11 @@
 package a.jinkim.calculate.model
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 data class History (
-    val uid: Int ?,
-    val expression: String?,
-    val result: String?
+    @PrimaryKey val uid: Int ?,
+    @ColumnInfo(name = "expression") val expression: String?,
+    @ColumnInfo(name = "result") val result: String?
 )

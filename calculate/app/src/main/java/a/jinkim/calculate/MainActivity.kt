@@ -1,14 +1,19 @@
 package a.jinkim.calculate
 
+import a.jinkim.calculate.model.History
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.room.Room
+import androidx.room.RoomDatabase
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,9 +30,12 @@ class MainActivity : AppCompatActivity() {
         findViewById(R.id.historyLayout)
     }
 
-    private val historyLinearLayout : View by lazy{
-        findViewById(R.id.linearlayoutHistory)
+    private val historyLinearLayout : LinearLayout by lazy{
+        findViewById<LinearLayout>(R.id.linearlayoutHistory)
     }
+
+
+    lateinit var db : AppDatabase
 
     private var isOperator = false
     private var hasOperator = false
@@ -37,6 +45,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        db = Room.databaseBuilder(
+            applicationContext,AppDatabase::class.java,"HistoryDB"
+        ).build()
+
     }
 
     fun buttonClicked(v: View) {
@@ -124,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         val op = expressionTexts[1].toString()
 
         return when (op) {
-            "＋" -> (exp1 + exp2).toString()
+            "+" -> (exp1 + exp2).toString()
             "-" -> (exp1 - exp2).toString()
             "×" -> (exp1 * exp2).toString()
             "÷" -> (exp1 / exp2).toString()
@@ -158,11 +170,15 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "오류가 발생하였습니다.", Toast.LENGTH_SHORT).show()
         }
 
-        val expressText = expressionTextView.text
+        val expressText = expressionTextView.text.toString()
         val resultText = calculateExpression()
 
-        resultTextView.text = ""
-        expressionTextView.text = resultText
+        Thread(Runnable {
+            db.historydao().insertHistory(History(null,expressText,resultText))
+        }).start()
+
+        resultTextView.text = resultText
+        expressionTextView.text = ""
 
         isOperator = false
         hasOperator = false
@@ -178,6 +194,19 @@ class MainActivity : AppCompatActivity() {
 
     fun historyButtonClicked(v: View) {
         historyLayout.isVisible = true
+        historyLinearLayout.removeAllViews()
+
+        Thread(Runnable {
+            db.historydao().getAll().reversed().forEach{
+                    runOnUiThread{
+                        val historyraw = LayoutInflater.from(this).inflate(R.layout.history_raw,null,false)
+                        historyraw.findViewById<TextView>(R.id.expressionTextView).text = it.expression
+                        historyraw.findViewById<TextView>(R.id.resultTextView).text = "= "+it.result
+                        historyLinearLayout.addView(historyraw)
+                    }
+            }
+        }).start()
+
 
         //TODO 디비 모든 기록 가져오기
         //TODO 뷰에 모든 기록 할당
@@ -186,6 +215,10 @@ class MainActivity : AppCompatActivity() {
     fun historyClearButtonClicked(v: View) {
         //TODO 디비에서 모든 기록삭제
         //TODO 뷰에서 모든 기록삭제
+        historyLinearLayout.removeAllViews()
+        Thread(Runnable {
+            db.historydao().deleteAll()
+        }).start()
     }
 
     fun closeHistroyButtonClicked(v: View) {
