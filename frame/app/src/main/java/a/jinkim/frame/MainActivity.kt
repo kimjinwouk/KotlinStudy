@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "사진을 가져오지 못하였습니다.", Toast.LENGTH_SHORT).show()
                 } else {
                     imageUriList.add(selectImageUri)
-                    imageView[imageView.size - 1].setImageURI(selectImageUri)
+                    imageView[imageUriList.size - 1].setImageURI(selectImageUri)
                 }
 
             } else {
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         buttonStartPhotoFrameMode.setOnClickListener{
             val intent =Intent(this,PhotoFrameActivity::class.java)
             imageUriList.forEachIndexed{ index, uri ->  
-                intent.putExtra("photo$index",uri)
+                intent.putExtra("photo$index",uri.toString())
             }
             intent.putExtra("photoListSize",imageUriList.size)
             startActivity(intent)
