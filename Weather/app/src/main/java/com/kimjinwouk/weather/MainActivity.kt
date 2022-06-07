@@ -307,67 +307,60 @@ class MainActivity : BaseActivity() {
         lv_address.setOnItemClickListener { adapterView, view, i, l ->
             ListViewVisibleState = false;
             //adapterView.getItemAtPosition(i) 값을 저장.
-            val dialog = AddressConfirmDailog.CustomDialogBuilder()
-                .setTitle("설정")
-                .setDescription((adapterView.getItemAtPosition(i) as ItemAddress).address_full + "\n지역으로 설정할까요?")
-                .setPositiveBtnText("확인")
-                .setNegativeBtnText("취소")
-                .setBtnClickListener(object : AddressConfirmDailog.CustomDialogListener {
-
-                    override fun onClickPositiveBtn() {
-                        // 확인 버튼 클릭 시
-                        MyApp.prefs.setBoolean("key_locate",false)
-                        MyApp.prefs.getPrefs().edit(true) {
-                            putString(
-                                "선택여부",
-                                "선택"
-                            )
-                            putString(
-                                "선택_주소",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).address_full
-                            )
-                            putString(
-                                "선택_주소_1",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).address_1
-                            )
-                            putString(
-                                "선택_주소_2",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).address_2
-                            )
-                            putString(
-                                "선택_주소_3",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).address_3
-                            )
-                            putString(
-                                "선택_nx",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).nx.toString()
-                            )
-                            putString(
-                                "선택_ny",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).ny.toString()
-                            )
-                            putString(
-                                "선택_xpos",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).xpos.toString()
-                            )
-                            putString(
-                                "선택_ypos",
-                                (adapterView.getItemAtPosition(i) as ItemAddress).ypos.toString()
-                            )
-                        }
 
 
-                        UpdateUI()
+            MaterialAlertDialogBuilder(this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
+
+                .setTitle("위치 설정")
+                .setMessage((adapterView.getItemAtPosition(i) as ItemAddress).address_full + "\n지역으로 설정할까요?")
+                .setPositiveButton("확인"){
+                        dialog, which ->
+                    MyApp.prefs.setBoolean("key_locate",false)
+                    MyApp.prefs.getPrefs().edit(true) {
+                        putString(
+                            "선택여부",
+                            "선택"
+                        )
+                        putString(
+                            "선택_주소",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).address_full
+                        )
+                        putString(
+                            "선택_주소_1",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).address_1
+                        )
+                        putString(
+                            "선택_주소_2",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).address_2
+                        )
+                        putString(
+                            "선택_주소_3",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).address_3
+                        )
+                        putString(
+                            "선택_nx",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).nx.toString()
+                        )
+                        putString(
+                            "선택_ny",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).ny.toString()
+                        )
+                        putString(
+                            "선택_xpos",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).xpos.toString()
+                        )
+                        putString(
+                            "선택_ypos",
+                            (adapterView.getItemAtPosition(i) as ItemAddress).ypos.toString()
+                        )
                     }
 
-                    override fun onClickNegativeBtn() {
-                        // 취소 버튼 클릭 시
 
-                    }
-                })
-                .create()
-            dialog.show(supportFragmentManager, dialog.tag)
-
+                    UpdateUI()
+                }
+                .setNegativeButton("취소"){
+                        dialog,which ->
+                }.show()
         }
     }
 
