@@ -14,7 +14,6 @@ import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.weather.BaseActivity.Companion.ACTION_STOP
 import com.kimjinwouk.weather.Data.Item
 import com.kimjinwouk.weather.Data.WeatherData
-
 import retrofit2.Call
 import retrofit2.Callback
 import java.text.SimpleDateFormat
@@ -46,7 +45,6 @@ class WeatherSerivce : Service() {
     }
 
     //Notififcation for ON-going
-    private var iconNotification: Bitmap? = null
     private var notification: Notification? = null
     var mNotificationManager: NotificationManager? = null
     private val mNotificationId = 123
@@ -59,25 +57,25 @@ class WeatherSerivce : Service() {
             val intentMainLanding = Intent(this, MainActivity::class.java)
             val pendingIntent =
                 PendingIntent.getActivity(this, 0, intentMainLanding, FLAG_MUTABLE)
-            iconNotification = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
+
+
             if (mNotificationManager == null) {
                 mNotificationManager =
                     this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 assert(mNotificationManager != null)
-                mNotificationManager?.createNotificationChannelGroup(
-                    NotificationChannelGroup("chats_group", "Chats")
-                )
                 val notificationChannel =
                     NotificationChannel(
                         "service_channel", "Service Notifications",
-                        NotificationManager.IMPORTANCE_HIGH
-                    )
-                notificationChannel.enableLights(false)
-                notificationChannel.lockscreenVisibility = Notification.VISIBILITY_SECRET
+                        NotificationManager.IMPORTANCE_NONE
+                    ).apply {
+                        setShowBadge(false)
+                        description = "Weather"
+                    }
                 mNotificationManager?.createNotificationChannel(notificationChannel)
             }
+
             val builder = NotificationCompat.Builder(this, "service_channel")
 
             /*
@@ -95,18 +93,14 @@ class WeatherSerivce : Service() {
                         .toString()
                 )
                 setContentText(getContentText())
-                setSmallIcon(R.drawable.ic_launcher_foreground)
-                setPriority(NotificationCompat.PRIORITY_HIGH)
+                setSmallIcon(R.drawable.ic_app_icon)
+                setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 setWhen(System.currentTimeMillis())
                 setOnlyAlertOnce(true)
                 setContentIntent(pendingIntent)
                 setOngoing(true)
             }
 
-            if (iconNotification != null) {
-                builder.setLargeIcon(Bitmap.createScaledBitmap(iconNotification!!, 128, 128, false))
-            }
-            builder.color = resources.getColor(R.color.purple_200)
             notification = builder.build()
             startForeground(mNotificationId, notification)
             Log.d("Weather_MainActivity", "generateForegroundNotification() - startForeground")
@@ -136,14 +130,14 @@ class WeatherSerivce : Service() {
 
             Address +=
                 if (MyApp.prefs.getBoolean("key_address_2", true)) {
-                    " "+MyApp.prefs.getString("설정_주소_2", "")
+                    " " + MyApp.prefs.getString("설정_주소_2", "")
                 } else {
                     ""
                 }
 
             Address +=
                 if (MyApp.prefs.getBoolean("key_address_3", true)) {
-                    " "+MyApp.prefs.getString("설정_주소_3", "")
+                    " " + MyApp.prefs.getString("설정_주소_3", "")
                 } else {
                     ""
                 }
@@ -160,20 +154,19 @@ class WeatherSerivce : Service() {
 
             Address +=
                 if (MyApp.prefs.getBoolean("key_address_2", true)) {
-                    " "+MyApp.prefs.getString("선택_주소_2", "")
+                    " " + MyApp.prefs.getString("선택_주소_2", "")
                 } else {
                     ""
                 }
 
             Address +=
                 if (MyApp.prefs.getBoolean("key_address_3", true)) {
-                    " "+MyApp.prefs.getString("선택_주소_3", "")
+                    " " + MyApp.prefs.getString("선택_주소_3", "")
                 } else {
                     ""
                 }
         }
-        if (MyApp.prefs.getBoolean("key_weather_thm", true))
-        {
+        if (MyApp.prefs.getBoolean("key_weather_thm", true)) {
             Address += " : " + weatherArr[0].temp + "º"
         }
         return Address!!
@@ -193,8 +186,7 @@ class WeatherSerivce : Service() {
 
 */
         var Weather: String? = ""
-        if (MyApp.prefs.getBoolean("key_weather_sky", true))
-        {
+        if (MyApp.prefs.getBoolean("key_weather_sky", true)) {
             Weather += "하늘은 " +
                     when (weatherArr[0].sky) {
                         "1" -> "맑음"
@@ -204,18 +196,17 @@ class WeatherSerivce : Service() {
                     }
         }
 
-        if (MyApp.prefs.getBoolean("key_weather_rain", true))
-        {
+        if (MyApp.prefs.getBoolean("key_weather_rain", true)) {
             Weather +=
-                    when (weatherArr[0].rainType) {
-                        "1" -> " 그리고 비"
-                        "2" -> " 그리고 비 또는 눈"
-                        "3" -> " 그리고 눈"
-                        "5" -> " 그리고 빗방울"
-                        "6" -> " 그리고 빗방울 또는 눈날림"
-                        "7" -> " 그리고 눈날림"
-                        else -> ""
-                    }
+                when (weatherArr[0].rainType) {
+                    "1" -> " 그리고 비"
+                    "2" -> " 그리고 비 또는 눈"
+                    "3" -> " 그리고 눈"
+                    "5" -> " 그리고 빗방울"
+                    "6" -> " 그리고 빗방울 또는 눈날림"
+                    "7" -> " 그리고 눈날림"
+                    else -> ""
+                }
         }
 
         return Weather!!

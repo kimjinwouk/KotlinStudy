@@ -4,19 +4,20 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.weather.Adaper.AddressAdapter
 import com.kimjinwouk.weather.Data.ItemAddress
@@ -49,10 +50,10 @@ class MainActivity : BaseActivity() {
     private lateinit var addCode_1: String
     private lateinit var addCode_2: String
     private lateinit var addCode_3: String
-    private lateinit var btn_runService: Button
+    private lateinit var fab_runService: FloatingActionButton
     private lateinit var edt_myAddress: EditText
     private lateinit var lv_address: ListView
-    private lateinit var toolbar: Toolbar
+
     private lateinit var mAdapter: AddressAdapter
     private lateinit var KakaoMapContainer: RelativeLayout
 
@@ -74,8 +75,6 @@ class MainActivity : BaseActivity() {
         initListner() // 리스너 초기화
         UpdateUI() // UI 업데이트
 
-        setSupportActionBar(toolbar)    //툴바 사용 설정
-        supportActionBar!!.setDisplayShowTitleEnabled(false)        //타이틀 보이게 설정
 
     }
 
@@ -99,7 +98,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        //menuInflater.inflate(R.menu.menu, menu)
         return true
     }
 
@@ -121,11 +120,11 @@ class MainActivity : BaseActivity() {
 
 
     private fun init() {
-        btn_runService = findViewById(R.id.btn_runService)
+        fab_runService = findViewById(R.id.fab_runService)
         lv_address = findViewById(R.id.lv_address)
         edt_myAddress = findViewById(R.id.edt_myAddress)
         KakaoMapContainer = findViewById(R.id.kakaoMapView)
-        toolbar = findViewById(R.id.toolbar)
+
         initReadExcel()
         addressData.addAll(addressList)
         mAdapter = AddressAdapter(addressList)
@@ -158,6 +157,7 @@ class MainActivity : BaseActivity() {
     }
 
 
+
     private fun UpdateUI() {
         Log.d("Weather_MainActivity", "UpdateUI()")
         var isSelected: Boolean = MyApp.prefs.getBoolean("key_locate", true)
@@ -167,7 +167,6 @@ class MainActivity : BaseActivity() {
             } else {
                 MyApp.prefs.getString("선택_주소", "현재 위치 찾는중..")
             }
-
         )
         //카카오지도 현재위치 셋팅.
         KakaoMapView.setMapCenterPointAndZoomLevel(
@@ -191,9 +190,9 @@ class MainActivity : BaseActivity() {
         marker.apply {
             tag = 0
             itemName = if (isSelected) {
-                "현재 내 위치"
+                MyApp.prefs.getString("설정_주소", "").toString()
             } else {
-                "설정한 위치"
+                MyApp.prefs.getString("선택_주소", "").toString()
             }
             mapPoint = MapPoint.mapPointWithGeoCoord(
                 if (isSelected) {
@@ -222,60 +221,38 @@ class MainActivity : BaseActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(100L)
-            btn_runService.setText(
-                if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                    "서비스 위치변경 또는 중지"
-                } else {
-                    "서비스 실행"
-                }
-            )
+
         }
     }
 
     private fun runService() {
 
+        MaterialAlertDialogBuilder(this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
 
-        val dialog = AddressConfirmDailog.CustomDialogBuilder()
             .setTitle("위치 설정")
-            .setDescription(
-                if (MyApp.prefs.getBoolean("key_locate", true)) {
-                    MyApp.prefs.getString("설정_주소", "")
-                } else {
-                    MyApp.prefs.getString("선택_주소", "")
-                }
+            .setMessage(if (MyApp.prefs.getBoolean("key_locate", true)) {
+                MyApp.prefs.getString("설정_주소", "")
+            } else {
+                MyApp.prefs.getString("선택_주소", "")
+            } + " 위치로 설정하시겠습니까?"
             )
-            .setPositiveBtnText(
-                if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                    "서비스 위치변경"
-                } else {
-                    "실행"
-                }
-            )
-            .setNegativeBtnText(
-                if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                    "서비스 중지"
-                } else {
-                    "취소"
-                }
-            )
-            .setBtnClickListener(object : AddressConfirmDailog.CustomDialogListener {
-
-                override fun onClickPositiveBtn() {
-                    startService(Intent(this@MainActivity, WeatherSerivce::class.java))
-                    UpdateUI()
-
-                }
-
-                override fun onClickNegativeBtn() {
-                    // 취소 버튼 클릭 시
-                    val IntentStop = Intent(this@MainActivity, WeatherSerivce::class.java)
-                    IntentStop.action = ACTION_STOP
-                    startService(IntentStop)
-                    UpdateUI()
-                }
-            })
-            .create()
-        dialog.show(supportFragmentManager, dialog.tag)
+            .setPositiveButton("실행"){
+                dialog, which ->
+                startService(Intent(this@MainActivity, WeatherSerivce::class.java))
+                UpdateUI()
+            }
+            .setNegativeButton( if (isMyServiceRunning(WeatherSerivce::class.java)) {
+                "서비스 중지"
+            } else {
+                "취소"
+            }){
+                dialog,which ->
+                // 취소 버튼 클릭 시
+                val IntentStop = Intent(this@MainActivity, WeatherSerivce::class.java)
+                IntentStop.action = ACTION_STOP
+                startService(IntentStop)
+                UpdateUI()
+            }.show()
     }
 
     override fun onBackPressed() {
@@ -287,12 +264,9 @@ class MainActivity : BaseActivity() {
         super.onBackPressed()
     }
     private fun initListner() {
-        btn_runService.setOnClickListener {
+        fab_runService.setOnClickListener {
             runService()
-
         }
-
-
         edt_myAddress.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -335,7 +309,7 @@ class MainActivity : BaseActivity() {
             //adapterView.getItemAtPosition(i) 값을 저장.
             val dialog = AddressConfirmDailog.CustomDialogBuilder()
                 .setTitle("설정")
-                .setDescription((adapterView.getItemAtPosition(0) as ItemAddress).address_full + "\n지역으로 설정할까요?")
+                .setDescription((adapterView.getItemAtPosition(i) as ItemAddress).address_full + "\n지역으로 설정할까요?")
                 .setPositiveBtnText("확인")
                 .setNegativeBtnText("취소")
                 .setBtnClickListener(object : AddressConfirmDailog.CustomDialogListener {
@@ -350,35 +324,35 @@ class MainActivity : BaseActivity() {
                             )
                             putString(
                                 "선택_주소",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).address_full
+                                (adapterView.getItemAtPosition(i) as ItemAddress).address_full
                             )
                             putString(
                                 "선택_주소_1",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).address_1
+                                (adapterView.getItemAtPosition(i) as ItemAddress).address_1
                             )
                             putString(
                                 "선택_주소_2",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).address_2
+                                (adapterView.getItemAtPosition(i) as ItemAddress).address_2
                             )
                             putString(
                                 "선택_주소_3",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).address_3
+                                (adapterView.getItemAtPosition(i) as ItemAddress).address_3
                             )
                             putString(
                                 "선택_nx",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).nx.toString()
+                                (adapterView.getItemAtPosition(i) as ItemAddress).nx.toString()
                             )
                             putString(
                                 "선택_ny",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).ny.toString()
+                                (adapterView.getItemAtPosition(i) as ItemAddress).ny.toString()
                             )
                             putString(
                                 "선택_xpos",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).xpos.toString()
+                                (adapterView.getItemAtPosition(i) as ItemAddress).xpos.toString()
                             )
                             putString(
                                 "선택_ypos",
-                                (adapterView.getItemAtPosition(0) as ItemAddress).ypos.toString()
+                                (adapterView.getItemAtPosition(i) as ItemAddress).ypos.toString()
                             )
                         }
 

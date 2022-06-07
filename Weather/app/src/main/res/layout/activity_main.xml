@@ -5,30 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+
+
+    <EditText
+        android:id="@+id/edt_myAddress"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_margin="@dimen/padding_option_10"
+        android:background="@drawable/main_myadress_background"
+        android:fontFamily="@font/gmarketsansttfmedium"
+        android:gravity="center"
+        android:hint="Search places"
+        android:lines="1"
+        android:padding="@dimen/padding_option_5"
+        android:textColor="@color/black"
+        android:textColorHint="#ABAEB0"
+        android:textSize="@dimen/txtsize_option_14"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:background="@color/orange"
-        >
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="날씨"
-            android:layout_gravity="center"
-            android:id="@+id/toolbar_title"
-            android:textSize="20sp"
-            android:fontFamily="@font/gmarketsansttfmedium"
-            android:textColor="@color/black"
-            />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_search"
+        app:layout_constraintStart_toStartOf="@id/edt_myAddress"
+        app:layout_constraintTop_toTopOf="@id/edt_myAddress"
+        app:layout_constraintBottom_toBottomOf="@id/edt_myAddress"
+        />
 
 
-
-    </androidx.appcompat.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/kakaoMapView"
         android:layout_width="match_parent"
@@ -36,62 +42,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_myAddress"
+        android:layout_marginTop="@dimen/padding_option_10"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="@dimen/padding_option_10"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/edt_myAddress"
+        android:layout_marginTop="@dimen/padding_option_10">
 
-        <EditText
-            android:id="@+id/edt_myAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/main_myadress_background"
-            android:gravity="center_vertical|left"
-            android:hint="주소 검색"
-            android:paddingLeft="@dimen/padding_option_10"
-            android:textColor="@color/black"
-            android:textSize="@dimen/txtsize_option_20"
-            android:lines="1"
-            android:fontFamily="@font/gmarketsansttfmedium"
-            android:padding="@dimen/padding_option_10"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_runService"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/main_runservice_background"
-            android:text="서비스 시작하기"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:gravity="center"/>
-
-        <EditText
-            android:id="@+id/edt_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="주소를 입력하세요."
-            app:layout_constraintTop_toBottomOf="@id/btn_runService" />
 
         <ListView
             android:id="@+id/lv_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="@dimen/padding_option_10"
             android:layout_marginBottom="@dimen/padding_option_10"
+            android:background="@drawable/main_myadress_background"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edt_myAddress"
-            android:background="@drawable/main_myadress_background"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_runService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/padding_option_30"
+        android:layout_marginBottom="@dimen/padding_option_30"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_play"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
