@@ -4,14 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/pomodoro_red"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_tomato_stem"
+        app:layout_constraintBottom_toTopOf="@id/textviewReaminMinutes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/textviewReaminMinutes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00"
-        android:textSize="40sp"
+        android:textColor="@color/white"
+        android:textSize="120sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,22 +37,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="@id/textviewReaminMinutes"
+        android:textColor="@color/white"
+        android:textSize="70sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/textviewReaminMinutes"
         app:layout_constraintLeft_toRightOf="@id/textviewReaminMinutes"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textviewReaminMinutes"
         tools:ignore="HardcodedText" />
 
     <SeekBar
         android:id="@+id/seekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
         android:max="60"
+        android:progressDrawable="@color/transparent"
+        android:thumb="@drawable/ic_thumb"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textviewReaminMinutes" />
+        app:layout_constraintTop_toBottomOf="@id/textviewReaminMinutes"
+        app:tickMark="@drawable/drawable_tick_mark" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

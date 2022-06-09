@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android/KotlinStudy/timer/app/src/main/res/layout/activity_main.xml" value="0.302536231884058" />
+        <entry key="..\:/Android/KotlinStudy/timer/app/src/main/res/drawable/drawable_tick_mark.xml" value="0.1" />
+        <entry key="..\:/Android/KotlinStudy/timer/app/src/main/res/drawable/ic_thumb.xml" value="0.1" />
+        <entry key="..\:/Android/KotlinStudy/timer/app/src/main/res/layout/activity_main.xml" value="0.15491009681881052" />
       </map>
     </option>
   </component>
