@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.zxing.integration.android.IntentIntegrator
 import com.kimjinwouk.lotto.Fragment.homeFragment
 import com.kimjinwouk.lotto.Fragment.placeFragment
 
