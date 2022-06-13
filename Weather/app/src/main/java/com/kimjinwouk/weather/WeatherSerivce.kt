@@ -4,8 +4,6 @@ import android.app.*
 import android.app.PendingIntent.FLAG_MUTABLE
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -119,53 +117,30 @@ class WeatherSerivce : Service() {
 
         var Address: String? = ""
 
-        if (isSelected) {
-
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_1", true)) {
-                    MyApp.prefs.getString("설정_주소_1", "")
-                } else {
-                    ""
-                }
-
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_2", true)) {
-                    " " + MyApp.prefs.getString("설정_주소_2", "")
-                } else {
-                    ""
-                }
-
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_3", true)) {
-                    " " + MyApp.prefs.getString("설정_주소_3", "")
-                } else {
-                    ""
-                }
-
-        } else {
 
 
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_1", true)) {
-                    MyApp.prefs.getString("선택_주소_1", "")
-                } else {
-                    ""
-                }
+        Address +=
+            if (MyApp.prefs.getBoolean("key_address_1", true)) {
+                MyApp.prefs.getString("선택_주소_1", "")
+            } else {
+                ""
+            }
 
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_2", true)) {
-                    " " + MyApp.prefs.getString("선택_주소_2", "")
-                } else {
-                    ""
-                }
+        Address +=
+            if (MyApp.prefs.getBoolean("key_address_2", true)) {
+                " " + MyApp.prefs.getString("선택_주소_2", "")
+            } else {
+                ""
+            }
 
-            Address +=
-                if (MyApp.prefs.getBoolean("key_address_3", true)) {
-                    " " + MyApp.prefs.getString("선택_주소_3", "")
-                } else {
-                    ""
-                }
-        }
+        Address +=
+            if (MyApp.prefs.getBoolean("key_address_3", true)) {
+                " " + MyApp.prefs.getString("선택_주소_3", "")
+            } else {
+                ""
+            }
+
+
         if (MyApp.prefs.getBoolean("key_weather_thm", true)) {
             Address += " : " + weatherArr[0].temp + "º"
         }
@@ -245,16 +220,8 @@ class WeatherSerivce : Service() {
 
         val callGetWeather = RetroifitManager.service.getWeather(
             serviceKey, dataType, base_date, base_time,
-            if (isSelected) {
-                MyApp.prefs.getString("설정_nx", "")
-            } else {
-                MyApp.prefs.getString("선택_nx", "")
-            },
-            if (isSelected) {
-                MyApp.prefs.getString("설정_ny", "")
-            } else {
-                MyApp.prefs.getString("선택_ny", "")
-            },
+            MyApp.prefs.getString("선택_nx", ""),
+            MyApp.prefs.getString("선택_ny", ""),
             numOfRows
         )
 

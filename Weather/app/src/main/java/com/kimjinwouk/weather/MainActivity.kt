@@ -3,38 +3,26 @@ package com.kimjinwouk.weather
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
-import android.widget.Button
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.edit
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kimjinwouk.lotto.Retrofit.Interface.RetroifitManager
 import com.kimjinwouk.weather.Adaper.AddressAdapter
 import com.kimjinwouk.weather.Data.ItemAddress
-import com.kimjinwouk.weather.Data.Kakao.Document
-import com.kimjinwouk.weather.Data.Kakao.KakaoData
-import com.kimjinwouk.weather.Dialog.AddressConfirmDailog
 import jxl.Workbook
 import jxl.read.biff.BiffException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
-import retrofit2.Call
-import retrofit2.Callback
+import net.daum.mf.map.api.*
 import java.io.IOException
 import java.io.InputStream
 
@@ -82,16 +70,17 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        if(MyApp.prefs.getBoolean("key_edit",false)){
+        if (MyApp.prefs.getBoolean("key_edit", false)) {
             //수정된 이력이 있으면
             startService(Intent(this@MainActivity, WeatherSerivce::class.java))
             //서비스를 재싱핼하여 수정.
-            MyApp.prefs.setBoolean("key_edit",false)
+            MyApp.prefs.setBoolean("key_edit", false)
         }
 
         UpdateUI()
 
     }
+
     private fun KakaoMap() {
         KakaoMapView = MapView(this)
         KakaoMapContainer.addView(KakaoMapView)
@@ -157,96 +146,84 @@ class MainActivity : BaseActivity() {
     }
 
 
-
     private fun UpdateUI() {
         Log.d("Weather_MainActivity", "UpdateUI()")
         var isSelected: Boolean = MyApp.prefs.getBoolean("key_locate", true)
         edt_myAddress.setText(
-            if (isSelected) {
-                MyApp.prefs.getString("설정_주소", "현재 위치 찾는중..")
-            } else {
-                MyApp.prefs.getString("선택_주소", "현재 위치 찾는중..")
-            }
+
+            MyApp.prefs.getString("선택_주소", "")
+
         )
-        //카카오지도 현재위치 셋팅.
-        KakaoMapView.setMapCenterPointAndZoomLevel(
-            MapPoint.mapPointWithGeoCoord(
-                if (isSelected) {
-                    getYpos()
-                } else {
-                    MyApp.prefs.getString("선택_ypos", "").toDouble()
-                },
-                if (isSelected) {
-                    getXpos()
-                } else {
-                    MyApp.prefs.getString("선택_xpos", "").toDouble()
-                }
-            ), 5, true
-        )
+
 
         //내위치 마커표시.
         val marker = MapPOIItem()
         KakaoMapView.removeAllPOIItems()
-        marker.apply {
-            tag = 0
-            itemName = if (isSelected) {
-                MyApp.prefs.getString("설정_주소", "").toString()
-            } else {
-                MyApp.prefs.getString("선택_주소", "").toString()
-            }
-            mapPoint = MapPoint.mapPointWithGeoCoord(
-                if (isSelected) {
-                    getYpos()
-                } else {
-                    MyApp.prefs.getString("선택_ypos", "").toDouble()
-                },
-                if (isSelected) {
-                    getXpos()
-                } else {
+        if(!MyApp.prefs.getString("선택_주소", "").toString().equals(""))
+        {
+            marker.apply {
+                tag = 0
+                itemName =
+                    MyApp.prefs.getString("선택_주소", "").toString()
+
+                mapPoint = MapPoint.mapPointWithGeoCoord(
+                    MyApp.prefs.getString("선택_ypos", "").toDouble(),
                     MyApp.prefs.getString("선택_xpos", "").toDouble()
-                }
-            )
-            markerType = MapPOIItem.MarkerType.CustomImage
-            customImageResourceId = R.drawable.ic_place_locate
-            isCustomImageAutoscale = false
-            setCustomImageAnchor(0f, -1.0f)
-            isShowDisclosureButtonOnCalloutBalloon = false
+                )
+                markerType = MapPOIItem.MarkerType.CustomImage
+                customImageResourceId = R.drawable.ic_place_locate
+                isCustomImageAutoscale = false
+                setCustomImageAnchor(0f, -1.0f)
+                isShowDisclosureButtonOnCalloutBalloon = false
 
 
+            }
         }
+
+        val CameraUpdateFactory = CameraUpdateFactory.newMapPoint(MapPoint.mapPointWithGeoCoord(
+            MyApp.prefs.getString("선택_ypos", "").toDouble(),
+            MyApp.prefs.getString("선택_xpos", "").toDouble()
+        ))
+
+
         KakaoMapView.addPOIItem(marker)
         KakaoMapView.selectPOIItem(marker, false)
+        KakaoMapView.moveCamera(CameraUpdateFactory)
+
 
         SetListViewVisibleState()
+    }
 
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(100L)
-
-        }
+    fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = currentFocus
+        if(view == null) view = View(this)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun runService() {
 
-        MaterialAlertDialogBuilder(this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(
+            this,
+            R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+        )
 
             .setTitle("위치 설정")
-            .setMessage(if (MyApp.prefs.getBoolean("key_locate", true)) {
-                MyApp.prefs.getString("설정_주소", "")
-            } else {
+            .setMessage(
                 MyApp.prefs.getString("선택_주소", "")
-            } + " 위치로 설정하시겠습니까?"
+
             )
-            .setPositiveButton("실행"){
-                dialog, which ->
+            .setPositiveButton("실행") { dialog, which ->
                 startService(Intent(this@MainActivity, WeatherSerivce::class.java))
                 UpdateUI()
             }
-            .setNegativeButton( if (isMyServiceRunning(WeatherSerivce::class.java)) {
-                "서비스 중지"
-            } else {
-                "취소"
-            }){
-                dialog,which ->
+            .setNegativeButton(
+                if (isMyServiceRunning(WeatherSerivce::class.java)) {
+                    "서비스 중지"
+                } else {
+                    "취소"
+                }
+            ) { dialog, which ->
                 // 취소 버튼 클릭 시
                 val IntentStop = Intent(this@MainActivity, WeatherSerivce::class.java)
                 IntentStop.action = ACTION_STOP
@@ -256,13 +233,14 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if(ListViewVisibleState) {
+        if (ListViewVisibleState) {
             lv_address.visibility = View.GONE
             ListViewVisibleState = !ListViewVisibleState
             return
         }
         super.onBackPressed()
     }
+
     private fun initListner() {
         fab_runService.setOnClickListener {
             runService()
@@ -280,13 +258,8 @@ class MainActivity : BaseActivity() {
 
                 ListViewVisibleState = if (edt_myAddress.text.toString().equals(
                         MyApp.prefs.getString(
-                            "설정_주소",
-                            "현재 위치 찾는중.."
-                        )
-                    ) || edt_myAddress.text.toString().equals(
-                        MyApp.prefs.getString(
                             "선택_주소",
-                            "현재 위치 찾는중.."
+                            ""
                         )
                     )
                 ) {
@@ -309,13 +282,15 @@ class MainActivity : BaseActivity() {
             //adapterView.getItemAtPosition(i) 값을 저장.
 
 
-            MaterialAlertDialogBuilder(this, R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog)
+            MaterialAlertDialogBuilder(
+                this,
+                R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+            )
 
                 .setTitle("위치 설정")
                 .setMessage((adapterView.getItemAtPosition(i) as ItemAddress).address_full + "\n지역으로 설정할까요?")
-                .setPositiveButton("확인"){
-                        dialog, which ->
-                    MyApp.prefs.setBoolean("key_locate",false)
+                .setPositiveButton("확인") { dialog, which ->
+                    MyApp.prefs.setBoolean("key_locate", false)
                     MyApp.prefs.getPrefs().edit(true) {
                         putString(
                             "선택여부",
@@ -357,9 +332,9 @@ class MainActivity : BaseActivity() {
 
 
                     UpdateUI()
+                    hideKeyboard()
                 }
-                .setNegativeButton("취소"){
-                        dialog,which ->
+                .setNegativeButton("취소") { dialog, which ->
                 }.show()
         }
     }
@@ -387,14 +362,6 @@ class MainActivity : BaseActivity() {
         mAdapter.notifyDataSetChanged()
     }
 
-
-    companion object {
-        const val ACTION_STOP = "${BuildConfig.APPLICATION_ID}.stop"
-    }
-
-    override fun onLocationChanged(location: Location) {
-        setAddress()
-    }
 
     private fun initReadExcel() {
         Log.d("Weather_MainActivity", "initReadExcel()")
@@ -453,130 +420,4 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private fun readExcel() {
-        try {
-            val localFile: InputStream = baseContext.resources.assets.open("local_code.xls")
-            val wb: Workbook = Workbook.getWorkbook(localFile)
-            if (wb != null) {
-                val sheet = wb.getSheet(0) // 시트 불러오기
-                if (sheet != null) {
-                    val colTotal = sheet.columns // 전체 컬럼
-                    val rowIndexStart = 1 // row 인덱스 시작
-                    val rowTotal = sheet.getColumn(colTotal - 1).size
-                    var row = rowIndexStart
-                    while (row < rowTotal) {
-                        val contents = sheet.getCell(0, row).contents
-                        if (addCode_1.length != 0 && addCode_1.equals(
-                                sheet.getCell(
-                                    0,
-                                    row
-                                ).contents
-                            )
-                        ) {
-                            if (addCode_2.length == 0) {
-                                MyApp.prefs.setString(
-                                    "설정_nx",
-                                    sheet.getCell(3, row).contents
-                                )
-                                MyApp.prefs.setString(
-                                    "설정_ny",
-                                    sheet.getCell(4, row).contents
-                                )
-
-                                row = rowTotal
-                                break;
-                            } else if (addCode_2.equals(sheet.getCell(1, row).contents)) {
-                                if (addCode_3.length == 0) {
-                                    MyApp.prefs.setString(
-                                        "설정_nx",
-                                        sheet.getCell(3, row).contents
-                                    )
-                                    MyApp.prefs.setString(
-                                        "설정_ny",
-                                        sheet.getCell(4, row).contents
-                                    )
-                                    row = rowTotal
-                                    break;
-                                } else if (addCode_3.equals(sheet.getCell(2, row).contents)) {
-                                    MyApp.prefs.setString(
-                                        "설정_nx",
-                                        sheet.getCell(3, row).contents
-                                    )
-                                    MyApp.prefs.setString(
-                                        "설정_ny",
-                                        sheet.getCell(4, row).contents
-                                    )
-                                    row = rowTotal
-                                    break;
-                                }
-                            }
-                        }
-                        row++
-                    }
-                    UpdateUI()
-                }
-            }
-        } catch (e: IOException) {
-            Log.i("READ_EXCEL1", e.message!!)
-            e.printStackTrace()
-        } catch (e: BiffException) {
-            Log.i("READ_EXCEL1", e.message!!)
-            e.printStackTrace()
-        }
-
-
-    }
-
-
-    private fun setAddress() {
-        Log.d("Weather_MainActivity", "setAddress()")
-        val callGetAddress = RetroifitManager.KakaoService.getKakaoAddress(
-            KAKAOserviceKey, getXpos(), getYpos()
-        )
-        callGetAddress.enqueue(object : Callback<KakaoData> {
-            override fun onResponse(
-                call: Call<KakaoData>,
-                response: retrofit2.Response<KakaoData>
-            ) {
-                Log.d("Weather_MainActivity", "onResponse")
-                if (response.isSuccessful) {
-                    val it: List<Document> = response.body()!!.documents
-
-                    val totalCount = response.body()!!.meta.total_count - 1
-                    for (i in 0..totalCount) {
-                        if (it[i].region_type.equals("H")) {
-                            addCode_1 = it[i].region_1depth_name
-                            addCode_2 = it[i].region_2depth_name
-                            addCode_3 = it[i].region_3depth_name
-
-                            MyApp.prefs.setString(
-                                "설정_주소",
-                                addCode_1 + " " + addCode_2 + " " + addCode_3
-                            )
-
-                            MyApp.prefs.setString(
-                                "설정_주소_1",
-                                addCode_1
-                            )
-
-                            MyApp.prefs.setString(
-                                "설정_주소_2",
-                                addCode_2
-                            )
-
-                            MyApp.prefs.setString(
-                                "설정_주소_3",
-                                addCode_3
-                            )
-                        }
-                    }
-                    readExcel()
-                }
-            }
-
-            override fun onFailure(call: Call<KakaoData>, t: Throwable) {
-                Log.d("Weather_MainActivity", "onFailure")
-            }
-        })
-    }
 }
