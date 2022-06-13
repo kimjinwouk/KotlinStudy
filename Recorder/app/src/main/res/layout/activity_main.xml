@@ -31,7 +31,7 @@
 
 
 
-    <TextView
+    <a.jinkim.recorder.CountUpTextView
         android:id="@+id/recordTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,14 +40,19 @@
         app:layout_constraintStart_toStartOf="@id/recordButton"
         android:text="00:00"
         android:layout_marginBottom="20dp"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:textColor="@color/white"/>
 
     <a.jinkim.recorder.RecordButton
         android:id="@+id/recordButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="50dp"
+        tools:src="@drawable/ic_record"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
