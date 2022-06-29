@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TinderApp</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+
+    <string name="facebook_app_id">1102563107343373</string>
+    <string name="fb_login_protocol_scheme">fb1102563107343373</string>
+    <string name="facebook_client_token">d401540752e0c8633457e7833469c373</string>
+
+
+
+</resources>

@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "989460338832",
+    "firebase_url": "https://qoute-154f4-default-rtdb.firebaseio.com",
+    "project_id": "qoute-154f4",
+    "storage_bucket": "qoute-154f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989460338832:android:10760322d228ca9f936015",
+        "android_client_info": {
+          "package_name": "a.jinkim.famoussaying"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989460338832-ibl1q0dr8kk1s6srtqmdglq82h8flke5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAayoANUO_WyFHnyP0CWQzdGlylZDt_SeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989460338832-ibl1q0dr8kk1s6srtqmdglq82h8flke5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989460338832:android:701a7dd5f5380ba0936015",
+        "android_client_info": {
+          "package_name": "a.jinkim.tinderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989460338832-ibl1q0dr8kk1s6srtqmdglq82h8flke5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAayoANUO_WyFHnyP0CWQzdGlylZDt_SeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989460338832-ibl1q0dr8kk1s6srtqmdglq82h8flke5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
