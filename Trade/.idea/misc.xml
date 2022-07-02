@@ -12,6 +12,11 @@
         <entry key="..\:/Android/KotlinStudy/Trade/app/src/main/res/layout/fragment_mypage.xml" value="0.3671875" />
         <entry key="..\:/Android/KotlinStudy/Trade/app/src/main/res/layout/item_article.xml" value="0.21822916666666667" />
         <entry key="..\:/Android/KotlinStudy/Trade/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3671875" />
+        <entry key="..\:/KotlinStudy/Trade/app/src/main/res/layout/activity_chatdetail.xml" value="0.3233695652173913" />
+        <entry key="..\:/KotlinStudy/Trade/app/src/main/res/layout/fragment_chatlist.xml" value="0.3233695652173913" />
+        <entry key="..\:/KotlinStudy/Trade/app/src/main/res/layout/fragment_home.xml" value="0.3233695652173913" />
+        <entry key="..\:/KotlinStudy/Trade/app/src/main/res/layout/item_chat.xml" value="0.3233695652173913" />
+        <entry key="..\:/KotlinStudy/Trade/app/src/main/res/layout/item_chatlist.xml" value="0.3233695652173913" />
       </map>
     </option>
   </component>
