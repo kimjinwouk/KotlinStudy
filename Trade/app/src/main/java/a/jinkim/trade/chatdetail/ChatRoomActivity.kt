@@ -44,6 +44,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 adapter.submitList(chatList)
                 adapter.notifyDataSetChanged()
             }
+
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -56,8 +57,6 @@ class ChatRoomActivity : AppCompatActivity() {
                 senderId = auth.currentUser.uid,
                 message = binding.messageEditText.text.toString()
             )
-
-
 
             chatDB?.push()?.setValue(chatItem)
         }
