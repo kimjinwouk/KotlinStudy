@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.kimjinwouk.petwalk.BaseFragment
 import com.kimjinwouk.petwalk.R
+import com.kimjinwouk.petwalk.home.HomeFragment
 
 class MapFragment : Fragment(R.layout.fragment_map) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+    companion object: BaseFragment {
+        override fun newInstance(): MapFragment {
+            return MapFragment()
+        }
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
 }

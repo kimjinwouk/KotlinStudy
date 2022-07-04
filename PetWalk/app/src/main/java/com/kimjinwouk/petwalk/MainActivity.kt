@@ -1,9 +1,11 @@
 package com.kimjinwouk.petwalk
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.kimjinwouk.petwalk.chat.ChatFragment
 import com.kimjinwouk.petwalk.databinding.ActivityMainBinding
 import com.kimjinwouk.petwalk.home.HomeFragment
@@ -24,15 +26,22 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         FragmentInit()
+        replaceFragment(homeFragment)
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> replaceFragment(homeFragment)
-                R.id.map -> replaceFragment(mapFragment)
-                R.id.chatList -> replaceFragment(chatFragment)
-                R.id.myInfo -> replaceFragment(myInfoFragment)
+                R.id.home ->  ShowFragment.show("home", this)
+                R.id.map ->  ShowFragment.show("map", this)
+                R.id.chatList ->     ShowFragment.show("chatList", this)
+                R.id.myInfo -> ShowFragment.show("myInfo", this)
             }
             true
         }
+
+    }
+
+    override fun finish() {
+        super.finish()
+        ShowFragment.remove(this)
     }
 
     //프로그먼트 초기화
@@ -50,4 +59,7 @@ class MainActivity : BaseActivity() {
                 commit()
             }
     }
+
+
+
 }
