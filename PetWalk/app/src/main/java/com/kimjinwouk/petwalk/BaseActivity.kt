@@ -3,6 +3,7 @@ package com.kimjinwouk.petwalk
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -10,6 +11,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.kimjinwouk.petwalk.DB.AppDatabase
 import com.kimjinwouk.petwalk.DB.DBKey
 import com.kimjinwouk.petwalk.DB.Data
 
@@ -22,6 +24,7 @@ open class BaseActivity : AppCompatActivity() {
         Firebase.storage
     }
     public lateinit var userDB: DatabaseReference
+    public lateinit var petRoomDB: AppDatabase
 
 
     public fun Log(context: Context, msg: String) {
@@ -35,7 +38,7 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDB = Firebase.database.reference.child(DBKey.DB_USERS)
-
+        petRoomDB = AppDatabase.getInstance(this)
     }
 
     override fun onResume() {

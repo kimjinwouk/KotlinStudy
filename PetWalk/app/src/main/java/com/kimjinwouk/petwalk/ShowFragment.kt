@@ -1,9 +1,6 @@
 package com.kimjinwouk.petwalk
 
-import android.app.Activity
-import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.kimjinwouk.petwalk.chat.ChatFragment
@@ -19,7 +16,8 @@ class ShowFragment {
         private val fragmentMap: HashMap<String, Fragment> = HashMap()
 
         fun show(fragmentName: String, activity: FragmentActivity) {
-            fragmentMap.forEach{
+            fragmentMap.forEach {
+                Log.d(activity.toString(), "${it.key} hide fragment")
                 activity.supportFragmentManager.beginTransaction().hide(it.value).commit()
             }
 
@@ -46,10 +44,12 @@ class ShowFragment {
             }
         }
 
-        fun remove(activity : FragmentActivity){
-            fragmentMap.forEach{
+        fun remove(activity: FragmentActivity) {
+            fragmentMap.forEach {
                 activity.supportFragmentManager.beginTransaction().remove(it.value).commit()
+                Log.d(activity.toString(), "${it.key} remove fragment")
             }
+            fragmentMap.clear()
         }
     }
 

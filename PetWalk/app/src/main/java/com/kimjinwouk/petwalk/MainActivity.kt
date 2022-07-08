@@ -26,7 +26,7 @@ class MainActivity : BaseActivity() {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         FragmentInit()
-        replaceFragment(homeFragment)
+        ShowFragment.show("home", this)
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home ->  ShowFragment.show("home", this)
