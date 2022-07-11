@@ -6,22 +6,22 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
-
 import com.kimjinwouk.petwalk.BaseFragment
+import com.kimjinwouk.petwalk.DB.Data
 import com.kimjinwouk.petwalk.MainActivity
 import com.kimjinwouk.petwalk.R
+import com.kimjinwouk.petwalk.Service.BackgroundLocationUpdateService
 import com.kimjinwouk.petwalk.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -29,10 +29,9 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
+import com.kimjinwouk.petwalk.DB.Data.myLocation
 
-
-class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMapReadyCallback,
-    LocationListener {
+class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMapReadyCallback{
 
 
 /*
@@ -75,6 +74,7 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
             return MapFragment()
         }
 
+        const val TAG = "MapFragment"
         const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1000
         private val PERMISSIONS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -99,28 +99,25 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
 
 
 
-
+        // 1. 권한 체크
         if (permissionCheck().not()) {
             return
         }
-        // 사용자의 위치권한 획득 요청
+        // 2. 포그라운드 위치 정보 갱신
+        //https://stackoverflow.com/questions/28535703/best-way-to-get-user-gps-location-in-background-in-android
+
+
 
         if (runWalking.not()) {
             //runWalking이 false 경우 true로 변경하고 해당시점부터 좌표수집을하여 Room에 기록한다.
-            Toast.makeText(requireContext(),"시작",Toast.LENGTH_SHORT).show()
-            Thread {
-                maxId = (activity as MainActivity).petRoomDB.walkingDao().getId()
-                // MaxID 값을 구하고 아래 MaxId값 + 1 과 좌표값을 Room DB에 저장
-                Log.d("MapFragment","maxId : {$maxId}")
-                runWalking = true
-            }.start()
+            Toast.makeText(requireContext(),"산책 서비스 시작",Toast.LENGTH_SHORT).show()
+            runWalking = true
+            //서비스 시작
+            requireContext().startService((Intent(requireContext(), BackgroundLocationUpdateService::class.java)))
         }else{
-            Toast.makeText(requireContext(),"정지",Toast.LENGTH_SHORT).show()
             runWalking = false
-            Thread {
-                // MaxID 값을 구하고 아래 MaxId값 + 1 과 좌표값을 Room DB에 저장
-                Log.d("MapFragment",(activity as MainActivity).petRoomDB.walkingDao().getAll().toString())
-            }.start()
+            Toast.makeText(requireContext(),"산책 서비스 정지",Toast.LENGTH_SHORT).show()
+            requireContext().stopService((Intent(requireContext(), BackgroundLocationUpdateService::class.java)))
         }
         
         
@@ -149,7 +146,6 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
                 )
                 return false
             }
-
         }
     }
 
@@ -162,7 +158,6 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
                     PERMISSIONS,
                     LOCATION_PERMISSION_REQUEST_CODE
                 )
-
             })
             .create()
             .show()
@@ -181,14 +176,6 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
 
         val uiSetting = naverMap.uiSettings
         uiSetting.isLocationButtonEnabled = true
-
-        if (hasPermission()) {
-            locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 1000, 10f, this
-            )
-        }
-
-
     }
 
     @SuppressLint("MissingPermission")
@@ -201,27 +188,12 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
-
-
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             if (!locationSource.isActivated) {
                 naverMap.locationTrackingMode = LocationTrackingMode.None
             }
             return
         }
-
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (hasPermission()) {
-                locationManager?.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    10f,
-                    this
-                )
-            }
-        }
-
-
     }
 
     private fun hasPermission(): Boolean {
@@ -240,14 +212,18 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
     override fun onResume() {
         super.onResume()
         binding.naverMap.onResume()
-        if (this::naverMap.isInitialized) {
-            if (hasPermission()) {
-                locationManager?.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 1000, 10f, this
-                )
+        if(this::naverMap.isInitialized) {
+            naverMap?.let {
+                val coord = LatLng(myLocation)
+
+                val locationOverlay = it.locationOverlay
+                locationOverlay.isVisible = true
+                locationOverlay.position = coord
+                locationOverlay.bearing = myLocation.bearing
+                it.moveCamera(CameraUpdate.scrollTo(coord))
+                Log.d(TAG, "" + coord)
             }
         }
-
     }
 
     override fun onPause() {
@@ -269,70 +245,10 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
     override fun onDestroyView() {
         super.onDestroyView()
         binding.naverMap.onDestroy()
-        locationManager?.removeUpdates(this)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
         binding.naverMap.onLowMemory()
     }
-
-    override fun onLocationChanged(locations: MutableList<Location>) {
-        super.onLocationChanged(locations)
-
-    }
-
-
-    private var lat : Double = 0.0
-    private var lng : Double = 0.0
-    override fun onLocationChanged(location: Location) {
-        if (location == null) {
-            return
-        }
-
-
-
-        naverMap?.let {
-            val coord = LatLng(location)
-
-            val locationOverlay = it.locationOverlay
-            locationOverlay.isVisible = true
-            locationOverlay.position = coord
-            locationOverlay.bearing = location.bearing
-
-            it.moveCamera(CameraUpdate.scrollTo(coord))
-
-            Log.d("Mapfragment", "" + coord)
-        }
-
-
-        if (runWalking) {
-            lat = location.latitude
-            lng = location.longitude
-            Thread {
-                (activity as MainActivity).petRoomDB.walkingDao().insertWalk(
-                    Walking(0,maxId+1,lat.toFloat(),lng.toFloat(),System.currentTimeMillis())
-
-                )
-                Log.d("MapFragment","maxId : {$maxId+1}, lat : {$lat}, lng : {$lng}")
-            }.start()
-        }
-    }
-
-
-
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-        //super.onStatusChanged(provider, status, extras)
-
-    }
-
-    override fun onProviderDisabled(provider: String) {
-        //super.onProviderDisabled(provider)
-    }
-
-    override fun onProviderEnabled(provider: String) {
-        //super.onProviderEnabled(provider)
-    }
-
 }

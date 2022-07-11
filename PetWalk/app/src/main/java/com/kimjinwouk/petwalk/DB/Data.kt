@@ -1,5 +1,6 @@
 package com.kimjinwouk.petwalk.DB
 
+import android.location.Location
 import com.kimjinwouk.petwalk.login.UserItemModel
 
 /*
@@ -7,6 +8,9 @@ import com.kimjinwouk.petwalk.login.UserItemModel
 * */
 object Data {
     lateinit var loginUser : UserItemModel
-    lateinit var PetWalkDB : AppDatabase
+    lateinit var petWalkDB : AppDatabase
+    lateinit var myLocation : Location
+
+
 
 }

@@ -38,8 +38,10 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDB = Firebase.database.reference.child(DBKey.DB_USERS)
-        petRoomDB = AppDatabase.getInstance(this)
+        data.petWalkDB = AppDatabase.getInstance(this)
     }
+
+
 
     override fun onResume() {
         super.onResume()

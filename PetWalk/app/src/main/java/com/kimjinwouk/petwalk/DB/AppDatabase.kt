@@ -11,16 +11,11 @@ import androidx.room.RoomDatabase
 abstract class AppDatabase : RoomDatabase() {
     abstract fun walkingDao(): WalkingDao
 
-
     companion object {
         fun getInstance(context: Context): AppDatabase {
             return Room.databaseBuilder(
                 context, AppDatabase::class.java, "PetWalkDB"
             ).build()
-
-
         }
     }
-
-
 }
