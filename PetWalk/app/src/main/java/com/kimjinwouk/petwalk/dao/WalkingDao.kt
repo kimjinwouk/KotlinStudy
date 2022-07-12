@@ -10,7 +10,7 @@ import androidx.room.Query
 interface WalkingDao {
 
     @Query("SELECT * FROM Walking")
-    fun getAll(): List<Walking>
+    suspend fun getAll(): List<Walking>
 
     @Insert
     fun insertWalk(walking: Walking)

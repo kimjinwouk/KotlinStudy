@@ -1,12 +1,9 @@
 package com.kimjinwouk.petwalk
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import com.kimjinwouk.petwalk.chat.ChatFragment
+import com.kimjinwouk.petwalk.walk.WalkingListFragment
 import com.kimjinwouk.petwalk.databinding.ActivityMainBinding
 import com.kimjinwouk.petwalk.home.HomeFragment
 import com.kimjinwouk.petwalk.map.MapFragment
@@ -18,7 +15,7 @@ class MainActivity : BaseActivity() {
     private lateinit var homeFragment: HomeFragment
     private lateinit var mapFragment: MapFragment
     private lateinit var myInfoFragment: MyInfoFragment
-    private lateinit var chatFragment: ChatFragment
+    private lateinit var walkingListFragment: WalkingListFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +46,7 @@ class MainActivity : BaseActivity() {
         homeFragment = HomeFragment()
         mapFragment = MapFragment()
         myInfoFragment = MyInfoFragment()
-        chatFragment = ChatFragment()
+        walkingListFragment = WalkingListFragment()
     }
 
     private fun replaceFragment(fragment: Fragment) {

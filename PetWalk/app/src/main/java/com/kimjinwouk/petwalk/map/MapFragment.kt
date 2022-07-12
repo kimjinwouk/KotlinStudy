@@ -1,37 +1,40 @@
 package com.kimjinwouk.petwalk.map
 
 
-import a.jinkim.calculate.model.Walking
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.ComponentName
+import android.content.Context.BIND_AUTO_CREATE
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.kimjinwouk.petwalk.BaseFragment
-import com.kimjinwouk.petwalk.DB.Data
-import com.kimjinwouk.petwalk.MainActivity
+import com.kimjinwouk.petwalk.DB.Data.myLocation
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.Service.BackgroundLocationUpdateService
+import com.kimjinwouk.petwalk.Service.BackgroundLocationUpdateService.BindServiceBinder
 import com.kimjinwouk.petwalk.databinding.FragmentMapBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
-import com.kimjinwouk.petwalk.DB.Data.myLocation
 
-class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMapReadyCallback{
+class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMapReadyCallback {
 
 
 /*
@@ -57,12 +60,14 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
     private lateinit var naverMap: NaverMap
     private var runWalking = false
     private var locationManager: LocationManager? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMapBinding.bind(view)
         binding.walkingFloatingButton.setOnClickListener(this)
+        binding.locationButtonView.setOnClickListener(this)
         binding.naverMap.getMapAsync(this)
         binding.naverMap.onCreate(savedInstanceState)
         locationManager = context?.getSystemService(LOCATION_SERVICE) as LocationManager?
@@ -84,7 +89,12 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
     override fun onClick(p0: View?) {
         when (p0?.id) {
             binding.walkingFloatingButton.id -> walkStart()
+            binding.locationButtonView.id -> setMyLocate()
         }
+    }
+
+    private fun setMyLocate() {
+        myLastLocation()
     }
 
     private fun walkStart() {
@@ -98,7 +108,6 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
         * */
 
 
-
         // 1. 권한 체크
         if (permissionCheck().not()) {
             return
@@ -106,25 +115,65 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
         // 2. 포그라운드 위치 정보 갱신
         //https://stackoverflow.com/questions/28535703/best-way-to-get-user-gps-location-in-background-in-android
 
-
-
         if (runWalking.not()) {
             //runWalking이 false 경우 true로 변경하고 해당시점부터 좌표수집을하여 Room에 기록한다.
-            Toast.makeText(requireContext(),"산책 서비스 시작",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "산책 서비스 시작", Toast.LENGTH_SHORT).show()
             runWalking = true
             //서비스 시작
-            requireContext().startService((Intent(requireContext(), BackgroundLocationUpdateService::class.java)))
-        }else{
+            requireContext().startService(
+                (Intent(
+                    requireContext(),
+                    BackgroundLocationUpdateService::class.java
+                ))
+            )
+
+
+            requireContext().bindService(
+                Intent(
+                    requireContext(),
+                    BackgroundLocationUpdateService::class.java
+                ), mConnection, BIND_AUTO_CREATE
+            )
+        } else {
             runWalking = false
-            Toast.makeText(requireContext(),"산책 서비스 정지",Toast.LENGTH_SHORT).show()
-            requireContext().stopService((Intent(requireContext(), BackgroundLocationUpdateService::class.java)))
+            Toast.makeText(requireContext(), "산책 서비스 정지", Toast.LENGTH_SHORT).show()
+            requireContext().stopService(
+                (Intent(
+                    requireContext(),
+                    BackgroundLocationUpdateService::class.java
+                ))
+            )
         }
-        
-        
+
     }
 
-    private var maxId: Int = 0
+    private lateinit var bindService: BackgroundLocationUpdateService
 
+    private var mConnection = object : ServiceConnection {
+        override fun onServiceConnected(p0: ComponentName?, service: IBinder?) {
+            var binder = service as BindServiceBinder
+            bindService = binder.getService(); // get service.
+            bindService.registerCallback(mCallback); // callback registration
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+
+        }
+    }
+
+    private val mCallback: BackgroundLocationUpdateService.ICallback =
+        object : BackgroundLocationUpdateService.ICallback {
+            override fun remoteCall(location: Location) {
+                Log.e(
+                    TAG,
+                    "Latitude : " + location.getLatitude()
+                        .toString() + "\tLongitude : " + location.getLongitude()
+                )
+                setMapCenterMoving(naverMap,location)
+            }
+        }
+
+    private var maxId: Int = 0
     private fun permissionCheck(): Boolean {
         when {
             (ContextCompat.checkSelfPermission(
@@ -163,19 +212,30 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
             .show()
     }
 
-
     @SuppressLint("MissingPermission")
     override fun onMapReady(map: NaverMap) {
         naverMap = map
         naverMap.maxZoom = 18.0
         naverMap.minZoom = 10.0
-
+        val uiSetting = naverMap.uiSettings
+        uiSetting.isLocationButtonEnabled = false
+        binding.locationButtonView.map = naverMap
         locationSource =
             FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
         naverMap.locationSource = locationSource
 
-        val uiSetting = naverMap.uiSettings
-        uiSetting.isLocationButtonEnabled = true
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun myLastLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                // Got last known location. In some rare situations this can be null.
+                location?.let {
+                    setMapCenterMoving(naverMap, it)
+                }
+            }
     }
 
     @SuppressLint("MissingPermission")
@@ -188,12 +248,18 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if (!locationSource.isActivated) {
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE ->
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //권한을 성공적으로 받았다면
+                    Toast.makeText(requireContext(), "권한 성공적으로 받음.", Toast.LENGTH_SHORT).show()
+                    myLastLocation()
+                } else {
+                    //권한을 성공적으로 받지 못했다면
+                    Toast.makeText(requireContext(), "권한을 거부", Toast.LENGTH_SHORT).show()
+                }
         }
+
     }
 
     private fun hasPermission(): Boolean {
@@ -212,17 +278,23 @@ class MapFragment : Fragment(R.layout.fragment_map), View.OnClickListener, OnMap
     override fun onResume() {
         super.onResume()
         binding.naverMap.onResume()
-        if(this::naverMap.isInitialized) {
-            naverMap?.let {
-                val coord = LatLng(myLocation)
-
-                val locationOverlay = it.locationOverlay
-                locationOverlay.isVisible = true
-                locationOverlay.position = coord
-                locationOverlay.bearing = myLocation.bearing
-                it.moveCamera(CameraUpdate.scrollTo(coord))
-                Log.d(TAG, "" + coord)
+        if (this::naverMap.isInitialized) {
+            myLocation?.let {
+                setMapCenterMoving(naverMap, it)
             }
+        }
+    }
+
+    private fun setMapCenterMoving(naverMap: NaverMap, location: Location) {
+        naverMap?.let {
+            val coord = LatLng(location)
+
+            val locationOverlay = it.locationOverlay
+            locationOverlay.isVisible = true
+            locationOverlay.position = coord
+            locationOverlay.bearing = location.bearing
+            it.moveCamera(CameraUpdate.scrollTo(coord))
+            Log.d(TAG, "" + coord)
         }
     }
 

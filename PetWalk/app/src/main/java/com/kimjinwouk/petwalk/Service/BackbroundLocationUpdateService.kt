@@ -51,6 +51,33 @@ internal class BackgroundLocationUpdateService : Service(), GoogleApiClient.Conn
     /* For Google Fused API */
 
 
+    private var binder: IBinder = BindServiceBinder()
+    private var mCallback: ICallback? = null
+    var maxId: Int = 0
+
+    inner class BindServiceBinder : Binder() {
+        init {
+
+        }
+
+        fun getService(): BackgroundLocationUpdateService {
+            return this@BackgroundLocationUpdateService
+        }
+    }
+
+
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
+
+    interface ICallback {
+        fun remoteCall(location: Location)
+    }
+
+    fun registerCallback(cb: ICallback) {
+        mCallback = cb
+    }
+
     override fun onCreate() {
         super.onCreate()
         context = this
@@ -58,23 +85,15 @@ internal class BackgroundLocationUpdateService : Service(), GoogleApiClient.Conn
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         StartForeground()
-        val handler = Handler()
-        val runnable: Runnable = object : Runnable {
-            override fun run() {
-                try {
-                    if (!stopService) {
-                        //Perform your task here
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                } finally {
-                    if (!stopService) {
-                        handler.postDelayed(this, TimeUnit.SECONDS.toMillis(10))
-                    }
-                }
-            }
-        }
-        handler.postDelayed(runnable, 2000)
+        Thread {
+            maxId = petWalkDB.walkingDao().getId()
+            // MaxID 값을 구하고 아래 MaxId값 + 1 과 좌표값을 Room DB에 저장
+            maxId++
+            Log.e(
+                TAG_LOCATION,
+                "maxId : " + maxId
+            )
+        }.start()
         buildGoogleApiClient()
         return START_STICKY
     }
@@ -89,10 +108,6 @@ internal class BackgroundLocationUpdateService : Service(), GoogleApiClient.Conn
         super.onDestroy()
     }
 
-    @Nullable
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
 
     private fun StartForeground() {
         val intent = Intent(context, MainActivity::class.java)
@@ -172,28 +187,25 @@ internal class BackgroundLocationUpdateService : Service(), GoogleApiClient.Conn
         * 2. ITEM MAX 값이 있다면 해당 좌표를 MAX+1값으로 저장 지속적으로.
         *
         * */
+
+        //maxId값이 있으면 해당 값을 저장.
         Thread {
-            maxId = petWalkDB.walkingDao().getId()
-            // MaxID 값을 구하고 아래 MaxId값 + 1 과 좌표값을 Room DB에 저장
-        }.start()
-        maxId++
-        if (maxId > 0) {
-            //maxId값이 있으면 해당 값을 저장.
-            Thread {
-                petWalkDB.walkingDao().insertWalk(
-                    Walking(
-                        0,
-                        maxId + 1,
-                        location.latitude.toFloat(),
-                        location.longitude.toFloat(),
-                        System.currentTimeMillis()
-                    )
+            petWalkDB.walkingDao().insertWalk(
+                Walking(
+                    0,
+                    maxId,
+                    location.latitude.toFloat(),
+                    location.longitude.toFloat(),
+                    System.currentTimeMillis()
                 )
-            }.start()
+            )
+        }.start()
+        mCallback?.let {
+            it.remoteCall(location)
         }
     }
 
-    var maxId: Int = 0
+
 
     fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     fun onProviderEnabled(provider: String?) {}

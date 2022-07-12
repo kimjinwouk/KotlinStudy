@@ -3,7 +3,7 @@ package com.kimjinwouk.petwalk
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.kimjinwouk.petwalk.chat.ChatFragment
+import com.kimjinwouk.petwalk.walk.WalkingListFragment
 import com.kimjinwouk.petwalk.home.HomeFragment
 import com.kimjinwouk.petwalk.map.MapFragment
 import com.kimjinwouk.petwalk.myinfo.MyInfoFragment
@@ -24,7 +24,7 @@ class ShowFragment {
             when (fragmentName) {
                 "home" -> HomeFragment.set(fragmentName, activity)
                 "map" -> MapFragment.set(fragmentName, activity)
-                "chatList" -> ChatFragment.set(fragmentName, activity)
+                "chatList" -> WalkingListFragment.set(fragmentName, activity)
                 "myInfo" -> MyInfoFragment.set(fragmentName, activity)
                 //추가할 곳
                 else -> {

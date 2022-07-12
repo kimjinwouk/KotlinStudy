@@ -9,7 +9,7 @@ import com.kimjinwouk.petwalk.login.UserItemModel
 object Data {
     lateinit var loginUser : UserItemModel
     lateinit var petWalkDB : AppDatabase
-    lateinit var myLocation : Location
+    var myLocation : Location? = null
 
 
 

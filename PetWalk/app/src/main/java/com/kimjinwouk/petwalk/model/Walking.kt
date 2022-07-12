@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 * Date - 시간
 *
 * */
-@Entity
+@Entity(tableName = "Walking")
 data class Walking (
 
     @PrimaryKey(autoGenerate= true) val uid: Int = 0,
@@ -20,4 +20,6 @@ data class Walking (
     @ColumnInfo(name = "Lng") val Lng: Float?,
     @ColumnInfo(name = "Date") val Date: Long?,
 
-)
+){
+    constructor() : this(0,0,0.0f,0.0f,0)
+}

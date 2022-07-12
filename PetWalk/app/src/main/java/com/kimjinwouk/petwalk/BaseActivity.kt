@@ -1,6 +1,8 @@
 package com.kimjinwouk.petwalk
 
+import a.jinkim.calculate.model.Walking
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
@@ -38,8 +40,13 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDB = Firebase.database.reference.child(DBKey.DB_USERS)
+        Datainit()
+    }
+
+    private fun Datainit() {
         data.petWalkDB = AppDatabase.getInstance(this)
     }
+
 
 
 
