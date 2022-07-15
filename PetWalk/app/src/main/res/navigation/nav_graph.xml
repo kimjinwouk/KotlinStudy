@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home">
+
+    <action android:id="@+id/action_global_trackingActivity"
+        app:destination="@id/home"
+        app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/home"
+        android:name="com.kimjinwouk.petwalk.ui.fragment.HomeFragment"
+        android:label="fragment_run"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/map" />
+    </fragment>
+    <fragment
+        android:id="@+id/map"
+        android:name="com.kimjinwouk.petwalk.ui.fragment.MapFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_walkListFragment"
+            app:destination="@id/walkList" />
+    </fragment>
+    <fragment
+        android:id="@+id/walkList"
+        android:name="com.kimjinwouk.petwalk.ui.fragment.WalkingListFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_walkinglist" >
+        <action
+            android:id="@+id/action_walkListFragment_to_myInfoFragment"
+            app:destination="@id/myInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/myInfo"
+        android:name="com.kimjinwouk.petwalk.ui.fragment.WalkingListFragment"
+        android:label="activity_tracking"
+        tools:layout="@layout/fragment_myinfo" />
+</navigation>

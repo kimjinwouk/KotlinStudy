@@ -1,4 +1,4 @@
-package com.kimjinwouk.petwalk
+package com.kimjinwouk.petwalk.ui.fragment
 
 import androidx.fragment.app.Fragment
 

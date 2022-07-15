@@ -1,11 +1,8 @@
-package com.kimjinwouk.petwalk
+package com.kimjinwouk.petwalk.ui.activity
 
-import a.jinkim.calculate.model.Walking
 import android.content.Context
-import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -13,15 +10,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import com.kimjinwouk.petwalk.DB.AppDatabase
-import com.kimjinwouk.petwalk.DB.DBKey
-import com.kimjinwouk.petwalk.DB.Data
+import com.kimjinwouk.petwalk.data.AppDatabase
+import com.kimjinwouk.petwalk.data.DBKey
+import com.kimjinwouk.petwalk.data.Data
 
 open class BaseActivity : AppCompatActivity() {
 
-    public val auth: FirebaseAuth by lazy {
-        Firebase.auth
-    }
+
     public val storage: FirebaseStorage by lazy {
         Firebase.storage
     }
@@ -40,12 +35,9 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userDB = Firebase.database.reference.child(DBKey.DB_USERS)
-        Datainit()
+        //Datainit()
     }
 
-    private fun Datainit() {
-        data.petWalkDB = AppDatabase.getInstance(this)
-    }
 
 
 

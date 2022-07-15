@@ -1,4 +1,4 @@
-package com.kimjinwouk.petwalk.DB
+package com.kimjinwouk.petwalk.data
 
 class DBKey {
     companion object{

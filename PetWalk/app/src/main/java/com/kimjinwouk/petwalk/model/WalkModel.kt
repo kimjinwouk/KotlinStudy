@@ -1,12 +1,8 @@
 package a.jinkim.calculate.model
-
 import android.location.Location
-import android.os.Parcelable
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
 
 /*
 * 산책에대한 정보
@@ -16,10 +12,9 @@ import kotlinx.android.parcel.Parcelize
 * Date - 시간
 *
 * */
-
-@Entity(tableName = "Walking")
-data class Walking(
-    @PrimaryKey(autoGenerate = true) var uid: Int = 0,
-    @ColumnInfo(name = "ItemId") var ItemId: Int?
+data class WalkModel (
+    @ColumnInfo(name = "ItemId") val ItemId: Int?,
+    @ColumnInfo(name = "Locate") val Locate: List<Location>?,
+    @ColumnInfo(name = "SDate") val SDate: Long?,
+    @ColumnInfo(name = "EDate") val EDate: Long?
 )
-

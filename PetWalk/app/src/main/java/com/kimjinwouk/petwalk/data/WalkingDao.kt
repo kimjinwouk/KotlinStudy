@@ -1,6 +1,7 @@
-package a.jinkim.calculate.dao
+package com.kimjinwouk.petwalk.data
 
 import a.jinkim.calculate.model.Walking
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,10 +11,13 @@ import androidx.room.Query
 interface WalkingDao {
 
     @Query("SELECT * FROM Walking")
-    suspend fun getAll(): List<Walking>
+    fun getAll(): LiveData<List<Walking>>
+
+    @Query("SELECT DISTINCT ItemId FROM Walking")
+    suspend fun getDistinctID(): List<Int>
 
     @Insert
-    fun insertWalk(walking: Walking)
+    suspend fun insertWalk(walking: Walking)
 
     @Query("DELETE FROM Walking")
     fun deleteAll()

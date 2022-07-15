@@ -1,4 +1,4 @@
-package com.kimjinwouk.petwalk.login
+package com.kimjinwouk.petwalk.model
 
 data class UserItemModel(
     val email : String,

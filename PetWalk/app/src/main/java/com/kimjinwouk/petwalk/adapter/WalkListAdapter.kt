@@ -1,23 +1,24 @@
-package com.kimjinwouk.petwalk.walk.adapter
+package com.kimjinwouk.petwalk.adapter
 
 import a.jinkim.calculate.model.Walking
 import android.content.Context
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.kimjinwouk.petwalk.databinding.WalkingRawBinding
 
-class WalkListAdapter : ListAdapter<Walking, WalkListAdapter.ItemViewHolder>(diffUtil) {
+class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.ItemViewHolder>() {
 
-    inner class ItemViewHolder(private val binding: WalkingRawBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ItemViewHolder(private val binding: WalkingRawBinding)
+        : RecyclerView.ViewHolder(binding.root){
+
         fun bind (walk: Walking){
             binding.resultTextView.text = walk.ItemId.toString()
-
-
         }
     }
 
@@ -29,12 +30,23 @@ class WalkListAdapter : ListAdapter<Walking, WalkListAdapter.ItemViewHolder>(dif
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(currentList[position])
+        val currentItem = differ.currentList[position]
+        // 현재 아이템 넘겨줌
+        if (currentItem != null) {
+            holder.bind(currentItem)
+        }
     }
 
     private fun dpToPx(context: Context, dp: Int) : Int{
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(),context.resources.displayMetrics).toInt()
     }
+
+    // 데이터 변경
+    fun submitList(list: List<Walking>) = differ.submitList(list)
+
+    // 비동기 처리
+    val differ = AsyncListDiffer(this, diffUtil)
+
 
     companion object{
         val diffUtil = object : DiffUtil.ItemCallback<Walking>(){
@@ -48,5 +60,9 @@ class WalkListAdapter : ListAdapter<Walking, WalkListAdapter.ItemViewHolder>(dif
             }
 
         }
+    }
+
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 }

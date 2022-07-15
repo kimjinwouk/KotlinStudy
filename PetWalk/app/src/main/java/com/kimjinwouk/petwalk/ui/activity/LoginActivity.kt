@@ -1,21 +1,26 @@
-package com.kimjinwouk.petwalk.login
+package com.kimjinwouk.petwalk.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.kimjinwouk.petwalk.BaseActivity
-import com.kimjinwouk.petwalk.MainActivity
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.databinding.ActivityLoginBinding
+import com.kimjinwouk.petwalk.model.UserItemModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
 
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,4 +1,4 @@
-package com.kimjinwouk.petwalk.myinfo
+package com.kimjinwouk.petwalk.ui.fragment
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -17,11 +17,10 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.kimjinwouk.petwalk.BaseFragment
-import com.kimjinwouk.petwalk.MainActivity
+import com.kimjinwouk.petwalk.ui.activity.MainActivity
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.databinding.FragmentMyinfoBinding
-import com.kimjinwouk.petwalk.login.LoginActivity
+import com.kimjinwouk.petwalk.ui.activity.LoginActivity
 
 class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener {
 
@@ -240,7 +239,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
         ).toInt()
     }
 
-    companion object : BaseFragment{
+    companion object : BaseFragment {
         override fun newInstance(): MyInfoFragment {
             return MyInfoFragment()
         }

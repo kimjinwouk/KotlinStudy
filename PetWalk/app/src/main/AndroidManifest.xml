@@ -7,33 +7,41 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:ignore="CoarseFineLocation" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 
     <application
+        android:name=".RunApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PetWalk">
+        android:theme="@style/Theme.PetWalk"
+        android:launchMode="singleTask">
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="@string/naver_map_client_id" />
 
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".ui.activity.LoginActivity"
+            android:exported="true">
+
+        </activity>
+
+        <activity android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".BaseActivity"/>
-        <service android:name=".Service.BackgroundLocationUpdateService"
+
+        <activity android:name=".ui.activity.BaseActivity"/>
+        <service android:name=".Service.PetWalkService"
             android:foregroundServiceType="location"/>
     </application>
 
