@@ -2,6 +2,7 @@ package com.kimjinwouk.petwalk.ui.fragment
 
 
 import a.jinkim.calculate.model.Walking
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -14,24 +15,31 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.Service.PetWalkService
 import com.kimjinwouk.petwalk.Service.Polyline
+import com.kimjinwouk.petwalk.Service.Polylines
 import com.kimjinwouk.petwalk.databinding.FragmentMapBinding
 import com.kimjinwouk.petwalk.util.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
 import com.kimjinwouk.petwalk.util.Constants.Companion.ACTION_STOP_SERVICE
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_COLOR
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_WEIGHT
+import com.kimjinwouk.petwalk.util.Constants.Companion.POLYLINE_WIDTH
 import com.kimjinwouk.petwalk.util.Constants.Companion.TAG
 import com.kimjinwouk.petwalk.util.PetWalkUtil
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -70,7 +78,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     private val viewModel by viewModels<walkViewModel>()
 
     // 네이버 맵 선언
-    private var NaverMap: NaverMap?= null
+    private var NaverMap: NaverMap? = null
 
 
     // 라이브 데이터를 받아온 값들
@@ -81,6 +89,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // SharedPreferences 주입
     @Inject
     lateinit var sharedPref: SharedPreferences
+
 
     // 총 이동거리
     private var sumDistance = 0f
@@ -194,7 +203,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 달리기 기록 저장
     private fun endRunAndSaveToDB() {
         // 몸무게 불러오기
-        val weight = sharedPref.getFloat(KEY_WEIGHT, 70f)
+        //val weight = sharedPref.getFloat(KEY_WEIGHT, 70f)
 
         /**
          * 날짜 변환
@@ -207,9 +216,15 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         val year = yearFormat.format(calendar.time)
         val month = monthFormat.format(calendar.time)
         val day = dayFormat.format(calendar.time)
-        val title = "${year}년 ${month}월 ${day}일 러닝"
+        val title = "${year}년 ${month}월 ${day}일 산책"
 
+        val run = Walking(
+            0, 1, PetWalkService.pathPoints.value
+        )
 
+        viewModel.insertWalk(run)
+        stopRun()
+        /*
         NaverMap?.takeSnapshot { bmp ->
             // 반올림
             val avgSpeed =
@@ -225,6 +240,8 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             Toast.makeText(requireActivity(), "달리기 기록이 저장되었습니다.", Toast.LENGTH_SHORT).show()
             stopRun()
         }
+
+         */
     }
 
     // 위치 추적 상태에 따른 레이아웃 변경
@@ -245,21 +262,26 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     // 경로 전부 표시
     private fun addAllPolylines() {
-//        for (polyline in pathPoints) {
-//            val polylineOptions = PolylineOptions()
-//                .color(POLYLINE_COLOR)
-//                .width(POLYLINE_WIDTH)
-//                .addAll(polyline)
-//            map?.addPolyline(polylineOptions)
-//        }
+        if (pathPoints != null && pathPoints.size > 0) {
+            val polyline = PolylineOverlay()
+            polyline.apply {
+                width = POLYLINE_WIDTH
+                color = POLYLINE_COLOR
+                joinType = PolylineOverlay.LineJoin.Round
+                coords = pathPoints.last()
+            }
+            polyline.map = NaverMap
+        }
     }
 
     // 지도 위치 이동
     private fun moveCameraToUser() {
-        if (pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()) {
-            NaverMap?.moveCamera(
-                CameraUpdate.scrollTo(pathPoints.last().last())
-            )
+        if (isTracking) {
+            if (pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()) {
+                naverMapMove(pathPoints.last().last())
+            }
+        } else {
+            setCurrentLocation()
         }
     }
 
@@ -298,13 +320,15 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2] // 마지막 전 경로
             val lastLatLng = pathPoints.last().last() // 마지막 경로
 
-//            val polylineOptions = PolylineOptions()
-//                .color(POLYLINE_COLOR)
-//                .width(POLYLINE_WIDTH)
-//                .add(preLastLatLng)
-//                .add(lastLatLng)
-//
-//            NaverMap?.addPolyline(polylineOptions)
+            val polyline = PolylineOverlay()
+            polyline.map = null
+            polyline.apply {
+                width = POLYLINE_WIDTH
+                color = POLYLINE_COLOR
+                joinType = PolylineOverlay.LineJoin.Round
+                coords = pathPoints.last().toList()
+            }
+            polyline.map = NaverMap
 
             // 이동거리 계산
             val result = FloatArray(1)
@@ -331,25 +355,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         sendCommandToService(ACTION_STOP_SERVICE)
         //finish()
     }
-
-//    // 뒤로가기 버튼 눌렀을 때
-//    override fun onBackPressed() {
-//        if(currentTimeInMillis > 0L){
-//            var builder = AlertDialog.Builder(this)
-//            builder.setTitle("달리기를 취소할까요? 기록은 저장되지 않습니다.")
-//                .setPositiveButton("네"){ _,_ ->
-//                    // 달리기 종료시킴 (저장X)
-//                    stopRun()
-//                }
-//                .setNegativeButton("아니오"){_,_ ->
-//                    // 다시 시작
-//                }.create()
-//            builder.show()
-//        }
-//        else{
-//            super.onBackPressed()
-//        }
-//    }
 
     // 색상 정보 불러오기
     private fun colorLoad() {
@@ -404,26 +409,12 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         if (PetWalkUtil.hasLocationPermissions(requireContext())) {
             return
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ), 1
+            requestSinglePermission.launch(
+                arrayOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
                 )
-                permissionDialog(requireContext())
-            }
-            // API 23 미만 버전에서는 ACCESS_BACKGROUND_LOCATION X
-            else {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ), 1
-                )
-            }
+            )
         }
     }
 
@@ -439,16 +430,71 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             }.create()
 
         builder.show()
+
     }
 
     // 안드로이드 API 30 버전부터는 backgroundPermission 을 직접 설정해야함
     private fun backgroundPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
+        requestSinglePermission.launch(
             arrayOf(
                 android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ), 2
+            )
         )
+    }
+
+    companion object {
+        const val REQUESTCODE_ACCESS_FINE_LOCATION = 1
+        const val REQUESTCODE_ACCESS_BACKGROUND_LOCATION = 2
+    }
+
+    var requestSinglePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        permissions.entries.forEach { it ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                when {
+                    it.key == "android.permission.ACCESS_FINE_LOCATION" && it.value -> {
+                        permissionDialog(requireContext())
+                    }
+
+                    it.key == "android.permission.ACCESS_BACKGROUND_LOCATION" && it.value -> {
+                        setCurrentLocation()
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun setCurrentLocation() {
+        if (PetWalkUtil.hasLocationPermissions(requireContext())) {
+            FusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { it ->
+                it?.let { it ->
+                    naverMapMove(LatLng(it.latitude, it.longitude))
+                }
+            }
+        }
+    }
+
+
+    private fun naverMapMove(latlng: LatLng) {
+        NaverMap?.let {
+            it.moveCamera(CameraUpdate.scrollTo(latlng))
+            setMarker(it, latlng)
+        }
+    }
+
+    val marker = Marker()
+    private fun setMarker(naverMap: NaverMap, latlng: LatLng) {
+        marker.map = null
+        marker.apply {
+            isIconPerspectiveEnabled = true
+            icon = OverlayImage.fromResource(R.drawable.ic_baseline_run_circle_24)
+            alpha = 0.8f
+            position = latlng
+            zIndex = 10
+            map = naverMap
+        }
     }
 
 }

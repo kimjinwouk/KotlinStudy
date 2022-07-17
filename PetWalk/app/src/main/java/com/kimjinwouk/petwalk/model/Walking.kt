@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
+import com.kimjinwouk.petwalk.Service.Polyline
 
 /*
 * 산책에대한 정보
@@ -20,6 +20,8 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "Walking")
 data class Walking(
     @PrimaryKey(autoGenerate = true) var uid: Int = 0,
-    @ColumnInfo(name = "ItemId") var ItemId: Int?
+    var ItemId: Int?,
+    var Locations: MutableList<Polyline>?
+
 )
 

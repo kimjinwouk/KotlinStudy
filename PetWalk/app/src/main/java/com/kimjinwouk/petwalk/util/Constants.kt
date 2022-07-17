@@ -28,7 +28,7 @@ class Constants {
         /**
          * 경로 표시 옵션
          */
-        const val POLYLINE_WIDTH = 10f
+        const val POLYLINE_WIDTH = 10
         const val MAP_ZOOM = 15f
 
         // 타이머 갱신 주기

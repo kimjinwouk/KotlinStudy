@@ -32,8 +32,7 @@ class ShowFragment {
                 else -> {
                 }
             }
-
-             */
+            */
         }
 
         private fun IsNullCheck(size: Int, size1: Int, activity: FragmentActivity) {

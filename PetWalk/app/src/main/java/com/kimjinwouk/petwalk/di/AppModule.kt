@@ -3,6 +3,7 @@ package com.kimjinwouk.petwalk.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -11,6 +12,8 @@ import com.kimjinwouk.petwalk.util.Constants.Companion.SHARED_PREFERENCES_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -41,6 +44,5 @@ class AppModule {
     @Singleton
     @Provides
     fun provideFirebaseAuth() = Firebase.auth
-
 
 }
