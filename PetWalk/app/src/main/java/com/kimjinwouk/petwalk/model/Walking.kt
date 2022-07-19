@@ -1,5 +1,6 @@
 package a.jinkim.calculate.model
 
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Parcelable
 import androidx.room.ColumnInfo
@@ -20,8 +21,10 @@ import com.kimjinwouk.petwalk.Service.Polyline
 @Entity(tableName = "Walking")
 data class Walking(
     @PrimaryKey(autoGenerate = true) var uid: Int = 0,
-    var ItemId: Int?,
-    var Locations: MutableList<Polyline>?
-
+    var Locations: MutableList<Polyline>?, //이동한좌표
+    var Date : String = "", // 저장한날짜
+    var Time : String = "", // 걸린시간
+    var Bitmap : Bitmap,    // 네이버맵 스냅샷
+    var Distance : Int = 0  // 총 이동거리
 )
 

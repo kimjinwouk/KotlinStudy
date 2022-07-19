@@ -18,7 +18,11 @@ class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.ItemViewHolder>()
         : RecyclerView.ViewHolder(binding.root){
 
         fun bind (walk: Walking){
-            binding.resultTextView.text = walk.ItemId.toString()
+            binding.textViewUid.text = walk.uid.toString()
+            binding.textViewDate.text = walk.Date.toString()
+            binding.textViewTime.text = walk.Time.toString()
+            binding.textViewDistance.text = walk.Distance.toString()
+            binding.imageViewNaverSnapshot.setImageBitmap(walk.Bitmap)
         }
     }
 

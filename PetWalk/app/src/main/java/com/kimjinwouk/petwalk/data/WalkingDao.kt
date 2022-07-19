@@ -13,9 +13,6 @@ interface WalkingDao {
     @Query("SELECT * FROM Walking")
     fun getAll(): LiveData<List<Walking>>
 
-    @Query("SELECT DISTINCT ItemId FROM Walking")
-    suspend fun getDistinctID(): List<Int>
-
     @Insert
     suspend fun insertWalk(walking: Walking)
 
@@ -25,8 +22,6 @@ interface WalkingDao {
     @Delete
     fun deleteHistory(walking: Walking)
 
-    @Query("SELECT ItemId FROM Walking ORDER BY ItemId desc LIMIT 1 ")
-    fun getId(): Int
 
 /*
     @Query("select * from Walking where result like :result LIMIT 1")

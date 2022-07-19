@@ -40,7 +40,7 @@ class AppModule {
     fun provideSharedPreferences(app: Application) =
         app.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    // SharedPreferences 추가
+    // FirebaseAuth 추가
     @Singleton
     @Provides
     fun provideFirebaseAuth() = Firebase.auth

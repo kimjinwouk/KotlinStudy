@@ -28,28 +28,20 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
     // WalkListAdapter 선언
     private val recyclerAdapter = WalkListAdapter()
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 뷰바인딩
         _binding = FragmentWalkinglistBinding.bind(view)
         binding.apply {
             //Layout에서 줘야할 모든 옵션 적용.
-            
             //어뎁터 연결
             recyclerView.adapter = recyclerAdapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-
-
         }
-
 
         viewModel.walks.observe(requireActivity()){
             recyclerAdapter.submitList(it)
         }
-
-
     }
 }
+

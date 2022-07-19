@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
@@ -19,16 +20,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.room.PrimaryKey
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.Service.PetWalkService
 import com.kimjinwouk.petwalk.Service.Polyline
-import com.kimjinwouk.petwalk.Service.Polylines
 import com.kimjinwouk.petwalk.databinding.FragmentMapBinding
 import com.kimjinwouk.petwalk.util.Constants.Companion.ACTION_START_OR_RESUME_SERVICE
 import com.kimjinwouk.petwalk.util.Constants.Companion.ACTION_STOP_SERVICE
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_COLOR
-import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_WEIGHT
 import com.kimjinwouk.petwalk.util.Constants.Companion.POLYLINE_WIDTH
 import com.kimjinwouk.petwalk.util.Constants.Companion.TAG
 import com.kimjinwouk.petwalk.util.PetWalkUtil
@@ -45,7 +45,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.round
 
 
 @AndroidEntryPoint
@@ -106,11 +105,13 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "MapFragment : onViewCreated")
         binding = FragmentMapBinding.bind(view)
+
+
 
         binding.apply {
             naverMap.getMapAsync {
+                it.uiSettings.isZoomControlEnabled = false
                 NaverMap = it
 
                 // 알림 클릭 등으로 다시 생성되었을 때 경로 표시
@@ -119,7 +120,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
                 // 거리 텍스트 변경 ( 알림 클릭 등으로 다시 생성되었을 때 초기화 방지)
                 sumDistance = updateDistance()
-
             }
             naverMap.onCreate(savedInstanceState)
 
@@ -138,13 +138,13 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 // 이미 실행 중이면 일시 정지
                 if (isTracking) {
                     //sendCommandToService(ACTION_PAUSE_SERVICE)
-
                     zoomToWholeTrack()
                     endRunAndSaveToDB()
                 }
                 // 아니라면 실행
                 else {
                     sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
+                    Toast.makeText(requireContext(),"산책 시작!",Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -162,11 +162,12 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         })
 
         // 경로 변경 관찰
+
         PetWalkService.pathPoints.observe(requireActivity(), Observer {
+            Log.d(TAG, "PetWalkService.pathPoints")
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
-
             // 거리 텍스트 변경
             //binding.distanceText.text = "${PetWalkUtil.getFormattedDistance(sumDistance)}Km"
         })
@@ -179,35 +180,24 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         })
     }
 
+
     // 스냅샷 찍기 위하여 전체 경로가 다 보이게 줌
     private fun zoomToWholeTrack() {
         val bounds = LatLngBounds.Builder()
-        for (polyline in pathPoints) {
-            for (point in polyline) {
-                bounds.include(point)
+        lateinit var bitmap: Bitmap
+        if (pathPoints != null && pathPoints.last().size > 1) {
+            for (polyline in pathPoints) {
+                for (point in polyline) {
+                    bounds.include(point)
+                }
             }
+            NaverMap?.moveCamera(CameraUpdate.fitBounds(bounds.build(), 100))
         }
-        val width = binding.naverMap.width
-        val height = binding.naverMap.height
-
-//       NaverMap?.moveCamera(
-//           CameraUpdateFactory.newLatLngBounds(
-//               bounds.build(),
-//               width,
-//               height,
-//               (height * 0.05f).toInt()
-//           )
-//       )
     }
 
     // 달리기 기록 저장
     private fun endRunAndSaveToDB() {
-        // 몸무게 불러오기
-        //val weight = sharedPref.getFloat(KEY_WEIGHT, 70f)
 
-        /**
-         * 날짜 변환
-         */
         val calendar = Calendar.getInstance()
         val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
         val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
@@ -218,30 +208,16 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         val day = dayFormat.format(calendar.time)
         val title = "${year}년 ${month}월 ${day}일 산책"
 
-        val run = Walking(
-            0, 1, PetWalkService.pathPoints.value
-        )
+        NaverMap?.takeSnapshot(object : NaverMap.SnapshotReadyCallback {
+            override fun onSnapshotReady(bitmap: Bitmap) {
+                val run = Walking(
+                    0, PetWalkService.pathPoints.value, title, currentTimeInMillis.toString() ,bitmap ,sumDistance.toInt()               )
+                viewModel.insertWalk(run)
+                stopRun()
+                Toast.makeText(requireContext(),"산책 종료 후 저장!",Toast.LENGTH_SHORT).show()
 
-        viewModel.insertWalk(run)
-        stopRun()
-        /*
-        NaverMap?.takeSnapshot { bmp ->
-            // 반올림
-            val avgSpeed =
-                round((sumDistance / 1000f) / (currentTimeInMillis / 1000f / 60 / 60) * 10) / 10f
-            val timestamp = calendar.timeInMillis
-            val caloriesBurned = ((sumDistance / 1000f) * weight).toInt()
-//            val run = Walking(0,null,timestamp,avgSpeed,sumDistance,currentTimeInMillis,
-//                caloriesBurned,title,year.toInt(),month.toInt(),day.toInt() )
-
-            val run = Walking(0, 222)
-
-            viewModel.insertWalk(run)
-            Toast.makeText(requireActivity(), "달리기 기록이 저장되었습니다.", Toast.LENGTH_SHORT).show()
-            stopRun()
-        }
-
-         */
+            }
+        })
     }
 
     // 위치 추적 상태에 따른 레이아웃 변경
@@ -258,12 +234,14 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 //                finishButton.visibility = View.GONE
 //            }
 //        }
+
     }
 
     // 경로 전부 표시
     private fun addAllPolylines() {
-        if (pathPoints != null && pathPoints.size > 0) {
-            val polyline = PolylineOverlay()
+        if (pathPoints.isNotEmpty() != null && pathPoints.size > 1) {
+            polyline.map = null
+            polyline.map = NaverMap
             polyline.apply {
                 width = POLYLINE_WIDTH
                 color = POLYLINE_COLOR
@@ -271,7 +249,9 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 coords = pathPoints.last()
             }
             polyline.map = NaverMap
+            Log.d(TAG, "addAllPolylines : ${pathPoints.last().toList().size}")
         }
+
     }
 
     // 지도 위치 이동
@@ -315,19 +295,20 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     }
 
     // 경로 표시 (마지막 전, 마지막 경로 연결)
+    val polyline = PolylineOverlay()
     private fun addLatestPolyline() {
         if (pathPoints.isNotEmpty() && pathPoints.last().size > 1) {
             val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2] // 마지막 전 경로
             val lastLatLng = pathPoints.last().last() // 마지막 경로
 
-            val polyline = PolylineOverlay()
-            polyline.map = null
+
             polyline.apply {
                 width = POLYLINE_WIDTH
                 color = POLYLINE_COLOR
                 joinType = PolylineOverlay.LineJoin.Round
                 coords = pathPoints.last().toList()
             }
+            Log.d(TAG, "addLatestPolyline : ${pathPoints.last().toList().size}")
             polyline.map = NaverMap
 
             // 이동거리 계산
@@ -343,6 +324,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
     }
 
+
     // 서비스에게 명령을 전달함
     private fun sendCommandToService(action: String) =
         Intent(requireContext(), PetWalkService::class.java).also {
@@ -352,6 +334,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     // 달리기 종료
     private fun stopRun() {
+        PetWalkService.pathPoints.removeObservers(requireActivity())
         sendCommandToService(ACTION_STOP_SERVICE)
         //finish()
     }
@@ -478,6 +461,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
 
     private fun naverMapMove(latlng: LatLng) {
+        Log.d(TAG, "naverMapMove")
         NaverMap?.let {
             it.moveCamera(CameraUpdate.scrollTo(latlng))
             setMarker(it, latlng)
