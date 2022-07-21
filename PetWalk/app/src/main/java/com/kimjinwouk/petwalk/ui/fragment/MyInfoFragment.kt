@@ -8,47 +8,53 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.kimjinwouk.petwalk.ui.activity.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.databinding.FragmentMyinfoBinding
 import com.kimjinwouk.petwalk.ui.activity.LoginActivity
+import com.kimjinwouk.petwalk.ui.activity.MainActivity
+import com.kimjinwouk.petwalk.viewmodel.walkViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener {
 
+    @Inject
+    lateinit var auth: FirebaseAuth
+    
+    //뷰바인딩
     private lateinit var binding: FragmentMyinfoBinding
+
+    //선택한 이미지 URI
     private lateinit var selectedUri: Uri
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity as MainActivity).Log(requireContext(), "onAttach")
-    }
+    // 뷰모델 생성
+    private val viewModel by viewModels<walkViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as MainActivity).Log(requireContext(), "onCreate")
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).Log(requireContext(), "onViewCreated")
         binding = FragmentMyinfoBinding.bind(view)
-        initUser()
         initLitener()
+        viewModel.loginDataRealtimeDB.observe(requireActivity(),{
+            //로그인한 데이터의 변경이 생기면 해당 UI 수정.
+            setUserData()
+        })
+
+
+
+
     }
 
     private fun initLitener() {
@@ -56,17 +62,11 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
         binding.signOutButton.setOnClickListener(this)
     }
 
-    private fun initUser() {
-        (activity as MainActivity).auth.currentUser ?: (activity as MainActivity).finish()
-        //TODO 로그인했지만 currentUser내용이없다면 로그인화면으로 전환되어야 한다.
-
-        val UserItemModel = (activity as MainActivity).data.loginUser
-
-        binding.userEmailTextView.text = UserItemModel.email
-        binding.userNickNameTextView.text = UserItemModel.nickName
-        (activity as MainActivity).Log(requireContext(), "initUser")
+    private fun setUserData() {
+        binding.userEmailTextView.text = viewModel.loginDataRealtimeDB.value!!.email.toString()
+        binding.userNickNameTextView.text = viewModel.loginDataRealtimeDB.value!!.nickName.toString()
         Glide.with(binding.userProfileImageView)
-            .load(UserItemModel.imageUri)
+            .load(viewModel.loginDataRealtimeDB.value!!.imageUri)
             .transform(
                 CenterCrop(),
                 RoundedCorners(dpToPx(binding.userProfileImageView.context, 30))
@@ -88,12 +88,10 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
     }
 
     private fun signOut() {
-        (activity as MainActivity).auth.signOut()
+        auth.signOut()
         val intent = Intent(requireContext(), LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
-        (activity as MainActivity).finish()
-
     }
 
     private fun userimageUpdate() {
@@ -239,10 +237,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
         ).toInt()
     }
 
-    companion object : BaseFragment {
-        override fun newInstance(): MyInfoFragment {
-            return MyInfoFragment()
-        }
+    companion object MyInfoFragment {
         const val PERMISSION_READ_EXTERNAL_STOREAGE_CODE = 100
         const val GET_IMAGE_CODE = 101
 

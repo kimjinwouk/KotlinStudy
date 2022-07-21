@@ -40,7 +40,6 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PolylineOverlay
-import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -96,8 +95,9 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 선 색상
     private var POLYLINE_COLOR = Color.RED
 
-
-    private lateinit var locationSource: FusedLocationSource
+    // SharedPreferences 주입
+    @Inject
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private var runWalking = false
     private var locationManager: LocationManager? = null
@@ -451,7 +451,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     @SuppressLint("MissingPermission")
     private fun setCurrentLocation() {
         if (PetWalkUtil.hasLocationPermissions(requireContext())) {
-            FusedLocationProviderClient(requireContext()).lastLocation.addOnSuccessListener { it ->
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { it ->
                 it?.let { it ->
                     naverMapMove(LatLng(it.latitude, it.longitude))
                 }

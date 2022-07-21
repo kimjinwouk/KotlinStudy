@@ -4,23 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.databinding.ActivityLoginBinding
-import com.kimjinwouk.petwalk.model.UserItemModel
+import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
+    // 뷰바인딩
     private lateinit var binding: ActivityLoginBinding
 
     @Inject
     lateinit var auth: FirebaseAuth
+
+    // 뷰모델 생성
+    private val viewModel by viewModels<walkViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,115 +31,64 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         binding.signUpButton.setOnClickListener(this)
         binding.signInButton.setOnClickListener(this)
 
+        viewModel.isLogin.observe(this, Observer {
+            if (it) {
+                //로그인 또는 회원가입이 이루어졌을 경우.
+                android.widget.Toast.makeText(this, "로그인 성공", android.widget.Toast.LENGTH_SHORT)
+                    .show()
+                //로그인 완료 UI 변경 시점.
+                //로그인이 완료된 후에는 Firebase에서 기타 외적인 데이터를 가지고 와야한다.
+                viewModel.getUserOnFirebase()
+            }
+        })
+
+        viewModel.isSignUp.observe(this, Observer {
+            if (it) {
+                viewModel.setUserOnFirebase(
+                    binding.emailEditText.text.toString(),
+                    binding.passwordEditText.text.toString()
+                )
+            }
+        })
+
+        viewModel.loginDataRealtimeDB.observe(this, Observer {
+            if (it != null) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        })
+
+
+
     }
 
     private fun SignIn() {
-        val email = binding.emailEditText.text.toString()
-        val password = binding.passwordEditText.text.toString()
-
-        //로그인
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    successSignIn()
-                } else {
-                    Toast(this, getString(R.string.SignInFailMsg))
-                }
-            }
-
+        viewModel.SignIn(
+            binding.emailEditText.text.toString(),
+            binding.passwordEditText.text.toString()
+        )
     }
 
     override fun onStart() {
         super.onStart()
-        signCheck()
-    }
-
-    private fun signCheck() {
-        if (auth.currentUser != null) {
-            getUserData()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-    }
-
-    private fun successSignIn() {
-        if (auth.currentUser == null) {
-            Toast(this, getString(R.string.SignInFailMsg))
-            return
-        }
-        Toast(this, getString(R.string.SignInSuccessMsg))
-        getUserData()
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-    }
-
-    private fun getUserData() {
-        userDB.child(auth.currentUser!!.uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val UserItemModel = snapshot.getValue(UserItemModel::class.java)
-                    UserItemModel ?: return
-                    data.loginUser = UserItemModel
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
+        //로그인이 완료된 후에는 Firebase에서 기타 외적인 데이터를 가지고 와야한다.
+        viewModel.getUserOnFirebase()
     }
 
     private fun SignUp() {
-
-        //회원가입
-        val email = binding.emailEditText.text.toString()
-        val password = binding.passwordEditText.text.toString()
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    successSignUp()
-                } else {
-                    Toast(this, getString(R.string.SignUpFailMsg))
-
-                }
-            }
-    }
-
-    private fun successSignUp() {
-        //회원가입에 성공했을경우 해당 회원의 정보 저장.
-
-        //유저의 디비를 가지고온다.
-        //userDB = Firebase.database.reference.child(DB_USERS) BaseActivity로이동
-
-        //가지고 온 유저디비에서 내정보를 가지고와 아래 닉네임타입에 회원가입시 들어간 닉네임을 저장.
-
-        val UserItemModel = UserItemModel(
-            email = binding.emailEditText.text.toString(),
-            nickName = binding.nickEditText.text.toString(),
-            imageUri = ""
+        viewModel.SignUp(
+            binding.emailEditText.text.toString(),
+            binding.passwordEditText.text.toString()
         )
-
-
-        auth.currentUser?.let {
-            userDB.child(it.uid)
-                .setValue(UserItemModel)
-                .addOnCompleteListener(this) {
-                    if (it.isSuccessful) {
-                        Toast(this, getString(R.string.SignUpSuccessMsg))
-                    } else {
-                        Toast(this, getString(R.string.SignUpFailMsg))
-                    }
-                }
-        }
     }
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
+            //회원가입
             binding.signUpButton.id -> SignUp()
+            //로그인
             binding.signInButton.id -> SignIn()
             else -> return
         }
-
     }
-
 }

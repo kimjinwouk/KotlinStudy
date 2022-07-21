@@ -5,9 +5,13 @@ import android.content.Context
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.kimjinwouk.petwalk.data.AppDatabase
+import com.kimjinwouk.petwalk.data.DBKey
 import com.kimjinwouk.petwalk.util.Constants.Companion.SHARED_PREFERENCES_NAME
 import dagger.Module
 import dagger.Provides
@@ -44,5 +48,24 @@ class AppModule {
     @Singleton
     @Provides
     fun provideFirebaseAuth() = Firebase.auth
+
+
+
+    // FusedLocationProviderClient 추가
+    @Singleton
+    @Provides
+    fun providesFusedLocationProviderClient(
+        @ApplicationContext context : Context
+    ) = FusedLocationProviderClient(context)
+
+    public lateinit var userDB: DatabaseReference
+
+    // DatabaseReference 추가
+    @Singleton
+    @Provides
+    fun providesDatabaseReference(
+    ) = Firebase.database.reference.child(DBKey.DB_USERS)
+
+
 
 }

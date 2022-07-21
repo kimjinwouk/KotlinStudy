@@ -3,8 +3,6 @@ package com.kimjinwouk.petwalk.ui.activity
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -12,7 +10,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.kimjinwouk.petwalk.data.AppDatabase
 import com.kimjinwouk.petwalk.data.DBKey
-import com.kimjinwouk.petwalk.data.Data
 
 open class BaseActivity : AppCompatActivity() {
 

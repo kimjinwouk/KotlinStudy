@@ -4,7 +4,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -21,6 +23,7 @@ import com.kimjinwouk.petwalk.util.Constants.Companion.ACTION_SHOW_TRACKING_ACTI
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_FIRST_TIME_TOGGLE
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_NAME
 import com.kimjinwouk.petwalk.util.Constants.Companion.TAG
+import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,14 +48,12 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var auth: FirebaseAuth
+
     // 처음 실행 여부
     private var firstTimeAppOpen: Boolean = true
 
-    private lateinit var homeFragment: HomeFragment
-    private lateinit var mapFragment: MapFragment
-    private lateinit var myInfoFragment: MyInfoFragment
-    private lateinit var walkingListFragment: WalkingListFragment
-
+    // 뷰모델 생성
+    private val viewModel by viewModels<walkViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,22 +80,6 @@ class MainActivity : BaseActivity() {
             bottomNavigationView.setupWithNavController(navController)
         }
 
-
-        //ShowFragment.remove(this)
-        //FragmentInit()
-        //initFragmentPosition()
-        /*
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> ShowFragment.show("home", this)
-                R.id.map -> ShowFragment.show("map", this)
-                R.id.walkList -> ShowFragment.show("chatList", this)
-                R.id.myInfo -> ShowFragment.show("myInfo", this)
-            }
-            true
-        }
-
-         */
     }
 
     // foreground 상태에서 호출
@@ -109,46 +94,5 @@ class MainActivity : BaseActivity() {
             navController.navigate(R.id.map)
         }
     }
-
-    // 백버튼 클릭 시 종료
-    override fun onBackPressed() {
-        finish()
-    }
-
-    private fun initFragmentPosition() {
-        if (intent.getBooleanExtra("foreground", false)) {
-            ShowFragment.show("map", this)
-            binding.bottomNavigationView.selectedItemId = R.id.map
-        } else {
-            ShowFragment.show("home", this)
-        }
-
-    }
-
-    override fun finish() {
-        super.finish()
-        //ShowFragment.remove(this)
-    }
-
-    //프로그먼트 초기화
-    private fun FragmentInit() {
-
-        homeFragment = HomeFragment()
-
-        mapFragment = MapFragment()
-
-        myInfoFragment = MyInfoFragment()
-
-        walkingListFragment = WalkingListFragment()
-    }
-
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .apply {
-                replace(R.id.fragmentContainer, fragment)
-                commit()
-            }
-    }
-
 
 }

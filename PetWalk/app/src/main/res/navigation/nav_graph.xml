@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/myInfo"
-        android:name="com.kimjinwouk.petwalk.ui.fragment.WalkingListFragment"
+        android:name="com.kimjinwouk.petwalk.ui.fragment.MyInfoFragment"
         android:label="activity_tracking"
         tools:layout="@layout/fragment_myinfo" />
 </navigation>
