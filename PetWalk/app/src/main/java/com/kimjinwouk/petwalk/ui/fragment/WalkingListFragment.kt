@@ -1,8 +1,10 @@
 package com.kimjinwouk.petwalk.ui.fragment
 
 import a.jinkim.calculate.model.Walking
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -12,6 +14,8 @@ import com.kimjinwouk.petwalk.adapter.WalkListAdapter
 import com.kimjinwouk.petwalk.databinding.FragmentWalkinglistBinding
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
@@ -27,6 +31,15 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
 
     // WalkListAdapter 선언
     private val recyclerAdapter = WalkListAdapter()
+
+
+    private var selectedDate: LocalDate? = null
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
+
+    //private val flightsAdapter = Example5FlightsAdapter()
+    //private val flights = generateFlights().groupBy { it.time.toLocalDate() }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -94,10 +94,17 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-service:2.3.0'
 
     // Activity KTX for viewModels()
-    implementation "androidx.activity:activity-ktx:1.1.0"
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
 
     // Navigation
     def nav_version = "2.3.3"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+
+
+    //달력
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+
 }

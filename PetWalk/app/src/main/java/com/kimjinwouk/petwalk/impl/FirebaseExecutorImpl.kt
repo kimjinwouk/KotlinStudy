@@ -1,11 +1,13 @@
 package com.kimjinwouk.petwalk.impl
 
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.kimjinwouk.petwalk.executor.FirebaseExecutor
 import com.kimjinwouk.petwalk.model.UserItemModel
 import javax.inject.Inject
@@ -13,6 +15,7 @@ import javax.inject.Inject
 
 class FirebaseExecutorImpl @Inject constructor(
     val auth: FirebaseAuth,
+    val storage: FirebaseStorage,
     val userDB: DatabaseReference
 ) : FirebaseExecutor {
 
@@ -73,5 +76,34 @@ class FirebaseExecutorImpl @Inject constructor(
                     }
                 }
         }
+    }
+
+    override fun uploadProfileImage(
+        selectedUri: String,
+        loginUser: MutableLiveData<UserItemModel>,
+        isChange: MutableLiveData<Boolean>
+    ) {
+
+        val fileName = "${System.currentTimeMillis()}.png"
+        val ref = storage.reference.child("users/photo").child(fileName)
+        val uploadTask = ref.putFile(selectedUri.toUri())
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            ref.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloaduri = task.result
+                loginUser.value?.imageUri = downloaduri.toString()
+                userDB.child(auth.uid!!).child("imageUri").setValue(loginUser.value?.imageUri)
+                isChange.value = true
+            } else {
+                // 오류처리
+            }
+        }
+
     }
 }

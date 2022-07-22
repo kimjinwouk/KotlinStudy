@@ -1,7 +1,6 @@
 package com.kimjinwouk.petwalk.executor
 
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
 import com.kimjinwouk.petwalk.model.UserItemModel
 
 interface FirebaseExecutor {
@@ -18,5 +17,10 @@ interface FirebaseExecutor {
     )
 
     fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>)
+    fun uploadProfileImage(
+        selectedUri: String,
+        loginUser: MutableLiveData<UserItemModel>,
+        isChange: MutableLiveData<Boolean>
+    )
 
 }

@@ -10,10 +10,10 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.databinding.FragmentMyinfoBinding
 import com.kimjinwouk.petwalk.ui.activity.LoginActivity
-import com.kimjinwouk.petwalk.ui.activity.MainActivity
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -40,21 +39,16 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
     private lateinit var selectedUri: Uri
 
     // 뷰모델 생성
-    private val viewModel by viewModels<walkViewModel>()
-
+    private val viewModel by activityViewModels<walkViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMyinfoBinding.bind(view)
         initLitener()
-        viewModel.loginDataRealtimeDB.observe(requireActivity(),{
+        viewModel.isChange.observe(requireActivity(), onChanged = {
             //로그인한 데이터의 변경이 생기면 해당 UI 수정.
-            setUserData()
+                setUserData()
         })
-
-
-
-
     }
 
     private fun initLitener() {
@@ -76,8 +70,6 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
             .placeholder(R.drawable.ic_baseline_image_search_24)
             .fallback(R.drawable.ic_baseline_image_search_24)
             .into(binding.userProfileImageView)
-
-
     }
 
     override fun onClick(p0: View?) {
@@ -115,8 +107,6 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
                 )
             }
         }
-
-
     }
 
     private fun showPermissionContextPopup() {
@@ -167,20 +157,10 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
         if (resultCode != Activity.RESULT_OK) {
             return
         }
-
         when (requestCode) {
             GET_IMAGE_CODE -> {
                 val uri = data?.data
                 if (uri != null) {
-                    binding.userProfileImageView.setImageURI(uri)
-                    Glide.with(binding.userProfileImageView)
-                        .load(uri)
-                        .transform(
-                            CenterCrop(),
-                            RoundedCorners(dpToPx(binding.userProfileImageView.context, 30))
-                        )
-                        .into(binding.userProfileImageView)
-
                     selectedUri = uri
                     uploadProfileImage()
                 } else {
@@ -195,38 +175,7 @@ class MyInfoFragment : Fragment(R.layout.fragment_myinfo), View.OnClickListener 
     }
 
     private fun uploadProfileImage() {
-        val fileName = "${System.currentTimeMillis()}.png"
-
-        (activity as MainActivity).storage.reference.child("users/photo").child(fileName)
-            .putFile(selectedUri)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    //업로드가 완료되면 업로드가된 주소가져와야한다.
-                    (activity as MainActivity).storage.reference.child("users/photo")
-                        .child(fileName)
-                        .downloadUrl
-                        .addOnSuccessListener { uri ->
-                            successImageUpload(uri.toString())
-                        }
-                        .addOnFailureListener {
-                            failImageUpload()
-                        }
-                } else {
-                    failImageUpload()
-                }
-            }
-    }
-
-    private fun successImageUpload(uri: String) {
-
-        (activity as MainActivity).auth.currentUser?.let { it ->
-            (activity as MainActivity).userDB.child(it.uid).child("imageUri").setValue(uri)
-
-        }
-    }
-
-    private fun failImageUpload() {
-
+        viewModel.uploadProfileImage(selectedUri.toString())
     }
 
     private fun dpToPx(context: Context, dp: Int): Int {

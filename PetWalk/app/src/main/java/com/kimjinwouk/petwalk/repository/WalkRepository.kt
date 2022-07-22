@@ -3,10 +3,7 @@ package com.kimjinwouk.petwalk.repository
 import a.jinkim.calculate.model.Walking
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.kimjinwouk.petwalk.data.WalkingDao
 import com.kimjinwouk.petwalk.impl.FirebaseExecutorImpl
 import com.kimjinwouk.petwalk.model.UserItemModel
@@ -42,9 +39,17 @@ class WalkRepository @Inject constructor(
     }
 
     fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) {
+
         firebaseExecutorImpl.getUserOnFirebase(loginUser)
     }
 
+    fun  uploadProfileImage(
+        selectedUri: String,
+        loginUser: MutableLiveData<UserItemModel>,
+        isChange: MutableLiveData<Boolean>
+    ) {
+        firebaseExecutorImpl.uploadProfileImage(selectedUri,loginUser,isChange)
+    }
 
     /*
     suspend fun insertRun(run : Run) = walkingDao.insertRun(run)

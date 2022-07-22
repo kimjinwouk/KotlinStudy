@@ -24,6 +24,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     // 뷰모델 생성
     private val viewModel by viewModels<walkViewModel>()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(LayoutInflater.from(this))
@@ -38,7 +39,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     .show()
                 //로그인 완료 UI 변경 시점.
                 //로그인이 완료된 후에는 Firebase에서 기타 외적인 데이터를 가지고 와야한다.
-                viewModel.getUserOnFirebase()
+                //viewModel.getUserOnFirebase()
+                startActivity(Intent(this, MainActivity::class.java))
             }
         })
 
@@ -54,7 +56,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         viewModel.loginDataRealtimeDB.observe(this, Observer {
             if (it != null) {
                 startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                //finish()
             }
         })
 
@@ -67,12 +69,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             binding.emailEditText.text.toString(),
             binding.passwordEditText.text.toString()
         )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        //로그인이 완료된 후에는 Firebase에서 기타 외적인 데이터를 가지고 와야한다.
-        viewModel.getUserOnFirebase()
     }
 
     private fun SignUp() {

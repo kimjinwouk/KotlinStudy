@@ -60,7 +60,8 @@ class MainActivity : BaseActivity() {
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-
+        viewModel.getUserOnFirebase()
+        
         // 데이터 불러오기
         firstTimeAppOpen = sharedPref.getBoolean(KEY_FIRST_TIME_TOGGLE, true)
         android.util.Log.d(TAG, "onCreate: $firstTimeAppOpen")

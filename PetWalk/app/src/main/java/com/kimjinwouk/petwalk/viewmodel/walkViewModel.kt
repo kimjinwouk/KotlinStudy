@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.kimjinwouk.petwalk.model.UserItemModel
 import com.kimjinwouk.petwalk.repository.WalkRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,17 +21,36 @@ class walkViewModel @Inject constructor(
     var isSignUp = MutableLiveData<Boolean>(false)
     var loginDataRealtimeDB = MutableLiveData<UserItemModel>()
 
+    /*
+    * Login
+    * */
     //로그인
     fun SignIn(email: String, password: String) = walkRepository.SignIn(isLogin,email, password)
-
     //회원가입
     fun SignUp(email: String, password: String) = walkRepository.SignUp(isSignUp,email, password)
-
     //회원가입 후 Firebase 에서 기타 정보 저장.
     fun setUserOnFirebase(email: String, password: String) = walkRepository.setUserOnFirebase(loginDataRealtimeDB,email,password)
 
+    /*
+    * Main
+    * */
     //로그인 후 Firebase 에서 기타 정보 가져오기.
-    fun getUserOnFirebase() = walkRepository.getUserOnFirebase(loginDataRealtimeDB)
+    fun getUserOnFirebase() = viewModelScope.launch {
+        walkRepository.getUserOnFirebase(loginDataRealtimeDB)
+    }
+
+
+
+    /*
+    * MyInfo
+    * */
+    var isChange = MutableLiveData<Boolean>(false)
+    //프로필 이미지 업로드
+    //이미지 업로드가 성공적으로 떨어지면 download uri를 loginDataRealtimeDB에 기록 후 옵저버가 감시하여 userData셋팅
+    fun uploadProfileImage(selectedUri: String) = viewModelScope.launch{
+        walkRepository.uploadProfileImage(selectedUri,loginDataRealtimeDB,isChange)
+    }
+
 
     val walks: LiveData<List<Walking>>
 

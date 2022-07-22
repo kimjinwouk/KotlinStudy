@@ -9,6 +9,7 @@ import com.kimjinwouk.petwalk.R
 //https://dkss7413.tistory.com/23 참고
 
 class ShowFragment {
+    /*
     companion object {
         private val fragmentMap: HashMap<String, Fragment> = HashMap()
 
@@ -87,5 +88,7 @@ class ShowFragment {
             fragmentMap.clear()
         }
     }
+
+     */
 
 }

@@ -224,17 +224,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     private fun updateTracking(isTracking: Boolean) {
         this.isTracking = isTracking
 
-//        binding.apply {
-//            if (!isTracking && currentTimeInMillis > 0L) {
-//                startButton.text = "다시 시작하기"
-//                finishButton.visibility = View.VISIBLE
-//            }
-//            else if (isTracking) {
-//                startButton.text = "정지하기"
-//                finishButton.visibility = View.GONE
-//            }
-//        }
-
     }
 
     // 경로 전부 표시

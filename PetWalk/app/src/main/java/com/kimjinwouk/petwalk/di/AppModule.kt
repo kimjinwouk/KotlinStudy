@@ -10,6 +10,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.kimjinwouk.petwalk.data.AppDatabase
 import com.kimjinwouk.petwalk.data.DBKey
 import com.kimjinwouk.petwalk.util.Constants.Companion.SHARED_PREFERENCES_NAME
@@ -49,6 +50,10 @@ class AppModule {
     @Provides
     fun provideFirebaseAuth() = Firebase.auth
 
+    // FirebaseStorage 추가
+    @Singleton
+    @Provides
+    fun provideFirebaseStorage() = Firebase.storage
 
 
     // FusedLocationProviderClient 추가
@@ -57,8 +62,6 @@ class AppModule {
     fun providesFusedLocationProviderClient(
         @ApplicationContext context : Context
     ) = FusedLocationProviderClient(context)
-
-    public lateinit var userDB: DatabaseReference
 
     // DatabaseReference 추가
     @Singleton
