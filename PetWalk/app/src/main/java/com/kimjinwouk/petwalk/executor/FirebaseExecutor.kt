@@ -16,7 +16,7 @@ interface FirebaseExecutor {
         password: String
     )
 
-    fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>)
+    fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>): Boolean
     fun uploadProfileImage(
         selectedUri: String,
         loginUser: MutableLiveData<UserItemModel>,

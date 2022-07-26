@@ -20,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.room.PrimaryKey
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.kimjinwouk.petwalk.R
 import com.kimjinwouk.petwalk.Service.PetWalkService
@@ -81,7 +80,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     // 라이브 데이터를 받아온 값들
     private var isTracking = false
-    private var pathPoints = mutableListOf<Polyline>()
+    private var pathPoints = mutableListOf<LatLng>()
     private var currentTimeInMillis = 0L
 
     // SharedPreferences 주입
@@ -144,7 +143,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 // 아니라면 실행
                 else {
                     sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-                    Toast.makeText(requireContext(),"산책 시작!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "산책 시작!", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -184,12 +183,9 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 스냅샷 찍기 위하여 전체 경로가 다 보이게 줌
     private fun zoomToWholeTrack() {
         val bounds = LatLngBounds.Builder()
-        lateinit var bitmap: Bitmap
-        if (pathPoints != null && pathPoints.last().size > 1) {
-            for (polyline in pathPoints) {
-                for (point in polyline) {
-                    bounds.include(point)
-                }
+        if (pathPoints != null && pathPoints.size > 1) {
+            for (point in pathPoints) {
+                bounds.include(point)
             }
             NaverMap?.moveCamera(CameraUpdate.fitBounds(bounds.build(), 100))
         }
@@ -211,10 +207,16 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         NaverMap?.takeSnapshot(object : NaverMap.SnapshotReadyCallback {
             override fun onSnapshotReady(bitmap: Bitmap) {
                 val run = Walking(
-                    0, PetWalkService.pathPoints.value, title, currentTimeInMillis.toString() ,bitmap ,sumDistance.toInt()               )
+                    0,
+                    PetWalkService.pathPoints.value!!,
+                    title,
+                    currentTimeInMillis.toString(),
+                    bitmap,
+                    sumDistance.toInt()
+                )
                 viewModel.insertWalk(run)
                 stopRun()
-                Toast.makeText(requireContext(),"산책 종료 후 저장!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "산책 종료 후 저장!", Toast.LENGTH_SHORT).show()
 
             }
         })
@@ -235,10 +237,10 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 width = POLYLINE_WIDTH
                 color = POLYLINE_COLOR
                 joinType = PolylineOverlay.LineJoin.Round
-                coords = pathPoints.last()
+                coords = pathPoints
             }
             polyline.map = NaverMap
-            Log.d(TAG, "addAllPolylines : ${pathPoints.last().toList().size}")
+            Log.d(TAG, "addAllPolylines : ${pathPoints.toList().size}")
         }
 
     }
@@ -246,8 +248,8 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 지도 위치 이동
     private fun moveCameraToUser() {
         if (isTracking) {
-            if (pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()) {
-                naverMapMove(pathPoints.last().last())
+            if (pathPoints.isNotEmpty() && pathPoints.isNotEmpty()) {
+                naverMapMove(pathPoints.last())
             }
         } else {
             setCurrentLocation()
@@ -257,9 +259,9 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 총 이동거리
     private fun updateDistance(): Float {
         var distanceInMeters = 0f
-        for (polyline in pathPoints) {
-            distanceInMeters += calculatePolylineLength(polyline)
-        }
+
+            distanceInMeters += calculatePolylineLength(pathPoints)
+
         return distanceInMeters
     }
 
@@ -286,18 +288,18 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     // 경로 표시 (마지막 전, 마지막 경로 연결)
     val polyline = PolylineOverlay()
     private fun addLatestPolyline() {
-        if (pathPoints.isNotEmpty() && pathPoints.last().size > 1) {
-            val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2] // 마지막 전 경로
-            val lastLatLng = pathPoints.last().last() // 마지막 경로
+        if (pathPoints.isNotEmpty() && pathPoints.size > 1) {
+            val preLastLatLng = pathPoints[pathPoints.size - 2] // 마지막 전 경로
+            val lastLatLng = pathPoints.last() // 마지막 경로
 
 
             polyline.apply {
                 width = POLYLINE_WIDTH
                 color = POLYLINE_COLOR
                 joinType = PolylineOverlay.LineJoin.Round
-                coords = pathPoints.last().toList()
+                coords = pathPoints.toList()
             }
-            Log.d(TAG, "addLatestPolyline : ${pathPoints.last().toList().size}")
+            Log.d(TAG, "addLatestPolyline : ${pathPoints.toList().size}")
             polyline.map = NaverMap
 
             // 이동거리 계산

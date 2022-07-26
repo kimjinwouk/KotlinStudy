@@ -10,6 +10,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.naver.maps.geometry.LatLng
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Modifier
 import com.kimjinwouk.petwalk.Service.Polyline as Polyline
@@ -24,14 +25,14 @@ class Converters{
         .create()
 
     @TypeConverter
-    fun fromLocations(value: MutableList<Polyline>?): String {
+    fun fromLocations(value: MutableList<LatLng>?): String {
         return Gson().toJson(value)
     }
     //Locate 받은걸 String으로 변환해서 저장.
 
     @TypeConverter
-    fun toLocations(value: String) : MutableList<Polyline> {
-        return gson.fromJson<MutableList<Polyline>>( value, object:TypeToken<MutableList<Polyline>>() {}.type )
+    fun toLocations(value: String) : MutableList<LatLng> {
+        return gson.fromJson<MutableList<LatLng>>( value, object:TypeToken<MutableList<LatLng>>() {}.type )
     }
 
     // Bitmap -> ByteArray 변환

@@ -1,72 +1,45 @@
 package com.kimjinwouk.petwalk.adapter
 
-import a.jinkim.calculate.model.Walking
-import android.content.Context
-import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-
 import androidx.recyclerview.widget.RecyclerView
-import com.kimjinwouk.petwalk.databinding.WalkingRawBinding
+import com.kimjinwouk.petwalk.databinding.EventItemViewBinding
+import com.kimjinwouk.petwalk.ui.fragment.WalkingListFragment
+import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.getColorCompat
+import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.layoutInflater
+import java.time.format.DateTimeFormatter
 
-class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.ItemViewHolder>() {
+class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.Example5FlightsViewHolder>() {
 
-    inner class ItemViewHolder(private val binding: WalkingRawBinding)
-        : RecyclerView.ViewHolder(binding.root){
+    val flights = mutableListOf<WalkingListFragment.Flight>()
 
-        fun bind (walk: Walking){
-            binding.textViewUid.text = walk.uid.toString()
-            binding.textViewDate.text = walk.Date.toString()
-            binding.textViewTime.text = walk.Time.toString()
-            binding.textViewDistance.text = walk.Distance.toString()
-            binding.imageViewNaverSnapshot.setImageBitmap(walk.Bitmap)
-        }
+    private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm")
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Example5FlightsViewHolder {
+        return Example5FlightsViewHolder(
+            EventItemViewBinding.inflate(parent.context.layoutInflater, parent, false)
+        )
     }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val binding = WalkingRawBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return ItemViewHolder(binding)
-
+    override fun onBindViewHolder(viewHolder: Example5FlightsViewHolder, position: Int) {
+        viewHolder.bind(flights[position])
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val currentItem = differ.currentList[position]
-        // 현재 아이템 넘겨줌
-        if (currentItem != null) {
-            holder.bind(currentItem)
-        }
-    }
+    override fun getItemCount(): Int = flights.size
 
-    private fun dpToPx(context: Context, dp: Int) : Int{
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(),context.resources.displayMetrics).toInt()
-    }
+    inner class Example5FlightsViewHolder(val binding: EventItemViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    // 데이터 변경
-    fun submitList(list: List<Walking>) = differ.submitList(list)
-
-    // 비동기 처리
-    val differ = AsyncListDiffer(this, diffUtil)
-
-
-    companion object{
-        val diffUtil = object : DiffUtil.ItemCallback<Walking>(){
-            override fun areItemsTheSame(oldItem: Walking, newItem: Walking): Boolean {
-                return oldItem.uid == newItem.uid
-
+        fun bind(flight: WalkingListFragment.Flight) {
+            binding.itemFlightDateText.apply {
+                text = formatter.format(flight.time)
+                setBackgroundColor(itemView.context.getColorCompat(flight.color))
             }
 
-            override fun areContentsTheSame(oldItem: Walking, newItem: Walking): Boolean {
-                return oldItem == newItem
-            }
+            binding.itemDepartureAirportCodeText.text = flight.departure.code
+            binding.itemDepartureAirportCityText.text = flight.departure.city
 
+            binding.itemDestinationAirportCodeText.text = flight.destination.code
+            binding.itemDestinationAirportCityText.text = flight.destination.city
         }
-    }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
     }
 }

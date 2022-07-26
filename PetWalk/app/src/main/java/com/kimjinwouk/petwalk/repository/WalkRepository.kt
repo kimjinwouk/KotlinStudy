@@ -38,9 +38,9 @@ class WalkRepository @Inject constructor(
         firebaseExecutorImpl.setUserOnFirebase(userProfile,email,password)
     }
 
-    fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) {
+    fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) : Boolean {
 
-        firebaseExecutorImpl.getUserOnFirebase(loginUser)
+        return firebaseExecutorImpl.getUserOnFirebase(loginUser)
     }
 
     fun  uploadProfileImage(

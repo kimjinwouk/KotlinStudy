@@ -43,7 +43,7 @@ import javax.inject.Inject
 * 커스텀 타입 설정.
 * */
 typealias Polyline = MutableList<LatLng>
-typealias Polylines = MutableList<Polyline>
+//typealias Polylines = MutableList<Polyline>
 
 @AndroidEntryPoint
 class PetWalkService : LifecycleService() {
@@ -72,9 +72,10 @@ class PetWalkService : LifecycleService() {
     private var lastSecondTimestamp = 0L // 1초 단위 체크를 위함
 
     //static 변수
+
     companion object {
         val isTracking = MutableLiveData<Boolean>() // 위치 추적 상태 여부
-        val pathPoints = MutableLiveData<Polylines>() // LatLng = 위도,경도
+        val pathPoints = MutableLiveData<MutableList<LatLng>>() // LatLng = 위도,경도
         val timeRunInMillis = MutableLiveData<Long>() // 뷰에 표시될 시간
         var isFirstRun = false // 처음 실행 여부 (false = 실행되지않음)
     }
@@ -157,7 +158,7 @@ class PetWalkService : LifecycleService() {
 
     // 타이머 시작
     private fun startTimer() {
-        addEmptyPolyline()
+        //addEmptyPolyline()
         isTracking.postValue(true)
         timeStarted = System.currentTimeMillis()
         isTimerEnabled = true
@@ -182,18 +183,19 @@ class PetWalkService : LifecycleService() {
     }
 
     // 빈 polyline 추가
+    /*
     private fun addEmptyPolyline() = pathPoints.value?.apply {
-        add(mutableListOf())
+        add(LatLng())
         pathPoints.postValue(this)
     } ?: pathPoints.postValue(mutableListOf(mutableListOf())) // null 이라면 초기화
-
+    */
 
     // 위치정보 추가
     private fun addPathPoint(location: Location?) {
         location?.let {
             val pos = LatLng(location.latitude, location.longitude)
             pathPoints.value?.apply {
-                last().add(pos)
+                add(pos)
                 pathPoints.postValue(this)
             }
         }

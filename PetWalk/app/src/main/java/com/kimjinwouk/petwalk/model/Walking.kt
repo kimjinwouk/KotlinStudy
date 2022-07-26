@@ -1,13 +1,10 @@
 package a.jinkim.calculate.model
 
 import android.graphics.Bitmap
-import android.location.Location
-import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.kimjinwouk.petwalk.Service.Polyline
+import com.naver.maps.geometry.LatLng
+
 
 /*
 * 산책에대한 정보
@@ -21,7 +18,7 @@ import com.kimjinwouk.petwalk.Service.Polyline
 @Entity(tableName = "Walking")
 data class Walking(
     @PrimaryKey(autoGenerate = true) var uid: Int = 0,
-    var Locations: MutableList<Polyline>?, //이동한좌표
+    var Locations: MutableList<LatLng> = mutableListOf(), //이동한좌표
     var Date : String = "", // 저장한날짜
     var Time : String = "", // 걸린시간
     var Bitmap : Bitmap,    // 네이버맵 스냅샷

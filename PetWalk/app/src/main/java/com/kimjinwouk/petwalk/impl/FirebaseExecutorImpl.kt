@@ -38,14 +38,16 @@ class FirebaseExecutorImpl @Inject constructor(
             }
     }
 
-    override fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) {
+    override fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) : Boolean{
 
+        var Ret = false
 
         userDB.child(auth.currentUser!!.uid)
             .addListenerForSingleValueEvent(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         loginUser.value = snapshot.getValue(UserItemModel::class.java)!!
+                        Ret = true
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -53,6 +55,7 @@ class FirebaseExecutorImpl @Inject constructor(
                     }
                 })
 
+        return Ret
     }
 
 

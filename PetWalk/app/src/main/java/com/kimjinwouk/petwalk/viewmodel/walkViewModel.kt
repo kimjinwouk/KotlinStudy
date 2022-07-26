@@ -36,7 +36,7 @@ class walkViewModel @Inject constructor(
     * */
     //로그인 후 Firebase 에서 기타 정보 가져오기.
     fun getUserOnFirebase() = viewModelScope.launch {
-        walkRepository.getUserOnFirebase(loginDataRealtimeDB)
+        isLogin.value = walkRepository.getUserOnFirebase(loginDataRealtimeDB)
     }
 
 

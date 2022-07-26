@@ -56,7 +56,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         viewModel.loginDataRealtimeDB.observe(this, Observer {
             if (it != null) {
                 startActivity(Intent(this, MainActivity::class.java))
-                //finish()
+                finish()
             }
         })
 
@@ -85,6 +85,13 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             //로그인
             binding.signInButton.id -> SignIn()
             else -> return
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(auth.currentUser != null){
+            viewModel.getUserOnFirebase()
         }
     }
 }
