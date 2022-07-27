@@ -1,5 +1,6 @@
 package com.kimjinwouk.petwalk.adapter
 
+import a.jinkim.calculate.model.Walking
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kimjinwouk.petwalk.databinding.EventItemViewBinding
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter
 
 class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.Example5FlightsViewHolder>() {
 
-    val flights = mutableListOf<WalkingListFragment.Flight>()
+    val flights = mutableListOf<Walking>()
 
     private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm")
 
@@ -29,17 +30,16 @@ class WalkListAdapter() : RecyclerView.Adapter<WalkListAdapter.Example5FlightsVi
     inner class Example5FlightsViewHolder(val binding: EventItemViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(flight: WalkingListFragment.Flight) {
+        fun bind(flight: Walking) {
             binding.itemFlightDateText.apply {
-                text = formatter.format(flight.time)
-                setBackgroundColor(itemView.context.getColorCompat(flight.color))
+                text = formatter.format(flight.Date)
             }
 
-            binding.itemDepartureAirportCodeText.text = flight.departure.code
-            binding.itemDepartureAirportCityText.text = flight.departure.city
+            binding.itemDepartureAirportCodeText.text = flight.Time
+            binding.itemDepartureAirportCityText.text = flight.Distance.toString()
 
-            binding.itemDestinationAirportCodeText.text = flight.destination.code
-            binding.itemDestinationAirportCityText.text = flight.destination.city
+            binding.itemDestinationAirportCodeText.text = flight.uid.toString()
+            binding.itemDestinationAirportCityText.text = flight.Locations.toString()
         }
     }
 }

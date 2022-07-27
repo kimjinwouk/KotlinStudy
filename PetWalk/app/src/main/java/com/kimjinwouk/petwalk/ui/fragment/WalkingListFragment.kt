@@ -1,6 +1,8 @@
 package com.kimjinwouk.petwalk.ui.fragment
 
+import a.jinkim.calculate.model.Walking
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -17,6 +19,7 @@ import com.kimjinwouk.petwalk.adapter.WalkListAdapter
 import com.kimjinwouk.petwalk.databinding.CalendarDayBinding
 import com.kimjinwouk.petwalk.databinding.CalendarHeaderBinding
 import com.kimjinwouk.petwalk.databinding.FragmentWalkinglistBinding
+import com.kimjinwouk.petwalk.util.Constants
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.daysOfWeekFromLocale
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.getColorCompat
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.setTextColorRes
@@ -31,7 +34,7 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import com.kizitonwose.calendarview.utils.next
 import com.kizitonwose.calendarview.utils.previous
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.DayOfWeek
+import kotlinx.coroutines.flow.observeOn
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -53,7 +56,7 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
 
     private var selectedDate: LocalDate? = null
     private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
-    private val flightsAdapter = WalkListAdapter()
+    private val walkingAdapter = WalkListAdapter()
 
     data class Flight(
         val time: LocalDateTime,
@@ -64,20 +67,26 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
         data class Airport(val city: String, val code: String)
     }
 
-    private val flights = generateFlights().groupBy { it.time.toLocalDate() }
+
+    private var tmp : Map<LocalDate, List<Walking>> ?= null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d(Constants.TAG, "onVieCreate")
         _binding = FragmentWalkinglistBinding.bind(view)
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
+
+        viewModel.walks.observe(requireActivity(),{
+            tmp = it.groupBy { it.Date.toLocalDate() }
+        })
 
         binding.apply {
 
             exFiveRv.apply {
                 layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                adapter = flightsAdapter
+                adapter = walkingAdapter
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
             }
 
@@ -132,13 +141,13 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
                     textView.setTextColorRes(R.color.example_5_text_grey_light)
                     layout.setBackgroundResource(if (selectedDate == day.date) R.drawable.ic_baseline_run_circle_24 else 0)
 
-                    val flights = flights[day.date]
+                    val flights = tmp!![day.date]
                     if (flights != null) {
                         if (flights.count() == 1) {
-                            flightBottomView.setBackgroundColor(view.context.getColorCompat(flights[0].color))
+                            flightBottomView.setBackgroundColor(R.color.black)
                         } else {
-                            flightTopView.setBackgroundColor(view.context.getColorCompat(flights[0].color))
-                            flightBottomView.setBackgroundColor(view.context.getColorCompat(flights[1].color))
+                            flightTopView.setBackgroundColor(R.color.black)
+                            flightBottomView.setBackgroundColor(R.color.black)
                         }
                     }
                 } else {
@@ -210,9 +219,9 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
     }
 
     private fun updateAdapterForDate(date: LocalDate?) {
-        flightsAdapter.flights.clear()
-        flightsAdapter.flights.addAll(flights[date].orEmpty())
-        flightsAdapter.notifyDataSetChanged()
+        walkingAdapter.flights.clear()
+        walkingAdapter.flights.addAll(tmp!![date].orEmpty())
+        walkingAdapter.notifyDataSetChanged()
     }
 }
 

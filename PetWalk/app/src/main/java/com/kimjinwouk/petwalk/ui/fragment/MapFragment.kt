@@ -41,6 +41,7 @@ import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PolylineOverlay
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
@@ -202,7 +203,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         val year = yearFormat.format(calendar.time)
         val month = monthFormat.format(calendar.time)
         val day = dayFormat.format(calendar.time)
-        val title = "${year}년 ${month}월 ${day}일 산책"
+        val title = LocalDateTime.now()
 
         NaverMap?.takeSnapshot(object : NaverMap.SnapshotReadyCallback {
             override fun onSnapshotReady(bitmap: Bitmap) {
@@ -441,7 +442,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
     @SuppressLint("MissingPermission")
     private fun setCurrentLocation() {
-        if (PetWalkUtil.hasLocationPermissions(requireContext())) {
+        if (PetWalkUtil.hasLocationPermissions(requireContext()) && isTracking.not()) {
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { it ->
                 it?.let { it ->
                     naverMapMove(LatLng(it.latitude, it.longitude))
@@ -449,7 +450,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             }
         }
     }
-
 
     private fun naverMapMove(latlng: LatLng) {
         Log.d(TAG, "naverMapMove")

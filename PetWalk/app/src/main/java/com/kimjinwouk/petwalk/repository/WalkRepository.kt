@@ -7,6 +7,8 @@ import com.google.firebase.database.DatabaseReference
 import com.kimjinwouk.petwalk.data.WalkingDao
 import com.kimjinwouk.petwalk.impl.FirebaseExecutorImpl
 import com.kimjinwouk.petwalk.model.UserItemModel
+import kotlinx.coroutines.flow.Flow
+
 import javax.inject.Inject
 
 
@@ -18,11 +20,14 @@ class WalkRepository @Inject constructor(
     private val firebaseExecutorImpl: FirebaseExecutorImpl
 ) {
 
-    val readAllData = walkingDao.getAll()
+
 
     //room 아래와 같이 진행
     suspend fun insertWalk(walk : Walking) = walkingDao.insertWalk(walk)
-    suspend fun selectAll() = walkingDao.getAll()
+
+    val allData : List<Walking> = walkingDao.getAll()
+
+    //fun selectAll() : Flow<List<Walking>> = walkingDao.getAll()
 
     fun SignIn( isLogin : MutableLiveData<Boolean>, email : String, password : String){
         firebaseExecutorImpl.onLogin(isLogin,email,password)

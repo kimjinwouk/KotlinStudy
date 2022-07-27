@@ -6,12 +6,13 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WalkingDao {
 
     @Query("SELECT * FROM Walking")
-    fun getAll(): LiveData<List<Walking>>
+    fun getAll(): List<Walking>
 
     @Insert
     suspend fun insertWalk(walking: Walking)

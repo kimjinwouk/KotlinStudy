@@ -52,18 +52,21 @@ class walkViewModel @Inject constructor(
     }
 
 
-    val walks: LiveData<List<Walking>>
-
-    init {
-        walks = walkRepository.readAllData
+    /*
+    * WalkingList
+    * */
+    var list = walkRepository.allData
+    var walks =  MutableLiveData<List<Walking>>()
+    init{
+        list.groupBy { it.Date.toLocalDate() }
+        walks.value = list
     }
-
     fun insertWalk(walk: Walking) = viewModelScope.launch {
         walkRepository.insertWalk(walk)
     }
 
-    fun selectWalk() = viewModelScope.launch {
-        walkRepository.selectAll()
-    }
+//    fun selectWalk()  = viewModelScope.launch {
+//        walkRepository.selectAll()
+//    }
 
 }

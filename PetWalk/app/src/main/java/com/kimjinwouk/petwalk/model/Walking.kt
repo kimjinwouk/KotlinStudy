@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.naver.maps.geometry.LatLng
+import java.time.LocalDateTime
 
 
 /*
@@ -18,8 +19,8 @@ import com.naver.maps.geometry.LatLng
 @Entity(tableName = "Walking")
 data class Walking(
     @PrimaryKey(autoGenerate = true) var uid: Int = 0,
-    var Locations: MutableList<LatLng> = mutableListOf(), //이동한좌표
-    var Date : String = "", // 저장한날짜
+    var Locations: List<LatLng> = listOf<LatLng>(), //이동한좌표
+    var Date : LocalDateTime , // 저장한날짜
     var Time : String = "", // 걸린시간
     var Bitmap : Bitmap,    // 네이버맵 스냅샷
     var Distance : Int = 0  // 총 이동거리

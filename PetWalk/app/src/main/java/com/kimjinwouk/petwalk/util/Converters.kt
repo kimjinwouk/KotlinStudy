@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken
 import com.naver.maps.geometry.LatLng
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Modifier
+import java.time.LocalDateTime
 import com.kimjinwouk.petwalk.Service.Polyline as Polyline
 
 class Converters{
@@ -34,6 +35,19 @@ class Converters{
     fun toLocations(value: String) : MutableList<LatLng> {
         return gson.fromJson<MutableList<LatLng>>( value, object:TypeToken<MutableList<LatLng>>() {}.type )
     }
+
+    @TypeConverter
+    fun fromTime(value: LocalDateTime?): String {
+        return Gson().toJson(value)
+    }
+    //Locate 받은걸 String으로 변환해서 저장.
+
+    @TypeConverter
+    fun toTime(value: String) : LocalDateTime {
+        return gson.fromJson<LocalDateTime>( value, object:TypeToken<LocalDateTime>() {}.type )
+    }
+
+
 
     // Bitmap -> ByteArray 변환
     @TypeConverter
