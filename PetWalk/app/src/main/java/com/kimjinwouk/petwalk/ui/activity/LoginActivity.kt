@@ -91,7 +91,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         if(auth.currentUser != null){
-            viewModel.getUserOnFirebase()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

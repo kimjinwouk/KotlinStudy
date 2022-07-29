@@ -4,8 +4,6 @@ import a.jinkim.calculate.model.Walking
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kimjinwouk.petwalk.databinding.EventItemViewBinding
-import com.kimjinwouk.petwalk.ui.fragment.WalkingListFragment
-import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.getColorCompat
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.layoutInflater
 import java.time.format.DateTimeFormatter
 

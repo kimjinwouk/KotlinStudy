@@ -13,7 +13,9 @@ import com.google.gson.reflect.TypeToken
 import com.naver.maps.geometry.LatLng
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Modifier
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import com.kimjinwouk.petwalk.Service.Polyline as Polyline
 
 class Converters{
@@ -37,17 +39,14 @@ class Converters{
     }
 
     @TypeConverter
-    fun fromTime(value: LocalDateTime?): String {
-        return Gson().toJson(value)
+    fun fromTimestamp(value: Long?): LocalDateTime? {
+        return value?.let { LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC) }
     }
-    //Locate 받은걸 String으로 변환해서 저장.
 
     @TypeConverter
-    fun toTime(value: String) : LocalDateTime {
-        return gson.fromJson<LocalDateTime>( value, object:TypeToken<LocalDateTime>() {}.type )
+    fun dateToTimestamp(date: LocalDateTime?): Long? {
+        return date?.atZone(ZoneOffset.UTC)?.toInstant()?.toEpochMilli()
     }
-
-
 
     // Bitmap -> ByteArray 변환
     @TypeConverter

@@ -2,12 +2,10 @@ package com.kimjinwouk.petwalk.ui.fragment
 
 import a.jinkim.calculate.model.Walking
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.ColorRes
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,11 +17,9 @@ import com.kimjinwouk.petwalk.adapter.WalkListAdapter
 import com.kimjinwouk.petwalk.databinding.CalendarDayBinding
 import com.kimjinwouk.petwalk.databinding.CalendarHeaderBinding
 import com.kimjinwouk.petwalk.databinding.FragmentWalkinglistBinding
-import com.kimjinwouk.petwalk.util.Constants
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.daysOfWeekFromLocale
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.getColorCompat
 import com.kimjinwouk.petwalk.util.PetWalkUtil.Companion.setTextColorRes
-import com.kimjinwouk.petwalk.util.generateFlights
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -34,9 +30,7 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import com.kizitonwose.calendarview.utils.next
 import com.kizitonwose.calendarview.utils.previous
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.observeOn
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -55,32 +49,21 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
     private val viewModel by viewModels<walkViewModel>()
 
     private var selectedDate: LocalDate? = null
-    private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
+    private val monthTitleFormatter = DateTimeFormatter.ofPattern("MM")
     private val walkingAdapter = WalkListAdapter()
 
-    data class Flight(
-        val time: LocalDateTime,
-        val departure: Airport,
-        val destination: Airport,
-        @ColorRes val color: Int
-    ) {
-        data class Airport(val city: String, val code: String)
-    }
-
-
-    private var tmp : Map<LocalDate, List<Walking>> ?= null
-
-
+    private var tmp: Map<LocalDate, List<Walking>>? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(Constants.TAG, "onVieCreate")
         _binding = FragmentWalkinglistBinding.bind(view)
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
 
-        viewModel.walks.observe(requireActivity(),{
-            tmp = it.groupBy { it.Date.toLocalDate() }
-        })
+
+        viewModel.walks.observe(requireActivity()) { it ->
+            tmp = it.groupBy { result -> result.Date.toLocalDate() }
+            binding.exFiveCalendar.notifyCalendarChanged()
+        }
 
         binding.apply {
 
@@ -124,11 +107,17 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
             }
         }
 
+
+
         binding.exFiveCalendar.dayBinder = object : DayBinder<DayViewContainer> {
-            override fun create(view: View) = DayViewContainer(view)
+            override fun create(view: View): DayViewContainer {
+                return DayViewContainer(view)
+            }
+
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.day = day
                 val textView = container.binding.exFiveDayText
+                val imageView = container.binding.exFiveDayToday
                 val layout = container.binding.exFiveDayLayout
                 textView.text = day.date.dayOfMonth.toString()
 
@@ -136,23 +125,38 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
                 val flightBottomView = container.binding.exFiveDayFlightBottom
                 flightTopView.background = null
                 flightBottomView.background = null
+                imageView.background = null
+
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     textView.setTextColorRes(R.color.example_5_text_grey_light)
-                    layout.setBackgroundResource(if (selectedDate == day.date) R.drawable.ic_baseline_run_circle_24 else 0)
-
-                    val flights = tmp!![day.date]
-                    if (flights != null) {
-                        if (flights.count() == 1) {
-                            flightBottomView.setBackgroundColor(R.color.black)
-                        } else {
-                            flightTopView.setBackgroundColor(R.color.black)
-                            flightBottomView.setBackgroundColor(R.color.black)
+                    textView.setBackgroundResource(if (selectedDate == day.date) R.drawable.calendarview_selected_background else 0)
+                    tmp?.let {
+                        val flights = it[day.date]
+                        if (flights != null) {
+                            if (flights.count() == 1) {
+                                flightBottomView.setBackgroundColor(R.color.black)
+                            } else {
+                                flightTopView.setBackgroundColor(R.color.black)
+                                flightBottomView.setBackgroundColor(R.color.black)
+                            }
                         }
                     }
+                    //오늘자 반전 표시
+                    if (day.date == LocalDate.now()) {
+                        textView.setBackgroundResource(R.drawable.calendarview_today_background)
+                        textView.setTextColorRes(R.color.white)
+                    }
+
                 } else {
-                    textView.setTextColorRes(R.color.example_5_text_grey)
                     layout.background = null
+                    textView.setTextColorRes(
+                        when (day.date.dayOfWeek.ordinal) {
+                            6 -> R.color.calendar_other_month_sunday_txt_color
+                            5 -> R.color.calendar_other_month_saturday_txt_color
+                            else -> R.color.calendar_other_month_normal_txt_color
+                        }
+                    )
                 }
             }
         }
@@ -172,8 +176,17 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
                             tv.text =
                                 daysOfWeek[index].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
                                     .toUpperCase(Locale.ENGLISH)
-                            tv.setTextColorRes(R.color.example_5_text_grey)
                             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                            /*
+                            tv.setTextColorRes(
+                                when (daysOfWeek[index].ordinal) {
+                                    6 -> R.color.calendar_sunday_txt_color
+                                    5 -> R.color.calendar_saturday_txt_color
+                                    else -> R.color.calendar_normaldaytxt_color
+                                }
+                            )
+
+                             */
                         }
                     month.yearMonth
                 }
@@ -181,7 +194,7 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
         }
 
         binding.exFiveCalendar.monthScrollListener = { month ->
-            val title = "${monthTitleFormatter.format(month.yearMonth)} ${month.yearMonth.year}"
+            val title = "${month.yearMonth.year}.${monthTitleFormatter.format(month.yearMonth)} "
             binding.exFiveMonthYearText.text = title
 
             selectedDate?.let {

@@ -14,8 +14,9 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="일"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+        android:textColor="@color/calendar_sunday_txt_color"
+        android:textSize="14sp"
+        />
 
     <TextView
         android:id="@+id/legendText2"
@@ -74,7 +75,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="토"
-        android:textColor="@color/black"
+        android:textColor="@color/calendar_saturday_txt_color"
         android:textSize="14sp" />
 
 </LinearLayout>

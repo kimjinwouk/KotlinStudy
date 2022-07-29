@@ -23,4 +23,25 @@
     <color name="example_5_toolbar_color">#282828</color>
     <color name="example_5_text_grey">#bdbdbd</color>
     <color name="example_5_text_grey_light">#616161</color>
+
+
+    <!--달력에 관한 색상코드 정리-->
+    <color name="calendar_sunday_txt_color">#D94E61</color>
+    <color name="calendar_normaldaytxt_color">#201F24</color>
+    <color name="calendar_saturday_txt_color">#6277E4</color>
+
+
+    <color name="calendar_other_month_sunday_txt_color">#FAC7CE</color>
+    <color name="calendar_other_month_normal_txt_color">#BCBCBC</color>
+    <color name="calendar_other_month_saturday_txt_color">#D1D9FE</color>
+
+
+    <color name="calendar_today_background_color">#1F1E23</color>
+    <color name="calendar_selected_background_color">#D8D9DB</color>
+
+
+
+
+
+    <!--달력에 관한 색상코드 정리-->
 </resources>

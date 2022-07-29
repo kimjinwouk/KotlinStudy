@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface WalkingDao {
 
     @Query("SELECT * FROM Walking")
-    fun getAll(): List<Walking>
+    fun getAll(): LiveData<List<Walking>>
 
     @Insert
     suspend fun insertWalk(walking: Walking)

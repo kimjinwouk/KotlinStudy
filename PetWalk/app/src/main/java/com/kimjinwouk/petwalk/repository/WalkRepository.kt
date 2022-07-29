@@ -25,7 +25,9 @@ class WalkRepository @Inject constructor(
     //room 아래와 같이 진행
     suspend fun insertWalk(walk : Walking) = walkingDao.insertWalk(walk)
 
-    val allData : List<Walking> = walkingDao.getAll()
+    fun selectWalk() = walkingDao.getAll()
+
+
 
     //fun selectAll() : Flow<List<Walking>> = walkingDao.getAll()
 
