@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item android:id="@+id/read"
+        android:title="읽기"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_person_24"
+        />
+
+    <item android:id="@+id/write"
+        android:title="쓰기"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_mode_edit_24"
+        />
+
+    <item android:id="@+id/statistics"
+        android:title="통계"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_insert_chart_24"
+        />
+    <item android:id="@+id/calendar"
+        android:title="수익금"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_calendar_month_24"
+        />
+</menu>

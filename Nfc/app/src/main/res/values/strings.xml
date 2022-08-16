@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">nfc</string>
+    <string name="hint_email">아이디</string>
+    <string name="hint_password">비밀번호</string>
+    <string name="SignIn">로그인</string>
+    <string name="SignInFailMsg">로그인에 실패했습니다. 다시 시도해주세요.</string>
+    <string name="SignInSuccessMsg">로그인 성공!</string>
+    <string name="Logout">로그아웃</string>
+    <string name="NFC_READY_TEXT">NFC 태그를 핸드폰 뒤에 위치해주세요.</string>
+    <string name="NFC_SUCCES_TEXT">현재 태그된 NFC의 정보는 아래와 같습니다.</string>
+    <string name="NFC_FAIL_TEXT">현재 태그의 정보를 불러오는데 실패하였습니다.</string>
+
+</resources>

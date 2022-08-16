@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/read">
+
+    <fragment
+        android:id="@+id/read"
+        android:name="com.nfc.ui.fragment.ReadFragment"
+        tools:layout="@layout/fragment_read" >
+        <action
+            android:id="@+id/action_read_to_write"
+            app:destination="@id/write" />
+    </fragment>
+    <fragment
+        android:id="@+id/write"
+        android:name="com.nfc.ui.fragment.WriteFragment"
+        tools:layout="@layout/fragment_write" >
+        <action
+            android:id="@+id/action_write_to_statistics"
+            app:destination="@id/statistics" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/statistics"
+        android:name="com.nfc.ui.fragment.StatsFragment"
+        tools:layout="@layout/fragment_statistics" >
+        <action
+            android:id="@+id/action_statistics_to_cal"
+            app:destination="@id/calendar" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/calendar"
+        android:name="com.nfc.ui.fragment.CalendarFragment"
+        tools:layout="@layout/fragment_calendar" >
+    </fragment>
+
+
+</navigation>
