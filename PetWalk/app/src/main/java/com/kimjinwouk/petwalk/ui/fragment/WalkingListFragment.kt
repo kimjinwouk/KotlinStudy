@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -99,8 +98,6 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
                             binding.exFiveCalendar.notifyDateChanged(day.date)
                             oldDate?.let { binding.exFiveCalendar.notifyDateChanged(it) }
                             updateAdapterForDate(day.date)
-                            Toast.makeText(requireContext(), "{$day.date} 클릭", Toast.LENGTH_SHORT)
-                                .show()
                         }
                     }
                 }
@@ -117,15 +114,11 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.day = day
                 val textView = container.binding.exFiveDayText
-                val imageView = container.binding.exFiveDayToday
                 val layout = container.binding.exFiveDayLayout
                 textView.text = day.date.dayOfMonth.toString()
 
                 val flightTopView = container.binding.exFiveDayFlightTop
-                val flightBottomView = container.binding.exFiveDayFlightBottom
                 flightTopView.background = null
-                flightBottomView.background = null
-                imageView.background = null
 
 
                 if (day.owner == DayOwner.THIS_MONTH) {
@@ -134,12 +127,7 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
                     tmp?.let {
                         val flights = it[day.date]
                         if (flights != null) {
-                            if (flights.count() == 1) {
-                                flightBottomView.setBackgroundColor(R.color.black)
-                            } else {
-                                flightTopView.setBackgroundColor(R.color.black)
-                                flightBottomView.setBackgroundColor(R.color.black)
-                            }
+                            flightTopView.setBackgroundResource(R.drawable.calendarview_event_background)
                         }
                     }
                     //오늘자 반전 표시
@@ -232,9 +220,12 @@ class WalkingListFragment : Fragment(R.layout.fragment_walkinglist) {
     }
 
     private fun updateAdapterForDate(date: LocalDate?) {
-        walkingAdapter.flights.clear()
-        walkingAdapter.flights.addAll(tmp!![date].orEmpty())
+        walkingAdapter.walks.clear()
+        walkingAdapter.walks.addAll(tmp!![date].orEmpty())
         walkingAdapter.notifyDataSetChanged()
     }
+
+
+    /**/
 }
 

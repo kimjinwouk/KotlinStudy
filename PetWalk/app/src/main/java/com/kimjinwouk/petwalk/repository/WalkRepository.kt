@@ -46,7 +46,6 @@ class WalkRepository @Inject constructor(
     }
 
     fun getUserOnFirebase(loginUser: MutableLiveData<UserItemModel>) : Boolean {
-
         return firebaseExecutorImpl.getUserOnFirebase(loginUser)
     }
 

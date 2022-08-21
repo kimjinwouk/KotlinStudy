@@ -1,5 +1,6 @@
 package com.kimjinwouk.petwalk.impl
 
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -10,6 +11,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.kimjinwouk.petwalk.executor.FirebaseExecutor
 import com.kimjinwouk.petwalk.model.UserItemModel
+import com.kimjinwouk.petwalk.util.Constants
 import javax.inject.Inject
 
 
@@ -51,7 +53,7 @@ class FirebaseExecutorImpl @Inject constructor(
                     }
 
                     override fun onCancelled(error: DatabaseError) {
-
+                        Log.d(Constants.TAG, "error : $error")
                     }
                 })
 

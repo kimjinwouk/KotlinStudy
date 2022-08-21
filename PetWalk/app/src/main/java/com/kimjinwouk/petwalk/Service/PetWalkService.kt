@@ -194,10 +194,9 @@ class PetWalkService : LifecycleService() {
     private fun addPathPoint(location: Location?) {
         location?.let {
             val pos = LatLng(location.latitude, location.longitude)
-            pathPoints.value?.let{
-                var tempItems : MutableList<LatLng>  = it
-                tempItems.add(pos)
-                pathPoints.value = tempItems
+            pathPoints.value?.apply {
+                add(pos)
+                pathPoints.postValue(this)
             }
         }
     }

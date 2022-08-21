@@ -2,12 +2,14 @@ package com.kimjinwouk.petwalk.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.kimjinwouk.petwalk.databinding.ActivityLoginBinding
+import com.kimjinwouk.petwalk.util.Constants
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,6 +31,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+        Log.d(Constants.TAG,"LoginActivity_OnCreate")
         binding.signUpButton.setOnClickListener(this)
         binding.signInButton.setOnClickListener(this)
 

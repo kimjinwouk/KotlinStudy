@@ -2,7 +2,7 @@ package com.kimjinwouk.petwalk.util
 
 class Constants {
     companion object{
-        const val TAG = "tst5"
+        const val TAG = "PetWalk"
 
         /**
          * 서비스 상태(action) 상수
@@ -28,7 +28,7 @@ class Constants {
         /**
          * 경로 표시 옵션
          */
-        const val POLYLINE_WIDTH = 10
+        const val POLYLINE_WIDTH = 20
         const val MAP_ZOOM = 15f
 
         // 타이머 갱신 주기

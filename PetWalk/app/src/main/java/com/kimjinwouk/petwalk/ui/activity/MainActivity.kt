@@ -3,6 +3,7 @@ package com.kimjinwouk.petwalk.ui.activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -24,17 +25,14 @@ import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_FIRST_TIME_TOGGLE
 import com.kimjinwouk.petwalk.util.Constants.Companion.KEY_NAME
 import com.kimjinwouk.petwalk.util.Constants.Companion.TAG
 import com.kimjinwouk.petwalk.viewmodel.walkViewModel
+import dagger.Provides
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
 import javax.inject.Inject
-
-
-
-
-
+import javax.inject.Singleton
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
-
 
     // ActivityMainBinding 선언
     private lateinit var binding: ActivityMainBinding
@@ -60,18 +58,16 @@ class MainActivity : BaseActivity() {
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-        viewModel.getUserOnFirebase()
-        
-        // 데이터 불러오기
-        firstTimeAppOpen = sharedPref.getBoolean(KEY_FIRST_TIME_TOGGLE, true)
-        android.util.Log.d(TAG, "onCreate: $firstTimeAppOpen")
-        val name = sharedPref.getString(KEY_NAME,"")
+        Log.d(TAG,"MainActivity_OnCreate")
 
         // 처음 실행했다면 세팅 화면으로
-        if(firstTimeAppOpen && auth.currentUser == null){
+        if(auth.currentUser == null){
             val intent = Intent(this,LoginActivity::class.java)
             startActivity(intent)
             finish()
+        }else{
+            //currentUser가 존재한다면 해당 uid로 viewModel을통해 해당 사용자 정보를 불러온다.
+            viewModel.getUserOnFirebase()
         }
 
         binding.apply {
@@ -82,7 +78,6 @@ class MainActivity : BaseActivity() {
         }
 
     }
-
     // foreground 상태에서 호출
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)

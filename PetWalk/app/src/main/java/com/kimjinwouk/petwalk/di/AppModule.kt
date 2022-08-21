@@ -34,6 +34,7 @@ class AppModule {
             .fallbackToDestructiveMigration() // 버전 변경 시 기존 데이터 삭제
             .build()
 
+
     // Dao 추가
     @Singleton
     @Provides

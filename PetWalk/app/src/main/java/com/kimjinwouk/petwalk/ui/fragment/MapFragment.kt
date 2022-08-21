@@ -110,6 +110,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
 
 
         binding.apply {
+            //naverMap 초기화
             naverMap.getMapAsync {
                 it.uiSettings.isZoomControlEnabled = false
                 NaverMap = it
@@ -133,6 +134,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
             walkingFloatingButton.setOnClickListener {
                 if (PetWalkUtil.hasLocationPermissions(requireContext()).not()) {
                     requestPermission()
+                    return@setOnClickListener
                 }
 
                 // 이미 실행 중이면 일시 정지
@@ -147,13 +149,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                     Toast.makeText(requireContext(), "산책 시작!", Toast.LENGTH_SHORT).show()
                 }
             }
-
-            // 종료 버튼 클릭 시 저장하고 종료
-//            finishButton.setOnClickListener {
-//                zoomToWholeTrack()
-//                endRunAndSaveToDB()
-//            }
-
         }
 
         // 위치 추적 여부 관찰하여 updateTracking 호출
@@ -162,9 +157,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         })
 
         // 경로 변경 관찰
-
         PetWalkService.pathPoints.observe(requireActivity(), Observer {
-            Log.d(TAG, "PetWalkService.pathPoints")
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
@@ -181,7 +174,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     }
 
 
-    // 스냅샷 찍기 위하여 전체 경로가 다 보이게 줌
+    //스냅샷 찍기 위하여 전체 경로가 다 보이게 줌
     private fun zoomToWholeTrack() {
         val bounds = LatLngBounds.Builder()
         if (pathPoints != null && pathPoints.size > 1) {
@@ -415,11 +408,6 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
             )
         )
-    }
-
-    companion object {
-        const val REQUESTCODE_ACCESS_FINE_LOCATION = 1
-        const val REQUESTCODE_ACCESS_BACKGROUND_LOCATION = 2
     }
 
     var requestSinglePermission = registerForActivityResult(
